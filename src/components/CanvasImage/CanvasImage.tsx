@@ -1,18 +1,29 @@
 import type { FC } from 'react';
 import React, { useRef, useEffect } from 'react';
 
-// components
+// images
 import redImage from '../../images/brennan-ehrhardt-HALe2SmkWAI-unsplash.jpg';
 import purpleImage from '../../images/martin-brechtl-zs3HRrWW66A-unsplash.jpg';
 
+// components
+import CanvasMarkers from '../CanvasMarker/CanvasMarkers';
+
+// config
+import {
+  CANVAS_RESOLUTION,
+  MEASUREMENT_PRECISION,
+  RGBA_GROUP,
+} from '../../utils/config';
+
 // styles
-import { Wrapper, Canvas } from './CanvasImage.styles';
+import { Wrapper, Canvas, ImageFallback } from './CanvasImage.styles';
 
-type Props = {
-  callback: (rgb: { r: number; g: number; b: number }) => void;
-};
+interface CanvasImageProps {
+  palette: indexRgbType[];
+  dispatch: React.Dispatch<ReducerActions>;
+}
 
-const CanvasImage: FC<Props> = ({ callback }) => {
+const CanvasImage: FC<CanvasImageProps> = ({ palette, dispatch }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
 
@@ -21,27 +32,23 @@ const CanvasImage: FC<Props> = ({ callback }) => {
   //   return [];
   // }, []);
 
-  interface channelType {
+  interface rgbType {
     r: number;
     g: number;
     b: number;
   }
 
-  interface indexChannelType extends channelType {
-    i: number;
-  }
-
-  const imagePxGroups = useRef<indexChannelType[]>([]);
-  const channelTotal = useRef<channelType>({ r: 0, g: 0, b: 0 });
+  const imagePxGroups = useRef<indexRgbType[]>([]);
+  const channelTotal = useRef<rgbType>({ r: 0, g: 0, b: 0 });
 
   useEffect(() => {
     // Initialize
     if (canvasRef.current) {
       canvasCtxRef.current = canvasRef.current.getContext('2d');
       const ctx = canvasCtxRef.current;
-      const RESOLUTION = { low: 400, med: 800, high: 1000, max: 1600 };
-      ctx!.canvas.width = RESOLUTION.high;
-      ctx!.canvas.height = RESOLUTION.high;
+
+      ctx!.canvas.width = CANVAS_RESOLUTION.high;
+      ctx!.canvas.height = CANVAS_RESOLUTION.high;
 
       const base_image = new Image();
       base_image.setAttribute('crossOrigin', 'anonymous');
@@ -60,8 +67,6 @@ const CanvasImage: FC<Props> = ({ callback }) => {
 
         // get rgba data for selected image area
         const dataPoints = imageData.length;
-        const RGBA_GROUP = 4; // fixed jpg rgb px grouping (do not change)
-        const MEASUREMENT_PRECISION = 100; // can be adjusted
         const sampleRate = RGBA_GROUP * MEASUREMENT_PRECISION;
 
         const pxMeasuredPerChannel = dataPoints / sampleRate;
@@ -102,7 +107,7 @@ const CanvasImage: FC<Props> = ({ callback }) => {
         imagePxGroups.current.sort(colorSort);
 
         // comparator
-        function colorSort(a: channelType, b: channelType) {
+        function colorSort(a: rgbType, b: rgbType) {
           if (a[dominantChannel] < b[dominantChannel]) {
             return -1;
           }
@@ -114,13 +119,13 @@ const CanvasImage: FC<Props> = ({ callback }) => {
         }
 
         // const middle = allPxColor.current.r.length / 2;
-        const MEDIAN = { lower: 1 / 2, upper: 1 / 2 + 1 };
-        const MID_AVG = { lower: 1 / 3, upper: 2 / 3 };
+        // const MEDIAN = { lower: 1 / 2, upper: 1 / 2 + 1 };
+        // const MID_AVG = { lower: 1 / 3, upper: 2 / 3 };
         const sampleSize = {
           lowerLimit: Math.floor(imagePxGroups.current.length * 0.5),
           upperLimit: Math.floor(imagePxGroups.current.length * 0.5) + 1,
         };
-
+        // markers.push(imagePxGroups.current[0]); //FIXME:
         const rgbValue = imagePxGroups.current
           .slice(sampleSize.lowerLimit, sampleSize.upperLimit)
           .reduce(
@@ -134,12 +139,12 @@ const CanvasImage: FC<Props> = ({ callback }) => {
 
         console.log(rgbValue);
 
-        callback(rgbValue);
+        dispatch({ type: 'setPalette', payload: rgbValue });
       };
 
       // asign image src to canvas context
-      base_image.src = redImage;
-      // base_image.src = purpleImage;
+      // base_image.src = redImage;
+      base_image.src = purpleImage;
     }
     // update when image is URL is passed from props
   }, []);
@@ -147,8 +152,10 @@ const CanvasImage: FC<Props> = ({ callback }) => {
   return (
     <>
       <Wrapper>
-        <Canvas ref={canvasRef}></Canvas>
-        {/* <ImageSource src={redImage} alt="red" /> */}
+        <CanvasMarkers palette={palette} dispatch={dispatch} />
+        <Canvas ref={canvasRef}>
+          <ImageFallback src={redImage} alt="Fallback image" />
+        </Canvas>
       </Wrapper>
     </>
   );

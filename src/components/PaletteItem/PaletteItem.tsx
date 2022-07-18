@@ -3,21 +3,25 @@ import React, { FC } from 'react';
 // components
 import Swatch from '../Swatch/Swatch';
 
+// helpers
+import { rgbToColorName, hslToColorName } from '../../utils/helpers';
+
 // styles
-import { Wrapper, Container } from './PaletteItem.styles';
+import { Wrapper, SwatchContainer } from './PaletteItem.styles';
 
 interface PaletteItemProps {
-  color: { r: number; g: number; b: number };
+  color: indexRgbType;
 }
 
 const PaletteItem: FC<PaletteItemProps> = ({ color }) => {
   return (
     <Wrapper>
-      <p>PaletteItem</p>
-      <Container>
+      <SwatchContainer>
         <Swatch color={color} />
-        <input placeholder="$automatic-color-name"></input>
-      </Container>
+        <input
+          value={color ? hslToColorName(color) : 'default-color-name'}
+        ></input>
+      </SwatchContainer>
       <div>{`rgb(
     ${color.r},
     ${color.g},

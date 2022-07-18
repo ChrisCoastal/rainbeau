@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 
 // mui
 import Card from '@mui/material/Card';
@@ -14,10 +14,14 @@ import Output from '../Output/Output';
 import Actions from '../Actions/Actions';
 import Credit from '../Credit/Credit';
 
-type Props = {};
+interface MainViewProps {
+  images: {}[];
+  palette: indexRgbType[];
+  dispatch: React.Dispatch<ReducerActions>;
+}
 
-const MainView = (props: Props) => {
-  const [color, setColor] = useState({ r: 0, g: 0, b: 0 });
+const MainView: FC<MainViewProps> = ({ images, palette, dispatch }) => {
+  // const [color, setColor] = useState<rgbType>({ r: 0, g: 0, b: 0 });
   const CardSx = {
     position: 'absolute',
     top: '0',
@@ -25,11 +29,12 @@ const MainView = (props: Props) => {
     maxWidth: '100%',
     maxHeight: '100%',
     // transform: 'translate(-50%, -50%)',
-    transition: 'all 1.2s ease',
+    borderRadius: '8px',
     boxShadow: '0 0.8rem 2rem 0 #3333333e',
-    '&:hover': {
-      transform: 'rotateY(-180deg)',
-    },
+    transition: 'all 1.2s ease',
+    // '&:hover': {
+    //   transform: 'rotateY(-180deg)',
+    // },
   };
 
   const CardBackSx = {
@@ -41,13 +46,13 @@ const MainView = (props: Props) => {
   };
 
   return (
-    <Wrapper bgColor={color}>
+    <Wrapper>
       <div>
         <FlipBox>
           {/* <AvgColor bgColor={color}>Color</AvgColor> */}
           <Card sx={CardSx}>
             <CardContent sx={{ p: '0' }}>
-              <CanvasImage callback={(color) => setColor(() => color)} />
+              <CanvasImage palette={palette} dispatch={dispatch} />
             </CardContent>
           </Card>
           {/* <Card sx={CardBackSx}></Card> */}
@@ -56,7 +61,7 @@ const MainView = (props: Props) => {
       </div>
       <ActionsBox>
         <Actions />
-        <Palette color={color} />
+        <Palette palette={palette} />
         <Output />
       </ActionsBox>
     </Wrapper>

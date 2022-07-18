@@ -1,40 +1,30 @@
 import styled from '@emotion/styled';
 
 interface WrapperProps {
-  bgColor: { r: number; g: number; b: number };
+  bgColor: { r: number; g: number; b: number }[];
 }
 
+/* background-color: ${(props) => props.bgColor}; */
+/* background-image: ${(props) =>
+    `linear-gradient(to right bottom, 
+      rgb(${props.bgColor.r},${props.bgColor.g},${props.bgColor.b}),
+      rgb(${props.bgColor.r - 30},${props.bgColor.g - 30},${props.bgColor.b - 30})
+      )`}; */
+
 // prettier-ignore
-export const Wrapper = styled.div<WrapperProps>`
+export const Wrapper = styled.div`
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 3rem;
-  /* background-color: ${(props) => props.bgColor}; */
-  /* background-image: ${(props) =>
-    `linear-gradient(to right bottom, 
-      rgb(${props.bgColor.r},${props.bgColor.g},${props.bgColor.b}),
-      rgb(${props.bgColor.r - 30},${props.bgColor.g - 30},${props.bgColor.b - 30})
-      )`}; */
   transition: all 0.6s ease-in;
   height: 100vh;
-
-  /* &::after {
-    position: absolute;
-    display: inline-block;
-    height: 100%;
-    background-image: ${(props) =>
-    `linear-gradient(to right bottom, 
-      rgb(${props.bgColor.r},${props.bgColor.g},${props.bgColor.b}),
-      rgb(${props.bgColor.r - 30},${props.bgColor.g - 30},${props.bgColor.b - 30})
-      )`};
-  } */
 `;
 
 export const FlipBox = styled.div`
   position: relative;
-  perspective: 150rem; // perspective is not required on parent, but gives much better effect
+  perspective: 150rem;
   width: 50rem;
   height: 50rem;
 `;

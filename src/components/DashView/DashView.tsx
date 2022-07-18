@@ -3,7 +3,9 @@ import React from 'react';
 // styles
 import { Wrapper } from './DashView.styles';
 
-type Props = {};
+interface Props {
+  dispatch: React.Dispatch<ReducerActions>;
+}
 
 const DashView = (props: Props) => {
   return (

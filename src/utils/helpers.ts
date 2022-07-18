@@ -1,4 +1,6 @@
-export function RGBToHex(r: number, g: number, b: number) {
+import { COLOR_NAMES } from './config';
+
+export function rgbToHex(r: number, g: number, b: number) {
   let hexR = r.toString(16);
   let hexG = g.toString(16);
   let hexB = b.toString(16);
@@ -10,8 +12,9 @@ export function RGBToHex(r: number, g: number, b: number) {
   return '#' + hexR + hexG + hexB;
 }
 
-export function RGBToHSL(r: number, g: number, b: number) {
+export function rgbToHsl(rgbColor: { r: number; g: number; b: number }) {
   // Make r, g, and b fractions of 1
+  let { r, g, b } = rgbColor;
   r /= 255;
   g /= 255;
   b /= 255;
@@ -42,8 +45,130 @@ export function RGBToHSL(r: number, g: number, b: number) {
   s = delta === 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
 
   // l/s to % value
-  s = +(s * 100).toFixed(1);
-  l = +(l * 100).toFixed(1);
+  s = +(s * 100).toFixed(0);
+  l = +(l * 100).toFixed(0);
 
-  return 'hsl(' + h + ',' + s + '%,' + l + '%)';
+  // 'hsl(' + h + ',' + s + '%,' + l + '%)';
+  return { h, s, l };
+}
+
+const filterChannel = (
+  channelValue: number,
+  channelName: 'r' | 'g' | 'b',
+  colorNames = COLOR_NAMES
+) =>
+  colorNames.filter(
+    (colorName) => Math.abs(colorName[channelName] - channelValue) < 4
+  );
+
+export function rgbToColorName(paletteColor: indexRgbType) {
+  const name = COLOR_NAMES.reduce(
+    (acc, colorName) => {
+      let diff = 0;
+      for (const channel in colorName) {
+        if (channel === 'r' || channel === 'g' || channel === 'b') {
+          diff += Math.abs(
+            (colorName[channel as keyof typeof colorName] as number) -
+              paletteColor[channel as keyof typeof paletteColor]
+          );
+        }
+        // if (channel === 'h' || channel === 's' || channel === 'l') {
+        //   diff += Math.abs(
+        //     (colorName[channel as keyof typeof colorName] as number) -
+        //       paletteColor[channel as keyof typeof paletteColor]
+        //   );
+        // }
+      }
+      console.log(diff);
+
+      return diff < acc.diff
+        ? {
+            name: colorName.name,
+            r: colorName.r,
+            g: colorName.g,
+            b: colorName.b,
+            diff: diff,
+          }
+        : acc;
+    },
+    { name: 'default-color-name', r: -1, g: -1, b: -1, diff: Infinity }
+  ) as { name: string; r: number; g: number; b: number; diff: number };
+  console.log(name);
+
+  return name.name;
+}
+
+export function hslToColorName(rgbPaletteColor: indexRgbType) {
+  const rgbColor = {
+    r: rgbPaletteColor.r,
+    g: rgbPaletteColor.g,
+    b: rgbPaletteColor.b,
+  };
+  const hslColor = rgbToHsl(rgbColor);
+  const name = COLOR_NAMES.reduce(
+    (acc, colorName) => {
+      // let diff = 0;
+      let hDiff = 0;
+      let slDiff = 0;
+
+      for (const channel in colorName) {
+        if (channel === 'h') {
+          hDiff += Math.abs(
+            (colorName[channel as keyof typeof colorName] as number) -
+              hslColor[channel as keyof typeof hslColor]
+          );
+        }
+        if (channel === 's' || channel === 'l') {
+          slDiff += Math.abs(
+            (colorName[channel as keyof typeof colorName] as number) -
+              hslColor[channel as keyof typeof hslColor]
+          );
+        }
+      }
+      // console.log(diff);
+
+      //     return hDiff < acc.hDiff
+      //       ? {
+      //           name: colorName.name,
+      //           h: colorName.h,
+      //           s: colorName.s,
+      //           l: colorName.l,
+      //           hDiff: hDiff,
+      //           slDiff: slDiff,
+      //         }
+      //       : acc;
+      //   },
+      //   {
+      //     name: 'default-color-name',
+      //     h: -1,
+      //     s: -1,
+      //     l: -1,
+      //     hDiff: Infinity,
+      //     slDiff: Infinity,
+      //   }
+      // ) as {
+      //   name: string;
+      //   h: number;
+      //   s: number;
+      //   l: number;
+      //   hDiff: number;
+      //   slDiff: number;
+      // };
+
+      const diff = Math.floor(hDiff * 1.2) + slDiff;
+      return diff < acc.diff
+        ? {
+            name: colorName.name,
+            r: colorName.r,
+            g: colorName.g,
+            b: colorName.b,
+            diff: diff,
+          }
+        : acc;
+    },
+    { name: 'default-color-name', r: -1, g: -1, b: -1, diff: Infinity }
+  ) as { name: string; r: number; g: number; b: number; diff: number };
+  console.log(hslColor, name);
+
+  return name.name;
 }

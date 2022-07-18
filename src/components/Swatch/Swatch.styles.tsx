@@ -7,6 +7,7 @@ interface WrapperProps {
 export const Color = styled.div<WrapperProps>`
   width: 1.6rem;
   height: 1.6rem;
+  margin-right: 0.4rem;
   border-radius: 50%;
   background-color: ${(props) => `rgb(
     ${props.bgColor.r},
