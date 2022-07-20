@@ -52,6 +52,13 @@ export function rgbToHsl(rgbColor: { r: number; g: number; b: number }) {
   return { h, s, l };
 }
 
+// translate canvas index (from getImageData()) to x y values on the canvas
+export const getXY = (index: number) => {
+  const yPos = Math.floor((index / 2000) * 0.4); // channel values per width * px per width
+  const xPos = Math.round((index % 2000) * 0.4);
+  return { xPos, yPos };
+};
+
 const filterChannel = (
   channelValue: number,
   channelName: 'r' | 'g' | 'b',
@@ -98,7 +105,9 @@ export function rgbToColorName(paletteColor: indexRgbType) {
   return name.name;
 }
 
-export function hslToColorName(rgbPaletteColor: indexRgbType) {
+export function hslToColorName(
+  rgbPaletteColor: indexRgbType | rgbType | xyRgbType
+) {
   const rgbColor = {
     r: rgbPaletteColor.r,
     g: rgbPaletteColor.g,

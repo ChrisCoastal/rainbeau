@@ -1,5 +1,5 @@
 // react
-import { useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 // types
 import type { FC } from 'react';
@@ -8,48 +8,88 @@ import type { FC } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 // config
-import { CANVAS_RESOLUTION } from '../../utils/config';
+import { CANVAS_RESOLUTION, RGBA_GROUP } from '../../utils/config';
+
+// components
+import Marker from './Marker';
 
 // styles
-import { Wrapper, Marker } from './CanvasMarkers.styles';
+import { Wrapper } from './CanvasMarkers.styles';
 
 interface CanvasMarkerProps {
-  palette: indexRgbType[];
+  palette: xyRgbType[];
+  canvasBound: DOMRect | undefined;
+  canvasXY: (number | undefined)[];
   dispatch: React.Dispatch<ReducerActions>;
 }
 
-const CanvasMarkers: FC<CanvasMarkerProps> = ({ palette, dispatch }) => {
-  const [isDragging, setIsDragging] = useState<boolean>(false);
-  const [dragPos, setDragPos] = useState<number | null>(null);
+interface MarkerPos {
+  x: number;
+  y: number;
+}
 
-  const getXY = (markerIndex: number) => {
-    const yPos = markerIndex / CANVAS_RESOLUTION.high;
-    const xPos = markerIndex % CANVAS_RESOLUTION.high;
-    return [xPos, yPos];
+const CanvasMarkers: FC<CanvasMarkerProps> = ({
+  palette,
+  canvasXY,
+  canvasBound,
+  dispatch,
+}) => {
+  const [mouseDown, setMouseDown] = useState<boolean>(false);
+  const [isMoving, setIsMoving] = useState<boolean>(false);
+  // const [prevMarkerPos, setPrevMarkerPos] = useState<MarkerPos>({ x, y });
+  // const [markerPos, setMarkerPos] = useState<MarkerPos>({ x, y });
+
+  // const markerDragHandler = (
+  //   e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  // ) => {
+  //   console.log('Moving');
+
+  // };
+
+  console.log(palette);
+
+  // useEffect(() => {
+
+  // }, [xPos, yPos]);
+
+  const mouseDownHandler = () => {
+    setMouseDown(true);
   };
-  // const dragPosition = useRef([xPos, yPos]);
 
-  const markerDragHandler = () => {
-    setIsDragging((prev) => !prev);
+  const moveMarkerHandler = (e: React.MouseEvent) => {
+    console.log('moving!');
+
+    if (!isMoving) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const MAX_XY = 700;
+    // const mouseX = Math.min(e.clientX, MAX_XY);
+    // const mouseY = Math.min(e.clientY, MAX_XY);
+    const mouseX = e.movementX;
+    const mouseY = e.movementY;
+
+    // isMoving && setPrevMarkerPos({ x, y });
+    // isMoving &&
+    //   setMarkerPos((prev) => ({ x: prev.x + mouseX, y: prev.y + mouseY }));
+    console.log(mouseX, mouseY);
   };
 
-  const markers: indexRgbType[] = [{ r: 100, g: 100, b: 100, i: 98000 }];
-  const markersPos = markers.map((marker) => {
-    const [xPos, yPos] = getXY(marker.i);
-
-    console.log(xPos, yPos);
+  const markersPos = palette.map((marker, index) => {
+    const { xPos, yPos } = marker.xy;
+    console.log(palette, xPos, yPos);
 
     return (
       <Marker
         key={uuidv4()}
         y={yPos}
         x={xPos}
-        onMouseDown={markerDragHandler}
+        canvasBound={canvasBound}
+        mouseDownHandler={mouseDownHandler}
       />
     );
   });
 
-  return <Wrapper>{markersPos}</Wrapper>;
+  return <Wrapper onMouseMove={moveMarkerHandler}>{markersPos}</Wrapper>;
 };
 
 export default CanvasMarkers;

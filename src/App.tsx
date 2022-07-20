@@ -11,7 +11,6 @@ import DashView from './components/DashView/DashView';
 function App() {
   const initialState: appState = {
     images: [],
-    // markers: [],
     palette: [],
   };
 
@@ -25,7 +24,6 @@ function App() {
         palette={state.palette}
         dispatch={dispatch}
       />
-      <DashView dispatch={dispatch} />
     </div>
   );
 }

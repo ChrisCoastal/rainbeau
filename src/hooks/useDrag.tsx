@@ -4,21 +4,35 @@ import React, { useState, useRef } from 'react';
 import { CANVAS_RESOLUTION } from '../utils/config';
 
 export const useDrag = (event: MouseEvent, startPoint: number) => {
-  const [isDragging, setIsDragging] = useState<boolean>(false);
+  // const [isDragging, setIsDragging] = useState<boolean>(false);
+  // const [prevMarkerPos, setPrevMarkerPos] = useState<MarkerPos>({ x, y });
+  // const [markerPos, setMarkerPos] = useState<MarkerPos>({ x, y });
 
-  const yPos = startPoint / CANVAS_RESOLUTION.high;
-  const xPos = startPoint % CANVAS_RESOLUTION.high;
-  const dragPosition = useRef([xPos, yPos]);
+  // console.log('startXY', canvasBound, x, y);
 
-  // const markersPos = markers.map((rgbi) => {
-  //   const [x, y] = xy(rgbi.i);
+  // const markerPosHandler = (e: MouseEvent) => {
+  //   if (!isDragging) return;
+  //   e.preventDefault();
+  //   e.stopPropagation();
+  //   const MAX_XY = 700;
+  //   // const mouseX = Math.min(e.clientX, MAX_XY);
+  //   // const mouseY = Math.min(e.clientY, MAX_XY);
+  //   const mouseX = e.movementX;
+  //   const mouseY = e.movementY;
 
-  //   console.log(x, y);
+  //   isDragging && setPrevMarkerPos({ x, y });
+  //   isDragging &&
+  //     setMarkerPos((prev) => ({ x: prev.x + mouseX, y: prev.y + mouseY }));
+  //   console.log(mouseX, mouseY);
 
-  //   return (
-  //     <Marker key={} y={y} x={x} onMouseDown={() => setIsDragging((prev) => !prev)} />
-  //   );
-  // });
+  //   return;
+  // };
 
-  return [isDragging, setIsDragging, xPos, yPos];
+  const markerMouseOutHandler = () => {
+    return;
+  };
+
+  // return [isDragging, setIsDragging, xPos, yPos];
+
+  return;
 };

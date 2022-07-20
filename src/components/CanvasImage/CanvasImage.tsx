@@ -15,38 +15,35 @@ import {
   RGBA_GROUP,
 } from '../../utils/config';
 
+// helpers
+import { getXY } from '../../utils/helpers';
+
 // styles
 import { Wrapper, Canvas, ImageFallback } from './CanvasImage.styles';
 
 interface CanvasImageProps {
-  palette: indexRgbType[];
+  palette: xyRgbType[];
   dispatch: React.Dispatch<ReducerActions>;
 }
 
 const CanvasImage: FC<CanvasImageProps> = ({ palette, dispatch }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
-
-  // const images: URL[] = useCallback(() => {
-  //   // fetched images
-  //   return [];
-  // }, []);
-
-  interface rgbType {
-    r: number;
-    g: number;
-    b: number;
-  }
+  const canvasXY = [
+    canvasCtxRef.current?.canvas.width,
+    canvasCtxRef.current?.canvas.height,
+  ];
+  console.log(palette);
 
   const imagePxGroups = useRef<indexRgbType[]>([]);
   const channelTotal = useRef<rgbType>({ r: 0, g: 0, b: 0 });
 
   useEffect(() => {
-    // Initialize
     if (canvasRef.current) {
       canvasCtxRef.current = canvasRef.current.getContext('2d');
       const ctx = canvasCtxRef.current;
 
+      // define canvas resolution
       ctx!.canvas.width = CANVAS_RESOLUTION.high;
       ctx!.canvas.height = CANVAS_RESOLUTION.high;
 
@@ -62,8 +59,8 @@ const CanvasImage: FC<CanvasImageProps> = ({ palette, dispatch }) => {
           ctx!.canvas.height
         ).data;
 
-        imagePxGroups.current = []; // reset
-        channelTotal.current = { r: 0, g: 0, b: 0 }; // reset
+        imagePxGroups.current = []; // reset from previous image
+        channelTotal.current = { r: 0, g: 0, b: 0 }; // reset from previous image
 
         // get rgba data for selected image area
         const dataPoints = imageData.length;
@@ -82,7 +79,7 @@ const CanvasImage: FC<CanvasImageProps> = ({ palette, dispatch }) => {
           channelTotal.current.g += gPx;
           channelTotal.current.b += bPx;
         }
-        console.log(dataPoints, imagePxGroups.current);
+        // console.log(dataPoints, imagePxGroups.current);
 
         const getDominantChannel = () => {
           const { r, g, b } = channelTotal.current;
@@ -126,18 +123,21 @@ const CanvasImage: FC<CanvasImageProps> = ({ palette, dispatch }) => {
           upperLimit: Math.floor(imagePxGroups.current.length * 0.5) + 1,
         };
         // markers.push(imagePxGroups.current[0]); //FIXME:
-        const rgbValue = imagePxGroups.current
+
+        const rgbValue: xyRgbType = imagePxGroups.current
           .slice(sampleSize.lowerLimit, sampleSize.upperLimit)
           .reduce(
             (acc, rgb, _, { length }) => ({
               r: acc.r + rgb.r / length,
               g: acc.g + rgb.g / length,
               b: acc.b + rgb.b / length,
+              xy: getXY(rgb.i),
             }),
-            { r: 0, g: 0, b: 0 }
+            { r: 0, g: 0, b: 0, xy: { xPos: 0, yPos: 0 } }
           );
 
         console.log(rgbValue);
+        console.log(canvasRef.current?.getBoundingClientRect());
 
         dispatch({ type: 'setPalette', payload: rgbValue });
       };
@@ -152,7 +152,12 @@ const CanvasImage: FC<CanvasImageProps> = ({ palette, dispatch }) => {
   return (
     <>
       <Wrapper>
-        <CanvasMarkers palette={palette} dispatch={dispatch} />
+        <CanvasMarkers
+          palette={palette}
+          canvasXY={canvasXY}
+          canvasBound={canvasRef.current?.getBoundingClientRect()}
+          dispatch={dispatch}
+        />
         <Canvas ref={canvasRef}>
           <ImageFallback src={redImage} alt="Fallback image" />
         </Canvas>

@@ -10,14 +10,10 @@ import { v4 as uuidv4 } from 'uuid';
 import { Wrapper, PaletteItemsContainer } from './Palette.styles';
 
 interface PaletteProps {
-  palette: indexRgbType[];
+  palette: xyRgbType[];
 }
 
 const Palette: FC<PaletteProps> = ({ palette }) => {
-  // const colors = [{ r: 140, g: 30, b: 214 }];
-  // colors.map <div rounded>color</div>hex code<input>#prefill name <light><dark>
-  console.log(palette);
-
   return (
     <Wrapper>
       <p>Palette</p>

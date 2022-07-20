@@ -1,4 +1,5 @@
-import React, { FC } from 'react';
+import type { FC } from 'react';
+import { useState } from 'react';
 
 // components
 import Swatch from '../Swatch/Swatch';
@@ -10,16 +11,21 @@ import { rgbToColorName, hslToColorName } from '../../utils/helpers';
 import { Wrapper, SwatchContainer } from './PaletteItem.styles';
 
 interface PaletteItemProps {
-  color: indexRgbType;
+  color: xyRgbType;
 }
 
 const PaletteItem: FC<PaletteItemProps> = ({ color }) => {
+  const [inputValue, setInputValue] = useState<string>(
+    color ? hslToColorName(color) : 'default-color-name'
+  );
+
   return (
     <Wrapper>
       <SwatchContainer>
         <Swatch color={color} />
         <input
-          value={color ? hslToColorName(color) : 'default-color-name'}
+          value={inputValue}
+          onChange={(event) => setInputValue(event.target.value)}
         ></input>
       </SwatchContainer>
       <div>{`rgb(

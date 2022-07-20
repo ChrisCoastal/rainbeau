@@ -1,6 +1,6 @@
 interface appState {
   images: {}[];
-  palette: indexRgbType[];
+  palette: xyRgbType[];
   // markers: [];
 }
 
@@ -13,6 +13,10 @@ interface rgbType {
   r: number;
   g: number;
   b: number;
+}
+
+interface xyRgbType extends rgbType {
+  xy: { xPos: number; yPos: number };
 }
 
 interface indexRgbType extends rgbType {

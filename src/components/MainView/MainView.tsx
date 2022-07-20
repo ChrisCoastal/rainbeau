@@ -16,7 +16,7 @@ import Credit from '../Credit/Credit';
 
 interface MainViewProps {
   images: {}[];
-  palette: indexRgbType[];
+  palette: xyRgbType[];
   dispatch: React.Dispatch<ReducerActions>;
 }
 
