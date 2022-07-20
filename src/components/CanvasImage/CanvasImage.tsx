@@ -139,7 +139,7 @@ const CanvasImage: FC<CanvasImageProps> = ({ palette, dispatch }) => {
         console.log(rgbValue);
         console.log(canvasRef.current?.getBoundingClientRect());
 
-        dispatch({ type: 'setPalette', payload: rgbValue });
+        dispatch({ type: 'addPalette', payload: rgbValue });
       };
 
       // asign image src to canvas context

@@ -5,7 +5,7 @@ interface appState {
 }
 
 interface ReducerActions {
-  type: 'setImages' | 'setPalette';
+  type: 'setImages' | 'addPalette' | 'replacePalette';
   payload?: any;
 }
 

@@ -34,7 +34,7 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
   canvasBound,
   dispatch,
 }) => {
-  const [mouseDown, setMouseDown] = useState<boolean>(false);
+  const [mouseDown, setMouseDown] = useState<number>(-1);
   const [isMoving, setIsMoving] = useState<boolean>(false);
   // const [prevMarkerPos, setPrevMarkerPos] = useState<MarkerPos>({ x, y });
   // const [markerPos, setMarkerPos] = useState<MarkerPos>({ x, y });
@@ -52,14 +52,17 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
 
   // }, [xPos, yPos]);
 
-  const mouseDownHandler = () => {
-    setMouseDown(true);
+  const mouseDownHandler = (e: React.MouseEvent, num: number) => {
+    console.log('mouseDown', num);
+
+    setMouseDown(num);
   };
 
   const moveMarkerHandler = (e: React.MouseEvent) => {
-    console.log('moving!');
+    if (mouseDown === -1) return;
 
-    if (!isMoving) return;
+    console.log('moving!');
+    const marker = mouseDown;
     e.preventDefault();
     e.stopPropagation();
     const MAX_XY = 700;
@@ -72,6 +75,14 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
     // isMoving &&
     //   setMarkerPos((prev) => ({ x: prev.x + mouseX, y: prev.y + mouseY }));
     console.log(mouseX, mouseY);
+
+    const newPalette = [...palette];
+    newPalette[marker].xy = {
+      xPos: (newPalette[marker].xy.xPos += mouseX),
+      yPos: (newPalette[marker].xy.yPos += mouseY),
+    };
+
+    dispatch({ type: 'replacePalette', payload: newPalette });
   };
 
   const markersPos = palette.map((marker, index) => {
@@ -83,6 +94,7 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
         key={uuidv4()}
         y={yPos}
         x={xPos}
+        num={index}
         canvasBound={canvasBound}
         mouseDownHandler={mouseDownHandler}
       />
