@@ -9,7 +9,7 @@ interface MarkerProps {
   x: number;
   num: number;
   canvasBound: DOMRect | undefined;
-  mouseDownHandler: (e: React.MouseEvent, num: number) => void;
+  clickHandler: (e: React.MouseEvent, num: number) => void;
 }
 
 interface MarkerPos {
@@ -17,13 +17,7 @@ interface MarkerPos {
   y: number;
 }
 
-const Marker: FC<MarkerProps> = ({
-  x,
-  y,
-  num,
-  canvasBound,
-  mouseDownHandler,
-}) => {
+const Marker: FC<MarkerProps> = ({ x, y, num, canvasBound, clickHandler }) => {
   const [isMoving, setIsMoving] = useState<boolean>(false);
   const [prevMarkerPos, setPrevMarkerPos] = useState<MarkerPos>({ x, y });
   const [markerPos, setMarkerPos] = useState<MarkerPos>({ x, y });
@@ -65,12 +59,10 @@ const Marker: FC<MarkerProps> = ({
       x={markerPos.x}
       y={markerPos.y}
       num={num}
-      onMouseDown={(e) => mouseDownHandler(e, num)}
-      // onDrag={() => setIsMoving(true)}
-      // onDragEnd={() => setIsMoving(false)}
-      onMouseUp={() => setIsMoving(false)}
-      onMouseLeave={() => setIsMoving(false)}
-      // onMouseMove={markerPosHandler}
+      onMouseDown={(e) => clickHandler(e, num)}
+      onMouseEnter={(e) => clickHandler(e, num)}
+      onDragStart={() => false}
+      onMouseUp={(e) => clickHandler(e, num)}
     />
   );
 };

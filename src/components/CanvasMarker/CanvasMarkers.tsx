@@ -52,10 +52,15 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
 
   // }, [xPos, yPos]);
 
-  const mouseDownHandler = (e: React.MouseEvent, num: number) => {
-    console.log('mouseDown', num);
-
-    setMouseDown(num);
+  const clickHandler = (e: React.MouseEvent, num: number) => {
+    console.log('mouseevent', e, num);
+    if (e.type === 'mouseenter' && mouseDown === num) return;
+    e.type === 'mouseenter' && setMouseDown(-1);
+    if (e.type === 'mousedown') {
+      setMouseDown(num);
+    }
+    e.type === 'mouseleave' && setMouseDown(-1);
+    e.type === 'mouseup' && setMouseDown(-1);
   };
 
   const moveMarkerHandler = (e: React.MouseEvent) => {
@@ -96,12 +101,21 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
         x={xPos}
         num={index}
         canvasBound={canvasBound}
-        mouseDownHandler={mouseDownHandler}
+        clickHandler={clickHandler}
       />
     );
   });
 
-  return <Wrapper onMouseMove={moveMarkerHandler}>{markersPos}</Wrapper>;
+  return (
+    <Wrapper
+      className="field"
+      onMouseMove={moveMarkerHandler}
+      onMouseUp={(e) => clickHandler(e, -1)}
+      onMouseLeave={(e) => clickHandler(e, -1)}
+    >
+      {markersPos}
+    </Wrapper>
+  );
 };
 
 export default CanvasMarkers;

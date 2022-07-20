@@ -15,8 +15,13 @@ interface rgbType {
   b: number;
 }
 
+interface coordinate {
+  xPos: number;
+  yPos: number;
+}
+
 interface xyRgbType extends rgbType {
-  xy: { xPos: number; yPos: number };
+  xy: coordinate;
 }
 
 interface indexRgbType extends rgbType {
