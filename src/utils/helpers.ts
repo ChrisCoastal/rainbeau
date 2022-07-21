@@ -54,9 +54,22 @@ export function rgbToHsl(rgbColor: { r: number; g: number; b: number }) {
 
 // translate canvas index (from getImageData()) to x y values on the canvas
 export const getXY = (index: number) => {
-  const yPos = Math.floor((index / 2000) * 0.4); // channel values per width * px per width
-  const xPos = Math.round((index % 2000) * 0.4);
+  const yPos = (index / 2000) * 0.4; // channel values per width * px per width: ;
+  const xPos = (index % 2000) * 0.4;
+
   return { xPos, yPos };
+};
+
+export const getIndex = (xPos: number, yPos: number) => {
+  let index = (yPos * 2000) / 0.4;
+  if (yPos !== 800) index += xPos / 0.4;
+  // const yPos = Math.floor((index / 2000) * 0.4); // channel values per width * px per width
+  // const xPos = Math.round((index % 2000) * 0.4);
+  return Math.round(index);
+};
+
+export const getColorAtIndexRGB = () => {
+  return;
 };
 
 const filterChannel = (
@@ -79,12 +92,6 @@ export function rgbToColorName(paletteColor: indexRgbType) {
               paletteColor[channel as keyof typeof paletteColor]
           );
         }
-        // if (channel === 'h' || channel === 's' || channel === 'l') {
-        //   diff += Math.abs(
-        //     (colorName[channel as keyof typeof colorName] as number) -
-        //       paletteColor[channel as keyof typeof paletteColor]
-        //   );
-        // }
       }
       console.log(diff);
 
@@ -116,7 +123,6 @@ export function hslToColorName(
   const hslColor = rgbToHsl(rgbColor);
   const name = COLOR_NAMES.reduce(
     (acc, colorName) => {
-      // let diff = 0;
       let hDiff = 0;
       let slDiff = 0;
 
@@ -134,35 +140,6 @@ export function hslToColorName(
           );
         }
       }
-      // console.log(diff);
-
-      //     return hDiff < acc.hDiff
-      //       ? {
-      //           name: colorName.name,
-      //           h: colorName.h,
-      //           s: colorName.s,
-      //           l: colorName.l,
-      //           hDiff: hDiff,
-      //           slDiff: slDiff,
-      //         }
-      //       : acc;
-      //   },
-      //   {
-      //     name: 'default-color-name',
-      //     h: -1,
-      //     s: -1,
-      //     l: -1,
-      //     hDiff: Infinity,
-      //     slDiff: Infinity,
-      //   }
-      // ) as {
-      //   name: string;
-      //   h: number;
-      //   s: number;
-      //   l: number;
-      //   hDiff: number;
-      //   slDiff: number;
-      // };
 
       const diff = Math.floor(hDiff * 1.2) + slDiff;
       return diff < acc.diff

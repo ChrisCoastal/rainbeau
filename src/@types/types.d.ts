@@ -1,5 +1,6 @@
 interface appState {
   images: {}[];
+  imageData: indexRgbType[];
   palette: xyRgbType[];
   // markers: [];
 }

@@ -18,14 +18,14 @@ interface MarkerPos {
 }
 
 const Marker: FC<MarkerProps> = ({ x, y, num, canvasBound, clickHandler }) => {
-  const [isMoving, setIsMoving] = useState<boolean>(false);
-  const [prevMarkerPos, setPrevMarkerPos] = useState<MarkerPos>({ x, y });
-  const [markerPos, setMarkerPos] = useState<MarkerPos>({ x, y });
+  // const [isMoving, setIsMoving] = useState<boolean>(false);
+  // const [prevMarkerPos, setPrevMarkerPos] = useState<MarkerPos>({ x, y });
+  // const [markerPos, setMarkerPos] = useState<MarkerPos>({ x, y });
 
-  const circleRef = useRef<HTMLDivElement>(null);
-  console.log('circle', circleRef.current);
+  // const circleRef = useRef<HTMLDivElement>(null);
+  // console.log('circle', circleRef.current);
 
-  console.log('startXY', canvasBound, x, y);
+  // console.log('startXY', canvasBound, x, y);
 
   // const markerPosHandler = (e: MouseEvent) => {
   //   if (!isMoving) return;
@@ -55,10 +55,11 @@ const Marker: FC<MarkerProps> = ({ x, y, num, canvasBound, clickHandler }) => {
 
   return (
     <Circle
-      ref={circleRef}
-      x={markerPos.x}
-      y={markerPos.y}
+      // ref={circleRef}
+      x={x}
+      y={y}
       num={num}
+      tabIndex={1}
       onMouseDown={(e) => clickHandler(e, num)}
       onMouseEnter={(e) => clickHandler(e, num)}
       onDragStart={() => false}

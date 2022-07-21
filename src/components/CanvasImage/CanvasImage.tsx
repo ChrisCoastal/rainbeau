@@ -38,6 +38,7 @@ const CanvasImage: FC<CanvasImageProps> = ({ palette, dispatch }) => {
   const imagePxGroups = useRef<indexRgbType[]>([]);
   const channelTotal = useRef<rgbType>({ r: 0, g: 0, b: 0 });
 
+  // create initial markers
   useEffect(() => {
     if (canvasRef.current) {
       canvasCtxRef.current = canvasRef.current.getContext('2d');
@@ -114,6 +115,7 @@ const CanvasImage: FC<CanvasImageProps> = ({ palette, dispatch }) => {
 
           return 0;
         }
+        console.log('sampled', imagePxGroups.current.length);
 
         // const middle = allPxColor.current.r.length / 2;
         // const MEDIAN = { lower: 1 / 2, upper: 1 / 2 + 1 };
@@ -148,6 +150,10 @@ const CanvasImage: FC<CanvasImageProps> = ({ palette, dispatch }) => {
     }
     // update when image is URL is passed from props
   }, []);
+
+  useEffect(() => {
+    console.log('PALETTE CHANGE', palette);
+  }, [palette]);
 
   return (
     <>

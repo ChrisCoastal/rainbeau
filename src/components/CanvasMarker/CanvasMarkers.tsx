@@ -55,12 +55,13 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
   const clickHandler = (e: React.MouseEvent, num: number) => {
     console.log('mouseevent', e, num);
     if (e.type === 'mouseenter' && mouseDown === num) return;
-    e.type === 'mouseenter' && setMouseDown(-1);
-    if (e.type === 'mousedown') {
-      setMouseDown(num);
-    }
-    e.type === 'mouseleave' && setMouseDown(-1);
-    e.type === 'mouseup' && setMouseDown(-1);
+    if (e.type === 'mousedown') setMouseDown(num);
+    if (
+      e.type === 'mouseenter' ||
+      e.type === 'mouseleave' ||
+      e.type === 'mouseup'
+    )
+      setMouseDown(-1);
   };
 
   const moveMarkerHandler = (e: React.MouseEvent) => {
@@ -70,7 +71,8 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
     const marker = mouseDown;
     e.preventDefault();
     e.stopPropagation();
-    const MAX_XY = 700;
+    const MAX_XY = 800;
+    const MIN_XY = 0;
     // const mouseX = Math.min(e.clientX, MAX_XY);
     // const mouseY = Math.min(e.clientY, MAX_XY);
     const mouseX = e.movementX;
@@ -82,11 +84,26 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
     console.log(mouseX, mouseY);
 
     const newPalette = [...palette];
+
+    // update xy
     newPalette[marker].xy = {
       xPos: (newPalette[marker].xy.xPos += mouseX),
       yPos: (newPalette[marker].xy.yPos += mouseY),
     };
+    // FIXME: not capping distance
+    for (const coord in newPalette) {
+      // TODO: newPalette[marker].xy[coord as keyof coordinate] += mouseXY[coord]
+      let dist = newPalette[marker].xy[coord as keyof coordinate];
+      if (dist > MAX_XY)
+        newPalette[marker].xy[coord as keyof coordinate] = MAX_XY;
+      if (dist < MIN_XY)
+        newPalette[marker].xy[coord as keyof coordinate] = MIN_XY;
+    }
 
+    // get color at new coordinates
+    const getColor = (x: number, y: number) => {};
+
+    // push updates to state
     dispatch({ type: 'replacePalette', payload: newPalette });
   };
 
@@ -106,6 +123,8 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
     );
   });
 
+  // need to set mouseMove listener on Wrapper (marker parent)
+  // otherwise mouse will leave Marker div on fast drags
   return (
     <Wrapper
       className="field"

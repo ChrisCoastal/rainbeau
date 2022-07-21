@@ -8,6 +8,7 @@ export const Wrapper = styled.div`
 `;
 
 export const PaletteItemsContainer = styled.div`
+  overflow-y: scroll;
   &not:first-of-type {
     padding-top: 0.8rem;
   }
