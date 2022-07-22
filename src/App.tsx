@@ -11,7 +11,7 @@ import DashView from './components/DashView/DashView';
 function App() {
   const initialState: appState = {
     images: [],
-    imageData: [],
+    currentImageData: [],
     palette: [],
   };
 
@@ -22,6 +22,7 @@ function App() {
       <Header />
       <MainView
         images={state.images}
+        currentImageData={state.currentImageData}
         palette={state.palette}
         dispatch={dispatch}
       />

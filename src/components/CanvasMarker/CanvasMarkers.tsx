@@ -7,6 +7,9 @@ import type { FC } from 'react';
 // uuid
 import { v4 as uuidv4 } from 'uuid';
 
+// helpers
+import { getPxGroupIndex } from '../../utils/helpers';
+
 // config
 import { CANVAS_RESOLUTION, RGBA_GROUP } from '../../utils/config';
 
@@ -18,6 +21,7 @@ import { Wrapper } from './CanvasMarkers.styles';
 
 interface CanvasMarkerProps {
   palette: xyRgbType[];
+  currentImageData: indexRgbType[];
   canvasBound: DOMRect | undefined;
   canvasXY: (number | undefined)[];
   dispatch: React.Dispatch<ReducerActions>;
@@ -30,6 +34,7 @@ interface MarkerPos {
 
 const CanvasMarkers: FC<CanvasMarkerProps> = ({
   palette,
+  currentImageData,
   canvasXY,
   canvasBound,
   dispatch,
@@ -46,14 +51,12 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
 
   // };
 
-  console.log(palette);
-
   // useEffect(() => {
 
   // }, [xPos, yPos]);
 
   const clickHandler = (e: React.MouseEvent, num: number) => {
-    console.log('mouseevent', e, num);
+    // console.log('mouseevent', e, num);
     if (e.type === 'mouseenter' && mouseDown === num) return;
     if (e.type === 'mousedown') setMouseDown(num);
     if (
@@ -66,8 +69,6 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
 
   const moveMarkerHandler = (e: React.MouseEvent) => {
     if (mouseDown === -1) return;
-
-    console.log('moving!');
     const marker = mouseDown;
     e.preventDefault();
     e.stopPropagation();
@@ -83,28 +84,41 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
     //   setMarkerPos((prev) => ({ x: prev.x + mouseX, y: prev.y + mouseY }));
     console.log(mouseX, mouseY);
 
-    const newPalette = [...palette];
+    const updatedPalette = [...palette];
 
     // update xy
-    newPalette[marker].xy = {
-      xPos: (newPalette[marker].xy.xPos += mouseX),
-      yPos: (newPalette[marker].xy.yPos += mouseY),
+    updatedPalette[marker].xy = {
+      xPos: (updatedPalette[marker].xy.xPos += mouseX),
+      yPos: (updatedPalette[marker].xy.yPos += mouseY),
     };
     // FIXME: not capping distance
-    for (const coord in newPalette) {
-      // TODO: newPalette[marker].xy[coord as keyof coordinate] += mouseXY[coord]
-      let dist = newPalette[marker].xy[coord as keyof coordinate];
+    for (const coord in updatedPalette) {
+      // TODO: updatedPalette[marker].xy[coord as keyof coordinate] += mouseXY[coord]
+      let dist = updatedPalette[marker].xy[coord as keyof coordinate];
       if (dist > MAX_XY)
-        newPalette[marker].xy[coord as keyof coordinate] = MAX_XY;
+        updatedPalette[marker].xy[coord as keyof coordinate] = MAX_XY;
       if (dist < MIN_XY)
-        newPalette[marker].xy[coord as keyof coordinate] = MIN_XY;
+        updatedPalette[marker].xy[coord as keyof coordinate] = MIN_XY;
     }
 
     // get color at new coordinates
-    const getColor = (x: number, y: number) => {};
+    const { xPos, yPos } = updatedPalette[marker].xy;
+    const updatedIndex = getPxGroupIndex(xPos, yPos);
+
+    console.log('NEW INDEX', updatedIndex);
+    const updatedColor = currentImageData[updatedIndex];
+    console.log('UPDATED COLOR', updatedColor);
+
+    const { r, g, b } = updatedColor;
+    const { xy } = updatedPalette[marker];
+    const updated = { r, g, b, xy };
+
+    updatedPalette[marker] = updated;
+
+    // updatedPalette[marker]
 
     // push updates to state
-    dispatch({ type: 'replacePalette', payload: newPalette });
+    dispatch({ type: 'replacePalette', payload: updatedPalette });
   };
 
   const markersPos = palette.map((marker, index) => {

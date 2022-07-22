@@ -16,11 +16,17 @@ import Credit from '../Credit/Credit';
 
 interface MainViewProps {
   images: {}[];
+  currentImageData: indexRgbType[];
   palette: xyRgbType[];
   dispatch: React.Dispatch<ReducerActions>;
 }
 
-const MainView: FC<MainViewProps> = ({ images, palette, dispatch }) => {
+const MainView: FC<MainViewProps> = ({
+  images,
+  currentImageData,
+  palette,
+  dispatch,
+}) => {
   // const [color, setColor] = useState<rgbType>({ r: 0, g: 0, b: 0 });
   const CardSx = {
     position: 'absolute',
@@ -52,7 +58,11 @@ const MainView: FC<MainViewProps> = ({ images, palette, dispatch }) => {
           {/* <AvgColor bgColor={color}>Color</AvgColor> */}
           <Card sx={CardSx}>
             <CardContent sx={{ p: '0' }}>
-              <CanvasImage palette={palette} dispatch={dispatch} />
+              <CanvasImage
+                palette={palette}
+                currentImageData={currentImageData}
+                dispatch={dispatch}
+              />
             </CardContent>
           </Card>
           {/* <Card sx={CardBackSx}></Card> */}

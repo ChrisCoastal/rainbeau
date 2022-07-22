@@ -16,17 +16,22 @@ import {
 } from '../../utils/config';
 
 // helpers
-import { getXY } from '../../utils/helpers';
+import { getPxGroupXY } from '../../utils/helpers';
 
 // styles
 import { Wrapper, Canvas, ImageFallback } from './CanvasImage.styles';
 
 interface CanvasImageProps {
   palette: xyRgbType[];
+  currentImageData: indexRgbType[];
   dispatch: React.Dispatch<ReducerActions>;
 }
 
-const CanvasImage: FC<CanvasImageProps> = ({ palette, dispatch }) => {
+const CanvasImage: FC<CanvasImageProps> = ({
+  palette,
+  currentImageData,
+  dispatch,
+}) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
   const canvasXY = [
@@ -36,6 +41,7 @@ const CanvasImage: FC<CanvasImageProps> = ({ palette, dispatch }) => {
   console.log(palette);
 
   const imagePxGroups = useRef<indexRgbType[]>([]);
+  // const imagePxGroups = useRef<indexRgbType[]>([]);
   const channelTotal = useRef<rgbType>({ r: 0, g: 0, b: 0 });
 
   // create initial markers
@@ -67,7 +73,7 @@ const CanvasImage: FC<CanvasImageProps> = ({ palette, dispatch }) => {
         const dataPoints = imageData.length;
         const sampleRate = RGBA_GROUP * MEASUREMENT_PRECISION;
 
-        const pxMeasuredPerChannel = dataPoints / sampleRate;
+        // const pxMeasuredPerChannel = dataPoints / sampleRate;
 
         for (let i = 0; i < dataPoints; i += sampleRate) {
           const rPx = imageData[i];
@@ -75,11 +81,21 @@ const CanvasImage: FC<CanvasImageProps> = ({ palette, dispatch }) => {
           const bPx = imageData[i + 2];
           // const a = imageData[i + 3]; // this is the alpha channel; can be accounted for when transparency
 
-          imagePxGroups.current.push({ r: rPx, g: gPx, b: bPx, i: i });
+          imagePxGroups.current.push({
+            r: rPx,
+            g: gPx,
+            b: bPx,
+            i: i,
+            // xy: getXY(i),
+          });
           channelTotal.current.r += rPx;
           channelTotal.current.g += gPx;
           channelTotal.current.b += bPx;
         }
+        dispatch({
+          type: 'setCurrentImageData',
+          payload: imagePxGroups.current,
+        });
         // console.log(dataPoints, imagePxGroups.current);
 
         const getDominantChannel = () => {
@@ -101,6 +117,7 @@ const CanvasImage: FC<CanvasImageProps> = ({ palette, dispatch }) => {
         //   channelTotal.current.g,
         //   channelTotal.current.b
         // );
+        console.log(imagePxGroups.current);
 
         imagePxGroups.current.sort(colorSort);
 
@@ -133,7 +150,7 @@ const CanvasImage: FC<CanvasImageProps> = ({ palette, dispatch }) => {
               r: acc.r + rgb.r / length,
               g: acc.g + rgb.g / length,
               b: acc.b + rgb.b / length,
-              xy: getXY(rgb.i),
+              xy: getPxGroupXY(rgb.i),
             }),
             { r: 0, g: 0, b: 0, xy: { xPos: 0, yPos: 0 } }
           );
@@ -160,6 +177,7 @@ const CanvasImage: FC<CanvasImageProps> = ({ palette, dispatch }) => {
       <Wrapper>
         <CanvasMarkers
           palette={palette}
+          currentImageData={currentImageData}
           canvasXY={canvasXY}
           canvasBound={canvasRef.current?.getBoundingClientRect()}
           dispatch={dispatch}

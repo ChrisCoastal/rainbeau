@@ -5,6 +5,8 @@ export const reducer = (state: appState, action: ReducerActions): appState => {
   switch (type) {
     case 'setImages':
       return { ...state, images: payload };
+    case 'setCurrentImageData':
+      return { ...state, currentImageData: payload };
     case 'addPalette':
       return { ...state, palette: [...state.palette, payload] };
     case 'replacePalette':

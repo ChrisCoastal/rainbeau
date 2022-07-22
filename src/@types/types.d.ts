@@ -1,12 +1,12 @@
 interface appState {
   images: {}[];
-  imageData: indexRgbType[];
+  currentImageData: indexRgbType[];
   palette: xyRgbType[];
   // markers: [];
 }
 
 interface ReducerActions {
-  type: 'setImages' | 'addPalette' | 'replacePalette';
+  type: 'setImages' | 'setCurrentImageData' | 'addPalette' | 'replacePalette';
   payload?: any;
 }
 

@@ -1,4 +1,4 @@
-import { COLOR_NAMES } from './config';
+import { COLOR_NAMES, RGBA_GROUP } from './config';
 
 export function rgbToHex(r: number, g: number, b: number) {
   let hexR = r.toString(16);
@@ -53,24 +53,59 @@ export function rgbToHsl(rgbColor: { r: number; g: number; b: number }) {
 }
 
 // translate canvas index (from getImageData()) to x y values on the canvas
-export const getXY = (index: number) => {
-  const yPos = (index / 2000) * 0.4; // channel values per width * px per width: ;
-  const xPos = (index % 2000) * 0.4;
+export const getPxGroupXY = (index: number) => {
+  const yPos = Math.floor((index / 2000) * 0.4); // channel values per width * px per width: ;
+  const xPos = Math.round((index % 2000) * 0.4);
 
   return { xPos, yPos };
 };
 
-export const getIndex = (xPos: number, yPos: number) => {
-  let index = (yPos * 2000) / 0.4;
-  if (yPos !== 800) index += xPos / 0.4;
+export const getPxGroupIndex = (xPos: number, yPos: number) => {
+  let rgbIndex = (yPos * 2000) / 0.4;
+  if (xPos !== 800) rgbIndex += xPos / 0.4;
+  let index = Math.round(rgbIndex / RGBA_GROUP);
+
+  // for (let i = 0; i < 4; i++) {
+  //   if (index % 4 !== 0) index++;
+  // }
+
   // const yPos = Math.floor((index / 2000) * 0.4); // channel values per width * px per width
   // const xPos = Math.round((index % 2000) * 0.4);
-  return Math.round(index);
+  return index;
 };
 
-export const getColorAtIndexRGB = () => {
-  return;
-};
+// export const getRgbAtPxGroup = (
+//   pxGroup = 4,
+//   sampleRate = 1,
+//   imageData: indexRgbType[]
+// ) => {
+//   let rgb = { r: 0, g: 0, b: 0 };
+//   for (let i = 0; i < pxGroup; i += sampleRate) {
+//     rgb.r = imageData[i];
+//     rgb.g = imageData[i + 1];
+//     rgb.b = imageData[i + 2];
+//   }
+// };
+
+// export const getImagePx = () => {
+
+// for (let i = 0; i < dataPoints; i += sampleRate) {
+//   const rPx = imageData[i];
+//   const gPx = imageData[i + 1];
+//   const bPx = imageData[i + 2];
+//   // const a = imageData[i + 3]; // this is the alpha channel; can be accounted for when transparency
+
+//   imagePxGroups.current.push({
+//     r: rPx,
+//     g: gPx,
+//     b: bPx,
+//     i: i,
+//     // xy: getXY(i),
+//   });
+//   channelTotal.current.r += rPx;
+//   channelTotal.current.g += gPx;
+//   channelTotal.current.b += bPx;
+// }}
 
 const filterChannel = (
   channelValue: number,

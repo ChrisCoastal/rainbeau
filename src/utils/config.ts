@@ -1,6 +1,6 @@
 export const RGBA_GROUP = 4; // fixed jpg rgb px grouping (do not change)
 
-export const MEASUREMENT_PRECISION = 10; // can be adjusted
+export const MEASUREMENT_PRECISION = 1; // can be adjusted FIXME: check for num > 1
 
 export const CANVAS_RESOLUTION = { low: 400, med: 800, high: 1000, max: 1600 };
 
