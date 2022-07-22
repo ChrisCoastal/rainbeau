@@ -54,24 +54,19 @@ export function rgbToHsl(rgbColor: { r: number; g: number; b: number }) {
 
 // translate canvas index (from getImageData()) to x y values on the canvas
 export const getPxGroupXY = (index: number) => {
-  const yPos = Math.floor((index / 2000) * 0.4); // channel values per width * px per width: ;
-  const xPos = Math.round((index % 2000) * 0.4);
+  const yPos = index / 3200; // channel values per width * canvaswidth/imagepx*resolution ;
+  const xPos = (index % 3200) / 4; // channel values per width * canvaswidth/channelvalues/width ;
+  console.log({ xPos, yPos });
 
   return { xPos, yPos };
 };
 
 export const getPxGroupIndex = (xPos: number, yPos: number) => {
-  let rgbIndex = (yPos * 2000) / 0.4;
-  if (xPos !== 800) rgbIndex += xPos / 0.4;
-  let index = Math.round(rgbIndex / RGBA_GROUP);
+  let rgbIndex = yPos * 3200;
+  if (xPos !== 800) rgbIndex += xPos * 4;
+  const pxIndex = rgbIndex / RGBA_GROUP;
 
-  // for (let i = 0; i < 4; i++) {
-  //   if (index % 4 !== 0) index++;
-  // }
-
-  // const yPos = Math.floor((index / 2000) * 0.4); // channel values per width * px per width
-  // const xPos = Math.round((index % 2000) * 0.4);
-  return index;
+  return pxIndex;
 };
 
 // export const getRgbAtPxGroup = (

@@ -1,14 +1,22 @@
 interface appState {
   images: {}[];
   currentImageData: indexRgbType[];
-  palette: xyRgbType[];
+  markerPositions: MarkerPosition;
+  palette: PaletteType[];
   // markers: [];
 }
 
 interface ReducerActions {
-  type: 'setImages' | 'setCurrentImageData' | 'addPalette' | 'replacePalette';
+  type:
+    | 'setImages'
+    | 'setCurrentImageData'
+    | 'addPalette'
+    | 'replacePalette'
+    | 'setMarkerPosition';
   payload?: any;
 }
+
+type MarkerPosition = Array<[number, number]>;
 
 interface rgbType {
   r: number;
@@ -26,6 +34,11 @@ interface xyRgbType extends rgbType {
 }
 
 interface indexRgbType extends rgbType {
+  i: number;
+}
+
+interface PaletteType extends rgbType {
+  xy: coordinate;
   i: number;
 }
 

@@ -1,5 +1,5 @@
 // react
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useMemo } from 'react';
 
 // types
 import type { FC } from 'react';
@@ -20,7 +20,7 @@ import Marker from './Marker';
 import { Wrapper } from './CanvasMarkers.styles';
 
 interface CanvasMarkerProps {
-  palette: xyRgbType[];
+  palette: PaletteType[];
   currentImageData: indexRgbType[];
   canvasBound: DOMRect | undefined;
   canvasXY: (number | undefined)[];
@@ -39,7 +39,7 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
   canvasBound,
   dispatch,
 }) => {
-  const [mouseDown, setMouseDown] = useState<number>(-1);
+  const [clickOnMarker, setClickOnMarker] = useState<number>(-1);
   const [isMoving, setIsMoving] = useState<boolean>(false);
   // const [prevMarkerPos, setPrevMarkerPos] = useState<MarkerPos>({ x, y });
   // const [markerPos, setMarkerPos] = useState<MarkerPos>({ x, y });
@@ -55,21 +55,21 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
 
   // }, [xPos, yPos]);
 
-  const clickHandler = (e: React.MouseEvent, num: number) => {
+  const clickHandler = (e: React.MouseEvent, num: number, clickPos = null) => {
     // console.log('mouseevent', e, num);
-    if (e.type === 'mouseenter' && mouseDown === num) return;
-    if (e.type === 'mousedown') setMouseDown(num);
+    if (e.type === 'mouseenter' && clickOnMarker === num) return;
+    if (e.type === 'mousedown') setClickOnMarker(num);
     if (
       e.type === 'mouseenter' ||
       e.type === 'mouseleave' ||
       e.type === 'mouseup'
     )
-      setMouseDown(-1);
+      setClickOnMarker(-1);
   };
 
   const moveMarkerHandler = (e: React.MouseEvent) => {
-    if (mouseDown === -1) return;
-    const marker = mouseDown;
+    if (clickOnMarker === -1) return;
+    const marker = clickOnMarker;
     e.preventDefault();
     e.stopPropagation();
     const MAX_XY = 800;
@@ -82,6 +82,17 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
     // isMoving && setPrevMarkerPos({ x, y });
     // isMoving &&
     //   setMarkerPos((prev) => ({ x: prev.x + mouseX, y: prev.y + mouseY }));
+
+    // if (
+    //   palette[marker].xy.xPos + mouseX > MAX_XY ||
+    //   palette[marker].xy.xPos + mouseX < MIN_XY
+    // )
+    //   return;
+    // if (
+    //   palette[marker].xy.yPos + mouseY > MAX_XY ||
+    //   palette[marker].xy.yPos + mouseY < MIN_XY
+    // )
+    //   return;
     console.log(mouseX, mouseY);
 
     const updatedPalette = [...palette];
@@ -110,8 +121,8 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
     console.log('UPDATED COLOR', updatedColor);
 
     const { r, g, b } = updatedColor;
-    const { xy } = updatedPalette[marker];
-    const updated = { r, g, b, xy };
+    const { i, xy } = updatedPalette[marker];
+    const updated = { r, g, b, i, xy };
 
     updatedPalette[marker] = updated;
 
@@ -121,6 +132,7 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
     dispatch({ type: 'replacePalette', payload: updatedPalette });
   };
 
+  // FIXME: all markers rerender on each update
   const markersPos = palette.map((marker, index) => {
     const { xPos, yPos } = marker.xy;
     console.log(palette, xPos, yPos);

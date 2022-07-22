@@ -22,7 +22,7 @@ import { getPxGroupXY } from '../../utils/helpers';
 import { Wrapper, Canvas, ImageFallback } from './CanvasImage.styles';
 
 interface CanvasImageProps {
-  palette: xyRgbType[];
+  palette: PaletteType[];
   currentImageData: indexRgbType[];
   dispatch: React.Dispatch<ReducerActions>;
 }
@@ -51,14 +51,20 @@ const CanvasImage: FC<CanvasImageProps> = ({
       const ctx = canvasCtxRef.current;
 
       // define canvas resolution
-      ctx!.canvas.width = CANVAS_RESOLUTION.high;
-      ctx!.canvas.height = CANVAS_RESOLUTION.high;
+      ctx!.canvas.width = CANVAS_RESOLUTION.med;
+      ctx!.canvas.height = CANVAS_RESOLUTION.med;
 
       const base_image = new Image();
       base_image.setAttribute('crossOrigin', 'anonymous');
       base_image.onload = () => {
         // drawImage(image, startx, starty, widthx, widthy)
         ctx?.drawImage(base_image, 0, 0, ctx.canvas.width, ctx.canvas.height);
+
+        // dev test marker accuracy
+        // ctx!.fillStyle = '#FF0000';
+        // ctx!.fillRect(0, 0, 400, 800);
+        // ctx!.fillStyle = '#00FF00';
+        // ctx!.fillRect(400, 0, 800, 800);
         const imageData = ctx!.getImageData(
           0,
           0,
@@ -71,6 +77,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
 
         // get rgba data for selected image area
         const dataPoints = imageData.length;
+
         const sampleRate = RGBA_GROUP * MEASUREMENT_PRECISION;
 
         // const pxMeasuredPerChannel = dataPoints / sampleRate;
@@ -92,6 +99,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
           channelTotal.current.g += gPx;
           channelTotal.current.b += bPx;
         }
+        console.log(imageData, dataPoints, imagePxGroups.current);
         dispatch({
           type: 'setCurrentImageData',
           payload: imagePxGroups.current,
@@ -117,9 +125,8 @@ const CanvasImage: FC<CanvasImageProps> = ({
         //   channelTotal.current.g,
         //   channelTotal.current.b
         // );
-        console.log(imagePxGroups.current);
 
-        imagePxGroups.current.sort(colorSort);
+        // imagePxGroups.current.sort(colorSort);
 
         // comparator
         function colorSort(a: rgbType, b: rgbType) {
@@ -132,7 +139,6 @@ const CanvasImage: FC<CanvasImageProps> = ({
 
           return 0;
         }
-        console.log('sampled', imagePxGroups.current.length);
 
         // const middle = allPxColor.current.r.length / 2;
         // const MEDIAN = { lower: 1 / 2, upper: 1 / 2 + 1 };
@@ -143,17 +149,21 @@ const CanvasImage: FC<CanvasImageProps> = ({
         };
         // markers.push(imagePxGroups.current[0]); //FIXME:
 
-        const rgbValue: xyRgbType = imagePxGroups.current
-          .slice(sampleSize.lowerLimit, sampleSize.upperLimit)
-          .reduce(
-            (acc, rgb, _, { length }) => ({
-              r: acc.r + rgb.r / length,
-              g: acc.g + rgb.g / length,
-              b: acc.b + rgb.b / length,
-              xy: getPxGroupXY(rgb.i),
-            }),
-            { r: 0, g: 0, b: 0, xy: { xPos: 0, yPos: 0 } }
-          );
+        // GET MEDIAN COLOR
+        // const rgbAvgValue: xyRgbType = imagePxGroups.current
+        //   .slice(sampleSize.lowerLimit, sampleSize.upperLimit)
+        //   .reduce(
+        //     (acc, rgb, _, { length }) => ({
+        //       r: acc.r + rgb.r / length,
+        //       g: acc.g + rgb.g / length,
+        //       b: acc.b + rgb.b / length,
+        //       xy: getPxGroupXY(rgb.i),
+        //     }),
+        //     { r: 0, g: 0, b: 0, xy: { xPos: 0, yPos: 0 } }
+        //   );
+        const centerPx =
+          imagePxGroups.current[imagePxGroups.current.length * 0.5];
+        const rgbValue = { ...centerPx, xy: getPxGroupXY(centerPx.i) };
 
         console.log(rgbValue);
         console.log(canvasRef.current?.getBoundingClientRect());
@@ -168,9 +178,9 @@ const CanvasImage: FC<CanvasImageProps> = ({
     // update when image is URL is passed from props
   }, []);
 
-  useEffect(() => {
-    console.log('PALETTE CHANGE', palette);
-  }, [palette]);
+  // useEffect(() => {
+  //   console.log('PALETTE CHANGE', palette);
+  // }, [palette]);
 
   return (
     <>

@@ -17,7 +17,8 @@ import Credit from '../Credit/Credit';
 interface MainViewProps {
   images: {}[];
   currentImageData: indexRgbType[];
-  palette: xyRgbType[];
+  palette: PaletteType[];
+  markerPos: MarkerPosition;
   dispatch: React.Dispatch<ReducerActions>;
 }
 
@@ -27,14 +28,12 @@ const MainView: FC<MainViewProps> = ({
   palette,
   dispatch,
 }) => {
-  // const [color, setColor] = useState<rgbType>({ r: 0, g: 0, b: 0 });
   const CardSx = {
     position: 'absolute',
     top: '0',
     left: '0',
     maxWidth: '100%',
     maxHeight: '100%',
-    // transform: 'translate(-50%, -50%)',
     borderRadius: '8px',
     boxShadow: '0 0.8rem 2rem 0 #3333333e',
     transition: 'all 1.2s ease',

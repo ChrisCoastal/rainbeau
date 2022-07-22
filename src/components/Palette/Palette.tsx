@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Wrapper, PaletteItemsContainer } from './Palette.styles';
 
 interface PaletteProps {
-  palette: xyRgbType[];
+  palette: PaletteType[];
 }
 
 const Palette: FC<PaletteProps> = ({ palette }) => {
