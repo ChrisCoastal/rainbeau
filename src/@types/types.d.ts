@@ -1,6 +1,6 @@
 interface appState {
   images: {}[];
-  currentImageData: indexRgbType[];
+  currentImageData: IndexedPxColor[];
   markerPositions: MarkerPosition;
   palette: PaletteType[];
   // markers: [];
@@ -10,7 +10,7 @@ interface ReducerActions {
   type:
     | 'setImages'
     | 'setCurrentImageData'
-    | 'addPalette'
+    | 'addMarker'
     | 'replacePalette'
     | 'setMarkerPosition';
   payload?: any;
@@ -22,6 +22,16 @@ interface rgbType {
   r: number;
   g: number;
   b: number;
+}
+
+interface hslType {
+  h: number;
+  s: number;
+  l: number;
+}
+
+interface IndexedPxColor extends rgbType, hslType {
+  i: number;
 }
 
 interface coordinate {

@@ -6,6 +6,10 @@ export const Wrapper = styled.div`
   border-radius: 6px;
   border: solid 1px #ddd;
 `;
+export const PaletteActions = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
 
 export const PaletteItemsContainer = styled.div`
   overflow-y: scroll;

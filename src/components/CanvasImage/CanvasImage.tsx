@@ -16,7 +16,11 @@ import {
 } from '../../utils/config';
 
 // helpers
-import { getPxGroupXY } from '../../utils/helpers';
+import {
+  getPxGroupXY,
+  rgbToHsl,
+  getDominantChannel,
+} from '../../utils/helpers';
 
 // styles
 import { Wrapper, Canvas, ImageFallback } from './CanvasImage.styles';
@@ -40,9 +44,13 @@ const CanvasImage: FC<CanvasImageProps> = ({
   ];
   console.log(palette);
 
-  const imagePxGroups = useRef<indexRgbType[]>([]);
-  // const imagePxGroups = useRef<indexRgbType[]>([]);
+  const sampledPxData = useRef<IndexedPxColor[]>([]);
+  // const sampledPxData = useRef<indexRgbType[]>([]);
   const channelTotal = useRef<rgbType>({ r: 0, g: 0, b: 0 });
+
+  const createCanvas = () => {
+    return;
+  };
 
   // create initial markers
   useEffect(() => {
@@ -56,6 +64,8 @@ const CanvasImage: FC<CanvasImageProps> = ({
 
       const base_image = new Image();
       base_image.setAttribute('crossOrigin', 'anonymous');
+
+      // after image is loaded
       base_image.onload = () => {
         // drawImage(image, startx, starty, widthx, widthy)
         ctx?.drawImage(base_image, 0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -72,7 +82,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
           ctx!.canvas.height
         ).data;
 
-        imagePxGroups.current = []; // reset from previous image
+        sampledPxData.current = []; // reset from previous image
         channelTotal.current = { r: 0, g: 0, b: 0 }; // reset from previous image
 
         // get rgba data for selected image area
@@ -83,38 +93,26 @@ const CanvasImage: FC<CanvasImageProps> = ({
         // const pxMeasuredPerChannel = dataPoints / sampleRate;
 
         for (let i = 0; i < dataPoints; i += sampleRate) {
-          const rPx = imageData[i];
-          const gPx = imageData[i + 1];
-          const bPx = imageData[i + 2];
-          // const a = imageData[i + 3]; // this is the alpha channel; can be accounted for when transparency
+          const r = imageData[i];
+          const g = imageData[i + 1];
+          const b = imageData[i + 2];
+          // const a = imageData[i + 3]; // this is the alpha channel; can be accounted for if transparency
+          const { h, s, l } = rgbToHsl({ r, g, b });
 
-          imagePxGroups.current.push({
-            r: rPx,
-            g: gPx,
-            b: bPx,
-            i: i,
-            // xy: getXY(i),
-          });
-          channelTotal.current.r += rPx;
-          channelTotal.current.g += gPx;
-          channelTotal.current.b += bPx;
+          //prettier-ignore
+          sampledPxData.current.push({r, g, b, h, s, l, i});
+          channelTotal.current.r += r;
+          channelTotal.current.g += g;
+          channelTotal.current.b += b;
         }
-        console.log(imageData, dataPoints, imagePxGroups.current);
+        console.log(imageData, dataPoints, sampledPxData.current);
         dispatch({
           type: 'setCurrentImageData',
-          payload: imagePxGroups.current,
+          payload: sampledPxData.current,
         });
-        // console.log(dataPoints, imagePxGroups.current);
+        // console.log(dataPoints, sampledPxData.current);
 
-        const getDominantChannel = () => {
-          const { r, g, b } = channelTotal.current;
-          if (r >= g && r >= b) return 'r';
-          if (g >= r && g >= b) return 'g';
-          if (b >= g && b >= r) return 'b';
-          return 'r';
-        };
-
-        const dominantChannel = getDominantChannel();
+        const dominantChannel = getDominantChannel(channelTotal.current);
         // const chanMax = Math.max(
         //   channelTotal.current.r,
         //   channelTotal.current.g,
@@ -126,7 +124,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
         //   channelTotal.current.b
         // );
 
-        // imagePxGroups.current.sort(colorSort);
+        // sampledPxData.current.sort(colorSort);
 
         // comparator
         function colorSort(a: rgbType, b: rgbType) {
@@ -144,13 +142,13 @@ const CanvasImage: FC<CanvasImageProps> = ({
         // const MEDIAN = { lower: 1 / 2, upper: 1 / 2 + 1 };
         // const MID_AVG = { lower: 1 / 3, upper: 2 / 3 };
         const sampleSize = {
-          lowerLimit: Math.floor(imagePxGroups.current.length * 0.5),
-          upperLimit: Math.floor(imagePxGroups.current.length * 0.5) + 1,
+          lowerLimit: Math.floor(sampledPxData.current.length * 0.5),
+          upperLimit: Math.floor(sampledPxData.current.length * 0.5) + 1,
         };
-        // markers.push(imagePxGroups.current[0]); //FIXME:
+        // markers.push(sampledPxData.current[0]); //FIXME:
 
         // GET MEDIAN COLOR
-        // const rgbAvgValue: xyRgbType = imagePxGroups.current
+        // const rgbAvgValue: xyRgbType = sampledPxData.current
         //   .slice(sampleSize.lowerLimit, sampleSize.upperLimit)
         //   .reduce(
         //     (acc, rgb, _, { length }) => ({
@@ -162,18 +160,18 @@ const CanvasImage: FC<CanvasImageProps> = ({
         //     { r: 0, g: 0, b: 0, xy: { xPos: 0, yPos: 0 } }
         //   );
         const centerPx =
-          imagePxGroups.current[imagePxGroups.current.length * 0.5];
+          sampledPxData.current[sampledPxData.current.length * 0.5];
         const rgbValue = { ...centerPx, xy: getPxGroupXY(centerPx.i) };
 
         console.log(rgbValue);
         console.log(canvasRef.current?.getBoundingClientRect());
 
-        dispatch({ type: 'addPalette', payload: rgbValue });
+        dispatch({ type: 'addMarker', payload: rgbValue });
       };
 
       // asign image src to canvas context
       // base_image.src = redImage;
-      base_image.src = purpleImage;
+      base_image.src = redImage;
     }
     // update when image is URL is passed from props
   }, []);
