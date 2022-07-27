@@ -1,5 +1,6 @@
+// state and reducer
 interface appState {
-  images: {}[];
+  images: Image[];
   currentImageData: IndexedPxColor[];
   markerPositions: MarkerPosition;
   palette: PaletteType[];
@@ -16,6 +17,48 @@ interface ReducerActions {
   payload?: any;
 }
 
+// API response
+interface APIImageData {
+  alt_description: string | null;
+  description: string | null;
+  blur_hash: string;
+  color: string; // HEX
+  height: number;
+  width: number;
+  id: string;
+  links: {
+    download: string;
+  };
+  urls: {
+    full: string;
+    regular: string; // use for canvas
+    thumb: string;
+  };
+  user: {
+    name: string;
+    username: string;
+    portfolio_url: string;
+  };
+  [key: string]: string | number | null;
+}
+
+type APIResponse = APIImageData[];
+
+// Image
+interface Image {
+  altText: string | null;
+  blurImage: string;
+  color: string; // HEX
+  imageDimensions: { x: image.width; y: image.height };
+  imageURL: string;
+  imageThumb: string;
+  downloadLink: string;
+  id: string;
+  artist: string | null;
+  artistLink: string | null;
+}
+
+// px and markers
 type MarkerPosition = Array<[number, number]>;
 
 interface rgbType {

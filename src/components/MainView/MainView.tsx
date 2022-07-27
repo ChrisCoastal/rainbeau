@@ -15,7 +15,7 @@ import Actions from '../Actions/Actions';
 import Credit from '../Credit/Credit';
 
 interface MainViewProps {
-  images: {}[];
+  images: Image[];
   currentImageData: indexRgbType[];
   palette: PaletteType[];
   markerPos: MarkerPosition;
@@ -58,6 +58,7 @@ const MainView: FC<MainViewProps> = ({
           <Card sx={CardSx}>
             <CardContent sx={{ p: '0' }}>
               <CanvasImage
+                images={images}
                 palette={palette}
                 currentImageData={currentImageData}
                 dispatch={dispatch}

@@ -109,6 +109,50 @@ export const getDominantChannel = (rgbChannels: rgbType) => {
   if (b >= g && b >= r) return 'b';
   return 'r';
 };
+// TODO: is this cleaner?
+// const chanMax = Math.max(
+//   channelTotal.current.r,
+//   channelTotal.current.g,
+//   channelTotal.current.b
+// );
+// const chanMin = Math.min(
+//   channelTotal.current.r,
+//   channelTotal.current.g,
+//   channelTotal.current.b
+// );
+
+// export const getSortedPx = ( imagePx: IndexedPxColor[], sortby: keyof IndexedPxColor, ) => {
+//   imagePx.sort(pxSort)
+
+//   // comparator
+//   function pxSort(a: rgbType, b: rgbType) {
+//     if (a[dominantChannel] < b[dominantChannel]) {
+//       return -1;
+//     }
+//     if (a[dominantChannel] > b[dominantChannel]) {
+//       return 1;
+//     }
+//     return 0;
+//   }
+//   return
+// }
+
+export const getMedianColor = (
+  imagePx: IndexedPxColor[],
+  lowerLimit: number,
+  upperLimit: number
+) => {
+  if (imagePx.length < upperLimit || lowerLimit < 0) return;
+  imagePx.slice(lowerLimit, upperLimit).reduce(
+    (acc, rgb, _, { length }) => ({
+      r: acc.r + rgb.r / length,
+      g: acc.g + rgb.g / length,
+      b: acc.b + rgb.b / length,
+      xy: getPxGroupXY(rgb.i),
+    }),
+    { r: 0, g: 0, b: 0, xy: { xPos: 0, yPos: 0 } }
+  );
+};
 
 const filterChannel = (
   channelValue: number,
