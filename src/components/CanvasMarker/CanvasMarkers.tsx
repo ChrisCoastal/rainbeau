@@ -8,7 +8,7 @@ import type { FC } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 // helpers
-import { getPxGroupIndex, getPxGroupXY } from '../../utils/helpers';
+import { getPxGroupIndex, getPxGroupXY, rgbToHsl } from '../../utils/helpers';
 
 // config
 import { CANVAS_RESOLUTION, RGBA_GROUP } from '../../utils/config';
@@ -40,7 +40,7 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
   dispatch,
 }) => {
   const [clickOnMarker, setClickOnMarker] = useState<number>(-1);
-  const [isMoving, setIsMoving] = useState<boolean>(false);
+  // const [isMoving, setIsMoving] = useState<boolean>(false);
   // const [prevMarkerPos, setPrevMarkerPos] = useState<MarkerPos>({ x, y });
   // const [markerPos, setMarkerPos] = useState<MarkerPos>({ x, y });
 
@@ -122,8 +122,9 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
     console.log('UPDATED COLOR', updatedColor);
 
     const { r, g, b } = updatedColor;
+    const { h, s, l } = rgbToHsl({ r, g, b });
     const { i, xy } = updatedPalette[marker];
-    const updated = { r, g, b, i, xy };
+    const updated = { r, g, b, h, s, l, i, xy };
 
     updatedPalette[marker] = updated;
 
@@ -136,7 +137,7 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
   // FIXME: all markers rerender on each update
   const markersPos = palette.map((marker, index) => {
     const { xPos, yPos } = marker.xy;
-    console.log(palette, xPos, yPos);
+    console.log(xPos, yPos);
 
     return (
       <Marker
