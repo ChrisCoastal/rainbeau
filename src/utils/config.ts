@@ -264,15 +264,7 @@ export const COLOR_NAMES = [
   { name: 'bright-pink', h: 330, s: 100, l: 50, r: 255, g: 0, b: 127 },
   { name: 'lavender-blush', h: 340, s: 100, l: 97, r: 255, g: 240, b: 245 },
   { name: 'pastel-pink', h: 346, s: 100, l: 91, r: 255, g: 209, b: 220 },
-  {
-    name: 'cherry-blossom-pink',
-    h: 348,
-    s: 100,
-    l: 86,
-    r: 255,
-    g: 183,
-    b: 197,
-  },
+  { name: 'sakura', h: 348, s: 100, l: 86, r: 255, g: 183, b: 197 },
   { name: 'bubble-gum', h: 349, s: 100, l: 88, r: 255, g: 193, b: 204 },
   { name: 'pink', h: 350, s: 100, l: 88, r: 255, g: 192, b: 203 },
 ];

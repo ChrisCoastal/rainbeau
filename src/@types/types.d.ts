@@ -2,9 +2,7 @@
 interface appState {
   images: Image[];
   currentImageData: IndexedPxColor[];
-  markerPositions: MarkerPosition;
   palette: PaletteType[];
-  // markers: [];
 }
 
 interface ReducerActions {
@@ -54,7 +52,7 @@ interface Image {
   imageThumb: string;
   downloadLink: string;
   id: string;
-  artist: string | null;
+  artistName: string | null;
   artistLink: string | null;
 }
 
@@ -75,6 +73,7 @@ interface hslType {
 
 interface IndexedPxColor extends rgbType, hslType {
   i: number;
+  xy: coordinate;
 }
 
 interface coordinate {

@@ -4,6 +4,10 @@ import React, { FC, useEffect, useState } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 
+// images
+import redImage from '../../images/brennan-ehrhardt-HALe2SmkWAI-unsplash.jpg';
+import purpleImage from '../../images/martin-brechtl-zs3HRrWW66A-unsplash.jpg';
+
 // components
 import CanvasImage from '../CanvasImage/CanvasImage';
 
@@ -18,7 +22,6 @@ interface MainViewProps {
   images: Image[];
   currentImageData: indexRgbType[];
   palette: PaletteType[];
-  markerPos: MarkerPosition;
   dispatch: React.Dispatch<ReducerActions>;
 }
 
@@ -28,6 +31,8 @@ const MainView: FC<MainViewProps> = ({
   palette,
   dispatch,
 }) => {
+  const [currentImage, setCurrentImage] = useState<number>(0);
+
   const CardSx = {
     position: 'absolute',
     top: '0',
@@ -42,13 +47,18 @@ const MainView: FC<MainViewProps> = ({
     // },
   };
 
+  function changeCanvasImage(indexStep: 1 | -1) {
+    setCurrentImage((prev) => prev + indexStep);
+  }
+
   const CardBackSx = {
     ...CardSx,
   };
 
-  const artist = {
-    name: 'SuperArtist',
-  };
+  const artist = images[currentImage]?.artistName ?? 'unknown artist';
+  const imageURL =
+    images[currentImage]?.imageURL ??
+    '../../images/martin-brechtl-zs3HRrWW66A-unsplash.jpg';
 
   return (
     <Wrapper>
@@ -58,7 +68,7 @@ const MainView: FC<MainViewProps> = ({
           <Card sx={CardSx}>
             <CardContent sx={{ p: '0' }}>
               <CanvasImage
-                images={images}
+                imageURL={imageURL}
                 palette={palette}
                 currentImageData={currentImageData}
                 dispatch={dispatch}
@@ -67,7 +77,7 @@ const MainView: FC<MainViewProps> = ({
           </Card>
           {/* <Card sx={CardBackSx}></Card> */}
         </FlipBox>
-        <Credit name={artist.name} />
+        <Credit name={artist} />
       </div>
       <ActionsBox>
         <Actions />

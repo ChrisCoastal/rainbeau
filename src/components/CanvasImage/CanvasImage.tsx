@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { FC, useCallback } from 'react';
 import React, { useRef, useEffect, useState } from 'react';
 
 // images
@@ -17,17 +17,13 @@ import {
 } from '../../utils/config';
 
 // helpers
-import {
-  getPxGroupXY,
-  rgbToHsl,
-  getDominantChannel,
-} from '../../utils/helpers';
+import { getPxGroupXY, rgbToHsl } from '../../utils/helpers';
 
 // styles
 import { Wrapper, Canvas, ImageFallback } from './CanvasImage.styles';
 
 interface CanvasImageProps {
-  images: Image[];
+  imageURL: string;
   palette: PaletteType[];
   currentImageData: indexRgbType[];
   dispatch: React.Dispatch<ReducerActions>;
@@ -125,6 +121,7 @@ const DUMMY_RESPONSE = [
 ];
 
 const CanvasImage: FC<CanvasImageProps> = ({
+  imageURL,
   palette,
   currentImageData,
   dispatch,
@@ -148,51 +145,76 @@ const CanvasImage: FC<CanvasImageProps> = ({
     return;
   };
 
-  function addMarker(imagePx: IndexedPxColor) {
-    dispatch({ type: 'addMarker', payload: imagePx });
-  }
+  const fetchImages = useCallback(async () => {
+    // const response = await fetch(
+    //   // TODO: add query
+    //   'https://api.unsplash.com/photos/random?count=1&orientation=squarish&client_id=CLIENTID',
+    //   {
+    //     method: 'GET',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       'Accept-Version': 'v1',
+    //     },
+    //   }
+    // );
+    // const data: APIResponse = await response.json();
+    // const data: APIResponse = DUMMY_RESPONSE;
+    const data = DUMMY_RESPONSE;
+    console.log(data);
+
+    const imageData = data.map((image) => ({
+      altText: image.alt_description || image.description,
+      blurImage: image.blur_hash,
+      color: image.color,
+      imageDimensions: { x: image.width, y: image.height },
+      imageURL: image.urls.full,
+      imageThumb: image.urls.thumb,
+      downloadLink: image.links.download,
+      id: image.id,
+      artistName: image.user.name || image.user.username,
+      artistLink: image.user.portfolio_url,
+    }));
+    console.log(imageData);
+
+    dispatch({ type: 'setImages', payload: imageData });
+  }, []);
+
+  const setImageDataState = useCallback((imageData: Uint8ClampedArray) => {
+    const dataPoints = imageData.length;
+    const sampleRate = RGBA_GROUP * MEASUREMENT_PRECISION;
+    // const pxMeasuredPerChannel = dataPoints / sampleRate;
+
+    for (let i = 0; i < dataPoints; i += sampleRate) {
+      const r = imageData[i];
+      const g = imageData[i + 1];
+      const b = imageData[i + 2];
+      // const a = imageData[i + 3]; // this is the alpha channel; can be accounted for if transparency
+      const { h, s, l } = rgbToHsl({ r, g, b });
+      const xy = getPxGroupXY(i);
+
+      //prettier-ignore
+      sampledPxData.current.push({r, g, b, h, s, l, i, xy});
+      channelTotal.current.r += r;
+      channelTotal.current.g += g;
+      channelTotal.current.b += b;
+    }
+
+    dispatch({
+      type: 'setCurrentImageData',
+      payload: sampledPxData.current,
+    });
+  }, []);
 
   // get images from api
   useEffect(() => {
-    (async () => {
-      try {
-        // const response = await fetch();
-        // 'https://api.unsplash.com/photos/random?client_id=CLIENT_ID',
-        // TODO: add query
-        // 'https://api.unsplash.com/photos/random?count=1&orientation=squarish&client_id=CLIENT_ID',
-        // {
-        //   method: 'GET',
-        //   headers: {
-        //     'Content-Type': 'application/json',
-        //     'Accept-Version': 'v1',
-        //   },
-        // }
-        // const data: APIResponse= await response.json();
-        // const data: APIResponse = DUMMY_RESPONSE;
-        const data = DUMMY_RESPONSE;
-        const imageData = data.map((image) => ({
-          altText: image.alt_description || image.description,
-          blurImage: image.blur_hash,
-          color: image.color,
-          imageDimensions: { x: image.width, y: image.height },
-          imageURL: image.urls.full,
-          imageThumb: image.urls.thumb,
-          downloadLink: image.links.download,
-          id: image.id,
-          artist: image.user.name || image.user.username,
-          artistLink: image.user.portfolio_url,
-        }));
-        console.log(data, imageData);
-        dispatch({ type: 'setImages', payload: imageData });
-      } catch (error) {
-        console.log(error);
-      }
-    })();
-  }, []);
+    try {
+      fetchImages();
+    } catch (error) {
+      console.log(error);
+    }
+  }, [fetchImages]); // memoized
 
-  // create initial markers
   useEffect(() => {
-    !isLoading && setIsLoading(true);
     if (canvasRef.current) {
       canvasCtxRef.current = canvasRef.current.getContext('2d');
       const ctx = canvasCtxRef.current;
@@ -200,83 +222,72 @@ const CanvasImage: FC<CanvasImageProps> = ({
       // define canvas resolution
       ctx!.canvas.width = CANVAS_RESOLUTION.med;
       ctx!.canvas.height = CANVAS_RESOLUTION.med;
-
-      const canvasImage = new Image();
-      canvasImage.setAttribute('crossOrigin', 'anonymous');
-
-      // after image is loaded
-      canvasImage.onload = () => {
-        sampledPxData.current = []; // reset from previous image
-        channelTotal.current = { r: 0, g: 0, b: 0 }; // reset from previous image
-
-        // drawImage(image, startx, starty, widthx, widthy)
-        ctx?.drawImage(canvasImage, 0, 0, ctx.canvas.width, ctx.canvas.height);
-        setIsLoading(false);
-
-        const imageData = ctx!.getImageData(
-          0,
-          0,
-          ctx!.canvas.width,
-          ctx!.canvas.height
-        ).data;
-
-        // get rgba data for selected image area
-        const dataPoints = imageData.length;
-        const sampleRate = RGBA_GROUP * MEASUREMENT_PRECISION;
-        // const pxMeasuredPerChannel = dataPoints / sampleRate;
-
-        for (let i = 0; i < dataPoints; i += sampleRate) {
-          const r = imageData[i];
-          const g = imageData[i + 1];
-          const b = imageData[i + 2];
-          // const a = imageData[i + 3]; // this is the alpha channel; can be accounted for if transparency
-          const { h, s, l } = rgbToHsl({ r, g, b });
-
-          //prettier-ignore
-          sampledPxData.current.push({r, g, b, h, s, l, i});
-          channelTotal.current.r += r;
-          channelTotal.current.g += g;
-          channelTotal.current.b += b;
-        }
-        console.log(imageData, dataPoints, sampledPxData.current);
-
-        dispatch({
-          type: 'setCurrentImageData',
-          payload: sampledPxData.current,
-        });
-
-        const dominantChannel = getDominantChannel(channelTotal.current);
-
-        // const middle = allPxColor.current.r.length / 2;
-        // const MEDIAN = { lower: 1 / 2, upper: 1 / 2 + 1 };
-        // const MID_AVG = { lower: 1 / 3, upper: 2 / 3 };
-        const sampleSize = {
-          lowerLimit: Math.floor(sampledPxData.current.length * 0.5),
-          upperLimit: Math.floor(sampledPxData.current.length * 0.5) + 1,
-        };
-        // markers.push(sampledPxData.current[0]); //FIXME:
-
-        const centerPx =
-          sampledPxData.current[sampledPxData.current.length * 0.5];
-        const rgbValue = { ...centerPx, xy: getPxGroupXY(centerPx.i) };
-
-        // console.log(rgbValue);
-        console.log(canvasRef.current?.getBoundingClientRect());
-
-        addMarker(rgbValue);
-        // dispatch({ type: 'addMarker', payload: rgbValue });
-      };
-
-      // asign image src to canvas context
-      // canvasImage.src = redImage;
-      canvasImage.src = redImage;
     }
-    // update when image is URL is passed from props
   }, []);
 
-  // useEffect(() => {
-  //   console.log('PALETTE CHANGE', palette);
-  // }, [palette]);
+  const getInitialMarkerPositions = (imageData: IndexedPxColor[]) => {
+    const markers: IndexedPxColor[] = [];
+    const totalDataPoints = imageData.length; // 640000
+    // sort by hue
+    // const sortedPxGroups = getSortedPx([...imageData], 'h');
+    // console.log('SORTED', sortedPxGroups, 'UNSORTED', imageData);
+
+    for (let i = 0; i < 3; i++) {
+      const randomPx = Math.floor(Math.random() * totalDataPoints);
+      markers.push(imageData[randomPx]);
+    }
+
+    console.log('markersss', markers);
+
+    return markers;
+  };
+
+  const addMarker = useCallback(
+    (marker: IndexedPxColor) => {
+      dispatch({ type: 'addMarker', payload: marker });
+    },
+    [dispatch]
+  );
+
+  // load image to canvas and create initial markers
+  useEffect(() => {
+    setIsLoading(true);
+    if (!imageURL) return;
+
+    const ctx = canvasCtxRef.current;
+    const canvasImage = new Image();
+    // allow images from API
+    canvasImage.setAttribute('crossOrigin', 'anonymous');
+
+    // after image is loaded
+    canvasImage.onload = () => {
+      sampledPxData.current = []; // reset from previous image
+      channelTotal.current = { r: 0, g: 0, b: 0 }; // reset from previous image
+
+      // drawImage(image, startx, starty, widthx, widthy)
+      ctx?.drawImage(canvasImage, 0, 0, ctx.canvas.width, ctx.canvas.height);
+      setIsLoading(false);
+
+      console.log('Bound', canvasRef.current?.getBoundingClientRect());
+      // rgba [] from loaded image
+      const imageData = ctx!.getImageData(
+        0,
+        0,
+        ctx!.canvas.width,
+        ctx!.canvas.height
+      ).data;
+
+      setImageDataState(imageData);
+      const markers = getInitialMarkerPositions(sampledPxData.current);
+
+      // add initial markers
+      markers.map((marker) => addMarker(marker));
+    };
+
+    // asign image src to canvas context
+    canvasImage.src = imageURL;
+    // update when image is URL is passed from props
+  }, [imageURL, setImageDataState, addMarker]);
 
   return (
     <>

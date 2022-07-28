@@ -1,11 +1,19 @@
 import type { FC } from 'react';
 import { useState } from 'react';
 
+// hooks
+import useInput from '../../hooks/useInput';
+
 // components
 import Swatch from '../Swatch/Swatch';
 
+// mui
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+
 // helpers
-import { rgbToColorName, hslToColorName } from '../../utils/helpers';
+import { hslToColorName } from '../../utils/helpers';
 
 // styles
 import { Wrapper, SwatchContainer } from './PaletteItem.styles';
@@ -15,18 +23,23 @@ interface PaletteItemProps {
 }
 
 const PaletteItem: FC<PaletteItemProps> = ({ color }) => {
-  const [inputValue, setInputValue] = useState<string>(
-    color ? hslToColorName(color) : 'default-color-name'
+  const initialValue = color ? hslToColorName(color) : 'default-color-name';
+  const { inputValueHandler, inputValue, inputReset } = useInput(
+    // validateInput,
+    initialValue
   );
 
   return (
     <Wrapper>
       <SwatchContainer>
         <Swatch color={color} />
-        <input
-          value={inputValue}
-          onChange={(event) => setInputValue(event.target.value)}
-        ></input>
+        <input value={inputValue} onChange={inputValueHandler}></input>
+        {/* <Button onClick={inputReset}>x</Button> */}
+        <Tooltip title="clear color name">
+          <IconButton onClick={inputReset}>
+            <HighlightOffIcon />
+          </IconButton>
+        </Tooltip>
       </SwatchContainer>
       <div>{`rgb(
     ${color.r},

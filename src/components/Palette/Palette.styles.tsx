@@ -5,6 +5,7 @@ export const Wrapper = styled.div`
   padding: 1rem;
   border-radius: 6px;
   border: solid 1px #ddd;
+  overflow: hidden;
 `;
 export const PaletteActions = styled.div`
   display: flex;
@@ -12,6 +13,7 @@ export const PaletteActions = styled.div`
 `;
 
 export const PaletteItemsContainer = styled.div`
+  height: 100%;
   overflow-y: scroll;
   &not:first-of-type {
     padding-top: 0.8rem;

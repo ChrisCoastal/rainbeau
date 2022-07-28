@@ -28,7 +28,7 @@ const Palette: FC<PaletteProps> = ({ palette }) => {
       <PaletteActions>
         <p>Palette</p>
         <Tooltip title="add marker">
-          <IconButton>
+          <IconButton onClick={() => console.log('Add a marker')}>
             <AddCircleIcon />
           </IconButton>
         </Tooltip>

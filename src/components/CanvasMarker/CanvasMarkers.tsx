@@ -8,7 +8,7 @@ import type { FC } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 // helpers
-import { getPxGroupIndex } from '../../utils/helpers';
+import { getPxGroupIndex, getPxGroupXY } from '../../utils/helpers';
 
 // config
 import { CANVAS_RESOLUTION, RGBA_GROUP } from '../../utils/config';
@@ -114,6 +114,7 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
 
     // get color at new coordinates
     const { xPos, yPos } = updatedPalette[marker].xy;
+    // const { xPos, yPos } = getPxGroupXY(updatedPalette[marker].i); // if x,y not added to state
     const updatedIndex = getPxGroupIndex(xPos, yPos);
 
     console.log('NEW INDEX', updatedIndex);

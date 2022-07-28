@@ -56,7 +56,6 @@ export function rgbToHsl(rgbColor: { r: number; g: number; b: number }) {
 export const getPxGroupXY = (index: number) => {
   const yPos = index / 3200; // channel values per width * canvaswidth/imagepx*resolution ;
   const xPos = (index % 3200) / 4; // channel values per width * canvaswidth/channelvalues/width ;
-  console.log({ xPos, yPos });
 
   return { xPos, yPos };
 };
@@ -121,21 +120,24 @@ export const getDominantChannel = (rgbChannels: rgbType) => {
 //   channelTotal.current.b
 // );
 
-// export const getSortedPx = ( imagePx: IndexedPxColor[], sortby: keyof IndexedPxColor, ) => {
-//   imagePx.sort(pxSort)
+// export const getSortedPx = (
+//   imagePx: IndexedPxColor[],
+//   sortBy: keyof IndexedPxColor
+// ) => {
+//   const sortedPx = imagePx.sort(pxSort);
 
-//   // comparator
-//   function pxSort(a: rgbType, b: rgbType) {
-//     if (a[dominantChannel] < b[dominantChannel]) {
+//   // comparator (low to high sort)
+//   function pxSort(a: IndexedPxColor, b: IndexedPxColor) {
+//     if (a[sortBy] < b[sortBy]) {
 //       return -1;
 //     }
-//     if (a[dominantChannel] > b[dominantChannel]) {
+//     if (a[sortBy] > b[sortBy]) {
 //       return 1;
 //     }
 //     return 0;
 //   }
-//   return
-// }
+//   return sortedPx;
+// };
 
 export const getMedianColor = (
   imagePx: IndexedPxColor[],
@@ -247,7 +249,7 @@ const changeToWarmth = (color: string) => {
   else return 'cool';
 };
 
-export const hslToColorBasic = (paletteColor: IndexedPxColor) => {
+export const hslToColorDescription = (paletteColor: IndexedPxColor) => {
   const { h, s, l } = paletteColor;
   let color = hueToColor(h);
   let satur = saturationToColor(s);
@@ -268,23 +270,24 @@ export const hslToColorBasic = (paletteColor: IndexedPxColor) => {
     satur = 'neutral';
 };
 
-const hueToColor = (hue: number) => {
-  const hueName = [];
-  // if (hue > 342 && hue <= 12) return 'red';
-  // if (hue > 12 && hue <= 32) return 'orange';
-  // if (hue > 32 && hue <= 64) return 'yellow';
-  // if (hue > 64 && hue <= 164) return 'green';
-  // if (hue > 164 && hue <= 256) return 'blue';
-  // if (hue > 256 && hue <= 288) return 'purple';
-  // if (hue > 288 && hue <= 342) return 'pink';
-  if (hue > 338 && hue <= 18) hueName.push('red');
-  if (hue > 38 && hue <= 86) hueName.push('yellow');
-  if (hue > 160 && hue <= 256) hueName.push('blue');
-  if (hue > 10 && hue <= 46) hueName.push('orange');
-  if (hue > 66 && hue <= 166) hueName.push('green');
-  if (hue > 256 && hue <= 308) hueName.push('purple');
-  if (hue > 284 && hue <= 344) hueName.push('pink');
-  return hueName.join('-');
+export const hueToColor = (hue: number) => {
+  if (hue > 342 && hue <= 12) return 'red';
+  if (hue > 12 && hue <= 32) return 'orange';
+  if (hue > 32 && hue <= 64) return 'yellow';
+  if (hue > 64 && hue <= 164) return 'green';
+  if (hue > 164 && hue <= 256) return 'blue';
+  if (hue > 256 && hue <= 288) return 'purple';
+  if (hue > 288 && hue <= 342) return 'pink';
+  else return '';
+  // const hueName: string[] = [];
+  // if (hue > 338 && hue <= 18) hueName.push('red');
+  // if (hue > 38 && hue <= 86) hueName.push('yellow');
+  // if (hue > 160 && hue <= 256) hueName.push('blue');
+  // if (hue > 10 && hue <= 46) hueName.push('orange');
+  // if (hue > 66 && hue <= 166) hueName.push('green');
+  // if (hue > 256 && hue <= 308) hueName.push('purple');
+  // if (hue > 284 && hue <= 344) hueName.push('pink');
+  // return hueName.join('-');
 };
 
 const lightToColor = (light: number) => {

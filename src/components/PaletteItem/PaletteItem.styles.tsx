@@ -16,5 +16,6 @@ export const Wrapper = styled.div`
 
 export const SwatchContainer = styled.div`
   display: flex;
+  align-items: center;
   margin-bottom: 0.4rem;
 `;
