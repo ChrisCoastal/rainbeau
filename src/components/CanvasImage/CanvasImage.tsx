@@ -1,6 +1,9 @@
 import { FC, useCallback } from 'react';
 import React, { useRef, useEffect, useState } from 'react';
 
+// hooks
+import useAddMarkers from '../../hooks/useAddMarkers';
+
 // images
 import redImage from '../../images/brennan-ehrhardt-HALe2SmkWAI-unsplash.jpg';
 import purpleImage from '../../images/martin-brechtl-zs3HRrWW66A-unsplash.jpg';
@@ -25,6 +28,7 @@ import { Wrapper, Canvas, ImageFallback } from './CanvasImage.styles';
 interface CanvasImageProps {
   imageURL: string;
   paletteMarkers: PaletteMarkerXY[];
+  // addMarkers: (markerQty?: number) => PaletteMarkerXY[];
   currentImageData: IndexedPxColor[];
   dispatch: React.Dispatch<ReducerActions>;
 }
@@ -123,6 +127,7 @@ const DUMMY_RESPONSE = [
 const CanvasImage: FC<CanvasImageProps> = ({
   imageURL,
   paletteMarkers,
+  // addMarkers,
   currentImageData,
   dispatch,
 }) => {
@@ -299,6 +304,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
+  const newMarkers = useAddMarkers;
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
@@ -319,34 +325,26 @@ const CanvasImage: FC<CanvasImageProps> = ({
   // function addMarker(imagePx: IndexedPxColor) {
   //   dispatch({ type: 'addMarker', payload: imagePx });
   // }
-  const addMarker = useCallback(
-    (marker: IndexedPxColor) => {
-      dispatch({ type: 'addMarker', payload: marker });
+
+  const createMarkers = useCallback(
+    (indexedImagePx: IndexedPxColor[], markerQty: number = 3) => {
+      const markers: PaletteMarkerXY[] = [];
+      const totalPx = indexedImagePx.length; // 640000
+      // sort by hue
+      // const sortedPxGroups = getSortedPx([...indexedImagePx], 'h');
+      // console.log('SORTED', sortedPxGroups, 'UNSORTED', indexedImagePx);
+
+      for (let loop = 0; loop < markerQty; loop++) {
+        const randomIndex = Math.floor(Math.random() * totalPx);
+        const randomPx = indexedImagePx[randomIndex];
+        markers.push({ ...randomPx, xy: getPxGroupXY(randomPx.i) });
+      }
+
+      dispatch({ type: 'addMarker', payload: markers });
+      return markers;
     },
     [dispatch]
   );
-
-  const createInitialMarkerPositions = (
-    indexedImagePx: IndexedPxColor[],
-    markerQty: number = 3
-  ) => {
-    const markers: PaletteMarkerXY[] = [];
-    const totalPx = indexedImagePx.length; // 640000
-    // sort by hue
-    // const sortedPxGroups = getSortedPx([...indexedImagePx], 'h');
-    // console.log('SORTED', sortedPxGroups, 'UNSORTED', indexedImagePx);
-
-    // for (let i = 0; i < markerQty; i++) {
-    const randomIndex = Math.floor(Math.random() * totalPx);
-    const randomPx = indexedImagePx[randomIndex];
-
-    markers.push({ ...randomPx, xy: getPxGroupXY(randomPx.i) });
-    // }
-
-    console.log('markersss', markers, '\n imagePX', indexedImagePx);
-
-    return markers;
-  };
 
   const setImageDataState = useCallback(
     (imageData: Uint8ClampedArray) => {
@@ -418,7 +416,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
 
   // create initial markers
   useEffect(() => {
-    !isLoading && setIsLoading(true);
+    setIsLoading(true);
     if (canvasRef.current) {
       canvasCtxRef.current = canvasRef.current.getContext('2d');
       const ctx = canvasCtxRef.current;
@@ -449,31 +447,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
         ).data;
 
         const indexedImagePx = setImageDataState(imageData);
-        const markers = createInitialMarkerPositions(indexedImagePx);
-        // // get rgba data for selected image area
-        // const dataPoints = imageData.length;
-        // const sampleRate = RGBA_GROUP * MEASUREMENT_PRECISION;
-        // // const pxMeasuredPerChannel = dataPoints / sampleRate;
-
-        // for (let i = 0; i < dataPoints; i += sampleRate) {
-        //   const r = imageData[i];
-        //   const g = imageData[i + 1];
-        //   const b = imageData[i + 2];
-        //   // const a = imageData[i + 3]; // this is the alpha channel; can be accounted for if transparency
-        //   const { h, s, l } = rgbToHsl({ r, g, b });
-
-        //   //prettier-ignore
-        //   sampledPxData.current.push({r, g, b, h, s, l, i} as IndexedPxColor);
-        //   channelTotal.current.r += r;
-        //   channelTotal.current.g += g;
-        //   channelTotal.current.b += b;
-        // }
-        // console.log(imageData, dataPoints, sampledPxData.current);
-
-        // dispatch({
-        //   type: 'setCurrentImageData',
-        //   payload: sampledPxData.current,
-        // });
+        const markers = createMarkers(indexedImagePx);
 
         const sampleSize = {
           lowerLimit: Math.floor(sampledPxData.current.length * 0.5),
@@ -491,7 +465,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
         // addMarker(rgbValue);
         // dispatch({ type: 'addMarker', payload: rgbValue });
         //     // add initial markers
-        markers.map((marker) => addMarker(marker));
+        // markers.map((marker) => addMarker(marker));
       };
 
       // asign image src to canvas context
@@ -500,7 +474,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
       console.log(canvasImage.src);
     }
     // update when image is URL is passed from props
-  }, [imageURL]);
+  }, [imageURL, createMarkers, setImageDataState]);
 
   return (
     <>

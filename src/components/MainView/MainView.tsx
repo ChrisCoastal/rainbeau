@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 
 // mui
 import Card from '@mui/material/Card';
@@ -10,6 +10,9 @@ import purpleImage from '../../images/martin-brechtl-zs3HRrWW66A-unsplash.jpg';
 
 // components
 import CanvasImage from '../CanvasImage/CanvasImage';
+
+// helpers
+import { getPxGroupXY } from '../../utils/helpers';
 
 // config
 import { CANVAS_SIZE } from '../../utils/config';
@@ -50,9 +53,37 @@ const MainView: FC<MainViewProps> = ({
     // },
   };
 
-  function changeCanvasImage(indexStep: 1 | -1) {
+  const changeCanvasImage = (indexStep: 1 | -1) => {
     setCurrentImage((prev) => prev + indexStep);
-  }
+  };
+
+  const addMarkerHandler = useCallback(
+    (
+      _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+      markerQty: number = 1
+    ) => {
+      if (!currentImageData) return [];
+      const markers: PaletteMarkerXY[] = [];
+      const totalPx = currentImageData.length; // 640000
+      // sort by hue
+      // const sortedPxGroups = getSortedPx([...currentImageData], 'h');
+      // console.log('SORTED', sortedPxGroups, 'UNSORTED', currentImageData);
+      console.log(markerQty);
+
+      for (let loop = 0; loop < markerQty; loop++) {
+        const randomIndex = Math.floor(Math.random() * totalPx);
+        const randomPx = currentImageData[randomIndex];
+        console.log(randomPx);
+
+        markers.push({ ...randomPx, xy: getPxGroupXY(randomPx.i) });
+      }
+      console.log(totalPx, markers);
+
+      dispatch({ type: 'addMarker', payload: markers });
+      return markers;
+    },
+    [dispatch, currentImageData]
+  );
 
   const CardBackSx = {
     ...CardSx,
@@ -71,6 +102,7 @@ const MainView: FC<MainViewProps> = ({
               <CanvasImage
                 imageURL={imageURL}
                 paletteMarkers={paletteMarkers}
+                // addMarkers={addMarkers}
                 currentImageData={currentImageData}
                 dispatch={dispatch}
               />
@@ -82,7 +114,10 @@ const MainView: FC<MainViewProps> = ({
       </div>
       <ActionsBox>
         <Actions />
-        <Palette paletteMarkers={paletteMarkers} />
+        <Palette
+          paletteMarkers={paletteMarkers}
+          addMarkerHandler={addMarkerHandler}
+        />
         <Output />
       </ActionsBox>
     </Wrapper>

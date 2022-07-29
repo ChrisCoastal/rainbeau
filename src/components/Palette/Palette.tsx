@@ -20,15 +20,19 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 interface PaletteProps {
   paletteMarkers: PaletteMarkerXY[];
+  addMarkerHandler: (
+    _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    markerQty?: number
+  ) => PaletteMarkerXY[];
 }
 
-const Palette: FC<PaletteProps> = ({ paletteMarkers }) => {
+const Palette: FC<PaletteProps> = ({ paletteMarkers, addMarkerHandler }) => {
   return (
     <Wrapper>
       <PaletteActions>
         <p>Palette</p>
         <Tooltip title="add marker">
-          <IconButton onClick={() => console.log('Add a marker')}>
+          <IconButton onClick={addMarkerHandler}>
             <AddCircleIcon />
           </IconButton>
         </Tooltip>
