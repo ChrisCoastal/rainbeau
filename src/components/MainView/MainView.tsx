@@ -11,6 +11,9 @@ import purpleImage from '../../images/martin-brechtl-zs3HRrWW66A-unsplash.jpg';
 // components
 import CanvasImage from '../CanvasImage/CanvasImage';
 
+// config
+import { CANVAS_SIZE } from '../../utils/config';
+
 // styles
 import { Wrapper, FlipBox, ActionsBox } from './MainView.styles';
 import Palette from '../Palette/Palette';
@@ -56,14 +59,12 @@ const MainView: FC<MainViewProps> = ({
   };
 
   const artist = images[currentImage]?.artistName ?? 'unknown artist';
-  const imageURL =
-    images[currentImage]?.imageURL ??
-    '../../images/martin-brechtl-zs3HRrWW66A-unsplash.jpg';
+  const imageURL = images[currentImage]?.imageURL;
 
   return (
     <Wrapper>
       <div>
-        <FlipBox>
+        <FlipBox pxDimension={CANVAS_SIZE.med}>
           {/* <AvgColor bgColor={color}>Color</AvgColor> */}
           <Card sx={CardSx}>
             <CardContent sx={{ p: '0' }}>

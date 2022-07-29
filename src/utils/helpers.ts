@@ -1,4 +1,4 @@
-import { COLOR_NAMES, RGBA_GROUP } from './config';
+import { COLOR_NAMES, RGBA_GROUP, CANVAS_SIZE } from './config';
 
 export function rgbToHex(r: number, g: number, b: number) {
   let hexR = r.toString(16);
@@ -54,8 +54,8 @@ export function rgbToHsl(rgbColor: { r: number; g: number; b: number }) {
 
 // translate canvas index (from getImageData()) to x y values on the canvas
 export const getPxGroupXY = (index: number) => {
-  const yPos = Math.floor(index / 3200); // channel values per width * canvaswidth/imagepx*resolution ;
-  const xPos = (index % 3200) / 4; // channel values per width * canvaswidth/channelvalues/width ;
+  const yPos = Math.floor((index / CANVAS_SIZE.med) * RGBA_GROUP);
+  const xPos = ((index % CANVAS_SIZE.med) * RGBA_GROUP) / RGBA_GROUP; // channel values per width * canvaswidth/channelvalues/width ;
 
   return { xPos, yPos };
 };

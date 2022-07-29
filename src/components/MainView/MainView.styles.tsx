@@ -1,7 +1,13 @@
 import styled from '@emotion/styled';
 
+import { REM_RATIO } from '../../utils/config';
+
 interface WrapperProps {
   bgColor: { r: number; g: number; b: number }[];
+}
+
+interface FlipBoxProps {
+  pxDimension: number;
 }
 
 /* background-color: ${(props) => props.bgColor}; */
@@ -22,11 +28,11 @@ export const Wrapper = styled.div`
   height: 100vh;
 `;
 
-export const FlipBox = styled.div`
+export const FlipBox = styled.div<FlipBoxProps>`
   position: relative;
   perspective: 150rem;
-  width: 50rem;
-  height: 50rem;
+  width: ${(props) => props.pxDimension / REM_RATIO}rem;
+  height: ${(props) => props.pxDimension / REM_RATIO}rem;
 `;
 
 export const ActionsBox = styled.section`

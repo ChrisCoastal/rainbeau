@@ -1,8 +1,11 @@
+export const REM_RATIO = 16;
+
 export const RGBA_GROUP = 4; // fixed jpg rgb px grouping (do not change)
 
 export const MEASUREMENT_PRECISION = 1; // can be adjusted FIXME: check for num > 1
 
 export const CANVAS_RESOLUTION = { low: 400, med: 800, high: 1000, max: 1600 };
+export const CANVAS_SIZE = { low: 400, med: 800, high: 1000, max: 1600 };
 
 export const MEDIAN = { lower: 1 / 2, upper: 1 / 2 + 1 };
 
