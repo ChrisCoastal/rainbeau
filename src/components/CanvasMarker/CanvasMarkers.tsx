@@ -20,8 +20,8 @@ import Marker from './Marker';
 import { Wrapper } from './CanvasMarkers.styles';
 
 interface CanvasMarkerProps {
-  palette: PaletteType[];
-  currentImageData: indexRgbType[];
+  paletteMarkers: PaletteMarkerXY[];
+  currentImageData: IndexedPxColor[];
   canvasBound: DOMRect | undefined;
   canvasXY: (number | undefined)[];
   dispatch: React.Dispatch<ReducerActions>;
@@ -33,7 +33,7 @@ interface MarkerPos {
 }
 
 const CanvasMarkers: FC<CanvasMarkerProps> = ({
-  palette,
+  paletteMarkers,
   currentImageData,
   canvasXY,
   canvasBound,
@@ -95,7 +95,7 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
     //   return;
     console.log(mouseX, mouseY);
     if (mouseX === 0 && mouseY === 0) return;
-    const updatedPalette = [...palette];
+    const updatedPalette = [...paletteMarkers];
 
     // update xy
     updatedPalette[marker].xy = {
@@ -135,7 +135,7 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
   };
 
   // FIXME: all markers rerender on each update
-  const markersPos = palette.map((marker, index) => {
+  const markersPos = paletteMarkers.map((marker, index) => {
     const { xPos, yPos } = marker.xy;
     console.log(xPos, yPos);
 

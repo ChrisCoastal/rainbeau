@@ -54,7 +54,7 @@ export function rgbToHsl(rgbColor: { r: number; g: number; b: number }) {
 
 // translate canvas index (from getImageData()) to x y values on the canvas
 export const getPxGroupXY = (index: number) => {
-  const yPos = index / 3200; // channel values per width * canvaswidth/imagepx*resolution ;
+  const yPos = Math.floor(index / 3200); // channel values per width * canvaswidth/imagepx*resolution ;
   const xPos = (index % 3200) / 4; // channel values per width * canvaswidth/channelvalues/width ;
 
   return { xPos, yPos };
@@ -72,7 +72,7 @@ export const getPxGroupIndex = (xPos: number, yPos: number) => {
 // export const getRgbAtPxGroup = (
 //   pxGroup = 4,
 //   sampleRate = 1,
-//   imageData: indexRgbType[]
+//   imageData: IndexedPxColor[]
 // ) => {
 //   let rgb = { r: 0, g: 0, b: 0 };
 //   for (let i = 0; i < pxGroup; i += sampleRate) {
@@ -166,7 +166,7 @@ const filterChannel = (
     (colorName) => Math.abs(colorName[channelName] - channelValue) < 4
   );
 
-export function rgbToColorName(paletteColor: indexRgbType) {
+export function rgbToColorName(paletteColor: PaletteMarkerXY) {
   const name = COLOR_NAMES.reduce(
     (acc, colorName) => {
       let diff = 0;
@@ -174,7 +174,7 @@ export function rgbToColorName(paletteColor: indexRgbType) {
         if (channel === 'r' || channel === 'g' || channel === 'b') {
           diff += Math.abs(
             (colorName[channel as keyof typeof colorName] as number) -
-              paletteColor[channel as keyof typeof paletteColor]
+              (paletteColor[channel as keyof typeof paletteColor] as number)
           );
         }
       }
@@ -197,9 +197,7 @@ export function rgbToColorName(paletteColor: indexRgbType) {
   return name.name;
 }
 
-export function hslToColorName(
-  rgbPaletteColor: indexRgbType | rgbType | xyRgbType
-) {
+export function hslToColorName(rgbPaletteColor: PaletteMarkerXY) {
   const rgbColor = {
     r: rgbPaletteColor.r,
     g: rgbPaletteColor.g,

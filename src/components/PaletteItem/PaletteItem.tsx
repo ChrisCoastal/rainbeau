@@ -19,7 +19,7 @@ import { hslToColorName } from '../../utils/helpers';
 import { Wrapper, SwatchContainer } from './PaletteItem.styles';
 
 interface PaletteItemProps {
-  color: xyRgbType;
+  color: PaletteMarkerXY;
 }
 
 const PaletteItem: FC<PaletteItemProps> = ({ color }) => {

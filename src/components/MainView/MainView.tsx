@@ -20,15 +20,15 @@ import Credit from '../Credit/Credit';
 
 interface MainViewProps {
   images: Image[];
-  currentImageData: indexRgbType[];
-  palette: PaletteType[];
+  currentImageData: IndexedPxColor[];
+  paletteMarkers: PaletteMarkerXY[];
   dispatch: React.Dispatch<ReducerActions>;
 }
 
 const MainView: FC<MainViewProps> = ({
   images,
   currentImageData,
-  palette,
+  paletteMarkers,
   dispatch,
 }) => {
   const [currentImage, setCurrentImage] = useState<number>(0);
@@ -69,7 +69,7 @@ const MainView: FC<MainViewProps> = ({
             <CardContent sx={{ p: '0' }}>
               <CanvasImage
                 imageURL={imageURL}
-                palette={palette}
+                paletteMarkers={paletteMarkers}
                 currentImageData={currentImageData}
                 dispatch={dispatch}
               />
@@ -81,7 +81,7 @@ const MainView: FC<MainViewProps> = ({
       </div>
       <ActionsBox>
         <Actions />
-        <Palette palette={palette} />
+        <Palette paletteMarkers={paletteMarkers} />
         <Output />
       </ActionsBox>
     </Wrapper>

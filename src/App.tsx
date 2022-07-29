@@ -11,7 +11,7 @@ function App() {
   const initialState: appState = {
     images: [],
     currentImageData: [],
-    palette: [],
+    paletteMarkers: [],
   };
 
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -22,7 +22,7 @@ function App() {
       <MainView
         images={state.images}
         currentImageData={state.currentImageData}
-        palette={state.palette}
+        paletteMarkers={state.paletteMarkers}
         dispatch={dispatch}
       />
     </div>

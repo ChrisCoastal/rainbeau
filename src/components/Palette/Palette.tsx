@@ -19,10 +19,10 @@ import IconButton from '@mui/material/IconButton';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 interface PaletteProps {
-  palette: PaletteType[];
+  paletteMarkers: PaletteMarkerXY[];
 }
 
-const Palette: FC<PaletteProps> = ({ palette }) => {
+const Palette: FC<PaletteProps> = ({ paletteMarkers }) => {
   return (
     <Wrapper>
       <PaletteActions>
@@ -34,8 +34,8 @@ const Palette: FC<PaletteProps> = ({ palette }) => {
         </Tooltip>
       </PaletteActions>
       <PaletteItemsContainer>
-        {palette.length > 0 &&
-          palette.map((color, i) => {
+        {paletteMarkers.length > 0 &&
+          paletteMarkers.map((color, i) => {
             return <PaletteItem key={uuidv4()} color={color} />;
           })}
       </PaletteItemsContainer>

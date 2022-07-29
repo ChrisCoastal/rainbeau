@@ -8,9 +8,9 @@ export const reducer = (state: appState, action: ReducerActions): appState => {
     case 'setCurrentImageData':
       return { ...state, currentImageData: payload };
     case 'addMarker':
-      return { ...state, palette: [...state.palette, payload] };
+      return { ...state, paletteMarkers: [...state.paletteMarkers, payload] };
     case 'replacePalette':
-      return { ...state, palette: payload };
+      return { ...state, paletteMarkers: payload };
     default:
       return state;
   }

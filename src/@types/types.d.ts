@@ -2,7 +2,7 @@
 interface appState {
   images: Image[];
   currentImageData: IndexedPxColor[];
-  palette: IndexedPxColor[];
+  paletteMarkers: PaletteMarkerXY[];
 }
 
 interface ReducerActions {
@@ -73,7 +73,7 @@ interface hslType {
 
 interface IndexedPxColor extends rgbType, hslType {
   i: number;
-  xy: coordinate;
+  // xy: coordinate;
 }
 
 interface coordinate {
@@ -81,23 +81,9 @@ interface coordinate {
   yPos: number;
 }
 
-interface xyRgbType extends rgbType {
-  xy: coordinate;
-}
-
-interface indexRgbType extends rgbType {
-  i: number;
-}
-
-interface PaletteType extends rgbType {
+interface PaletteMarkerXY extends IndexedPxColor {
   xy: coordinate;
   i: number;
-}
-
-interface hslType {
-  h: number;
-  s: number;
-  l: number;
 }
 
 interface ColorName {
