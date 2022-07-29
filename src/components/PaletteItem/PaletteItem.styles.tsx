@@ -6,6 +6,10 @@ export const Wrapper = styled.div`
   border-radius: 0.4rem;
   border: solid 1px #ddd;
 
+  &:last-child {
+    margin-bottom: 2.8rem;
+  }
+
   & input {
     width: 40%;
     padding: 0.2rem;

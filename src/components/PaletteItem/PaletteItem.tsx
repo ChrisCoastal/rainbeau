@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 // hooks
 import useInput from '../../hooks/useInput';
@@ -24,8 +24,10 @@ interface PaletteItemProps {
 
 const PaletteItem: FC<PaletteItemProps> = ({ color }) => {
   const initialValue = color ? hslToColorName(color) : 'default-color-name';
+  const inputRef = useRef<HTMLInputElement>(null);
   const { inputValueHandler, inputValue, inputReset } = useInput(
     // validateInput,
+    inputRef,
     initialValue
   );
 
@@ -33,7 +35,11 @@ const PaletteItem: FC<PaletteItemProps> = ({ color }) => {
     <Wrapper>
       <SwatchContainer>
         <Swatch color={color} />
-        <input value={inputValue} onChange={inputValueHandler}></input>
+        <input
+          value={inputValue}
+          onChange={inputValueHandler}
+          ref={inputRef}
+        ></input>
         {/* <Button onClick={inputReset}>x</Button> */}
         <Tooltip title="clear color name">
           <IconButton onClick={inputReset}>

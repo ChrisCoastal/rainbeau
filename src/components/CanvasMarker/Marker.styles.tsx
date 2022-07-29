@@ -15,8 +15,8 @@ export const Circle = styled.div<CircleProps>`
   border-radius: 50%;
   transform: translate(-50%, -50%);
   /* background-color: pink; */
-  border: 2px solid pink;
-  /* mix-blend-mode: exclusion; */
+  border: 3px solid pink;
+  mix-blend-mode: exclusion;
 
   cursor: grab;
 

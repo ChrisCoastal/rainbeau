@@ -10,4 +10,5 @@ export const Wrapper = styled.div<WrapperProps>`
   height: 100%;
   /* overflow: visible; */
   z-index: 1000;
+  mix-blend-mode: exclusion;
 `;
