@@ -232,10 +232,10 @@ const CanvasImage: FC<CanvasImageProps> = ({
     // const sortedPxGroups = getSortedPx([...imageData], 'h');
     // console.log('SORTED', sortedPxGroups, 'UNSORTED', imageData);
 
-    for (let i = 0; i < 3; i++) {
-      const randomPx = Math.floor(Math.random() * totalDataPoints);
-      markers.push(imageData[randomPx]);
-    }
+    // for (let i = 0; i < 3; i++) {
+    const randomPx = Math.floor(Math.random() * totalDataPoints);
+    markers.push(imageData[randomPx]);
+    // }
 
     console.log('markersss', markers);
 
@@ -264,8 +264,14 @@ const CanvasImage: FC<CanvasImageProps> = ({
       sampledPxData.current = []; // reset from previous image
       channelTotal.current = { r: 0, g: 0, b: 0 }; // reset from previous image
 
+      // dev test marker accuracy
+      ctx!.fillStyle = '#FF0000';
+      ctx!.fillRect(0, 0, 400, 800);
+      ctx!.fillStyle = '#00FF00';
+      ctx!.fillRect(400, 0, 800, 800);
       // drawImage(image, startx, starty, widthx, widthy)
-      ctx?.drawImage(canvasImage, 0, 0, ctx.canvas.width, ctx.canvas.height);
+      // ctx?.drawImage(canvasImage, 0, 0, ctx.canvas.width, ctx.canvas.height);
+
       setIsLoading(false);
 
       console.log('Bound', canvasRef.current?.getBoundingClientRect());

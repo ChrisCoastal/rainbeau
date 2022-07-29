@@ -65,6 +65,7 @@ export const getPxGroupIndex = (xPos: number, yPos: number) => {
   if (xPos !== 800) rgbIndex += xPos * 4;
   const pxIndex = rgbIndex / RGBA_GROUP;
 
+  // return +pxIndex.toFixed(0);
   return pxIndex;
 };
 
@@ -238,7 +239,7 @@ export function hslToColorName(
     },
     { name: 'default-color-name', r: -1, g: -1, b: -1, diff: Infinity }
   ) as { name: string; r: number; g: number; b: number; diff: number };
-  console.log(hslColor, name);
+  // console.log(hslColor, name);
 
   return name.name;
 }

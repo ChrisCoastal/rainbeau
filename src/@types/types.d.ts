@@ -2,7 +2,7 @@
 interface appState {
   images: Image[];
   currentImageData: IndexedPxColor[];
-  palette: PaletteType[];
+  palette: IndexedPxColor[];
 }
 
 interface ReducerActions {

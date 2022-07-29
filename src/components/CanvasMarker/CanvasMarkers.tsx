@@ -94,7 +94,7 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
     // )
     //   return;
     console.log(mouseX, mouseY);
-
+    if (mouseX === 0 && mouseY === 0) return;
     const updatedPalette = [...palette];
 
     // update xy
