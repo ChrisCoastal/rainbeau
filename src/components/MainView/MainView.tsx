@@ -117,6 +117,7 @@ const MainView: FC<MainViewProps> = ({
         <Palette
           paletteMarkers={paletteMarkers}
           addMarkerHandler={addMarkerHandler}
+          dispatch={dispatch}
         />
         <Output />
       </ActionsBox>

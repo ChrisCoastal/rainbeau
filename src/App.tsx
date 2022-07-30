@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React, { useEffect, useReducer } from 'react';
 
 // reducer
 import { reducer } from './utils/reducer';
@@ -15,6 +15,10 @@ function App() {
   };
 
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  // useEffect(() => {
+  //   sessionStorage.setItem('palette', JSON.stringify(state.paletteMarkers));
+  // }, [state.paletteMarkers]);
 
   return (
     <div className="App">

@@ -12,6 +12,13 @@ export const reducer = (state: appState, action: ReducerActions): appState => {
         ...state,
         paletteMarkers: [...state.paletteMarkers, ...payload],
       };
+    case 'deleteMarker':
+      return {
+        ...state,
+        paletteMarkers: state.paletteMarkers.filter(
+          (marker) => marker.i !== payload.i
+        ),
+      };
     case 'replacePalette':
       return { ...state, paletteMarkers: payload };
     default:

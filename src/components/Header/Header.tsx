@@ -8,9 +8,6 @@ const Header = (props: Props) => {
   return (
     <Wrapper>
       <p>RAINBEAU</p>
-      <div>
-        <a href="#">LOGIN</a>
-      </div>
     </Wrapper>
   );
 };

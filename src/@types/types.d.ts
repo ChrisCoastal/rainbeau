@@ -10,6 +10,7 @@ interface ReducerActions {
     | 'setImages'
     | 'setCurrentImageData'
     | 'addMarker'
+    | 'deleteMarker'
     | 'replacePalette'
     | 'setMarkerPosition';
   payload?: any;

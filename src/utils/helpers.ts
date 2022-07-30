@@ -304,3 +304,11 @@ const saturationToColor = (saturation: number) => {
   if (saturation <= 45) return 'muted';
   if (saturation > 84) return 'bright';
 };
+
+// session storage
+// Persist state in Session Storage
+export const isPersistedState = (stateName: string) => {
+  const sessionState = sessionStorage.getItem(stateName);
+
+  return sessionState && JSON.parse(sessionState);
+};

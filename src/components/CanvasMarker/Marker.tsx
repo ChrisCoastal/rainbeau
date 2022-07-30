@@ -64,7 +64,10 @@ const Marker: FC<MarkerProps> = ({ x, y, num, canvasBound, clickHandler }) => {
       onMouseEnter={(e) => clickHandler(e, num)}
       onDragStart={() => false}
       onMouseUp={(e) => clickHandler(e, num)}
-    />
+    >
+      <span></span>
+      <span></span>
+    </Circle>
   );
 };
 
