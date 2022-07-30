@@ -10,11 +10,11 @@ export const Circle = styled.div<CircleProps>`
   position: absolute;
   top: ${(props) => `${props.y}px`};
   left: ${(props) => `${props.x}px`};
-  height: 1.6rem;
-  width: 1.6rem;
+  height: 1.2rem;
+  width: 1.2rem;
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  /* background-color: pink; */
+  background-color: #ffffff30;
   border: 2px solid white;
   mix-blend-mode: exclusion;
 
@@ -22,24 +22,24 @@ export const Circle = styled.div<CircleProps>`
 
   & span {
     /* content: ${(props) => props.num}; */
-    top: 51%;
+    top: 52%;
     left: 50%;
-    height: 2px;
-    width: 1.7rem;
+    height: 1px;
+    width: 2.4rem;
+    /* width: 1.7rem; */
     position: absolute;
     background-color: white;
 
     &:nth-of-type(odd) {
-      transform: translate(-50%, -50%) rotate(45deg);
+      transform: translate(-51%, -51%) rotate(45deg);
     }
     &:nth-of-type(even) {
-      transform: translate(-50%, -50%) rotate(-45deg);
+      transform: translate(-51%, -51%) rotate(-45deg);
     }
   }
 
   &::after {
-    /* content: ${(props) => props.num}; */
-    content: '1';
+    content: '${(props) => props.num + 1}';
     position: absolute;
     left: 1.8rem;
     top: -1rem;

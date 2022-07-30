@@ -80,15 +80,14 @@ const Palette: FC<PaletteProps> = ({
       </PaletteActions>
       <PaletteItemsContainer>
         {paletteMarkers.length > 0 &&
-          paletteMarkers.map((color, i) => {
-            return (
-              <PaletteItem
-                key={uuidv4()}
-                color={color}
-                deleteMarkerHandler={deleteMarkerHandler}
-              />
-            );
-          })}
+          paletteMarkers.map((color, i) => (
+            <PaletteItem
+              key={uuidv4()}
+              markerNum={i}
+              color={color}
+              deleteMarkerHandler={deleteMarkerHandler}
+            />
+          ))}
       </PaletteItemsContainer>
     </Wrapper>
   );

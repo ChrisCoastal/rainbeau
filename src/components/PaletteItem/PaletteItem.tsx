@@ -29,10 +29,15 @@ import { Typography } from '@mui/material';
 
 interface PaletteItemProps {
   color: PaletteMarkerXY;
+  markerNum: number;
   deleteMarkerHandler: (marker: PaletteMarkerXY) => void;
 }
 
-const PaletteItem: FC<PaletteItemProps> = ({ color, deleteMarkerHandler }) => {
+const PaletteItem: FC<PaletteItemProps> = ({
+  color,
+  markerNum,
+  deleteMarkerHandler,
+}) => {
   const initialValue = color ? hslToColorName(color) : 'default-color-name';
   const inputRef = useRef<HTMLInputElement>(null);
   const colorRef = useRef<HTMLParagraphElement>(null);
@@ -51,6 +56,9 @@ const PaletteItem: FC<PaletteItemProps> = ({ color, deleteMarkerHandler }) => {
     <Wrapper>
       <ItemContent>
         <SwatchContainer>
+          <Typography fontSize="small" pr={1}>
+            {markerNum + 1}
+          </Typography>
           <Swatch color={color} />
           <input
             value={inputValue}
