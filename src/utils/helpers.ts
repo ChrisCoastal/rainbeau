@@ -178,7 +178,6 @@ export function rgbToColorName(rgb: rgbType | IndexedPxColor | ColorMarker) {
           );
         }
       }
-      console.log(diff);
 
       return diff < acc.diff
         ? {

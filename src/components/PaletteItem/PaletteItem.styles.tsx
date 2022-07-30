@@ -25,6 +25,7 @@ export const ItemContent = styled.div`
 `;
 
 export const ColorValue = styled.div`
+  display: inline-block;
   &:hover {
     cursor: copy;
   }
