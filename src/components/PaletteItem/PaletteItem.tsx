@@ -21,9 +21,11 @@ import { hslToColorName } from '../../utils/helpers';
 import {
   Wrapper,
   SwatchContainer,
+  ColorValue,
   ItemContent,
   ItemControls,
 } from './PaletteItem.styles';
+import { Typography } from '@mui/material';
 
 interface PaletteItemProps {
   color: PaletteMarkerXY;
@@ -33,11 +35,17 @@ interface PaletteItemProps {
 const PaletteItem: FC<PaletteItemProps> = ({ color, deleteMarkerHandler }) => {
   const initialValue = color ? hslToColorName(color) : 'default-color-name';
   const inputRef = useRef<HTMLInputElement>(null);
+  const colorRef = useRef<HTMLParagraphElement>(null);
   const { inputValueHandler, inputValue, inputReset } = useInput(
     // validateInput,
     inputRef,
     initialValue
   );
+
+  const colorToClipboard = () => {
+    colorRef.current &&
+      navigator.clipboard.writeText(colorRef.current?.innerText);
+  };
 
   return (
     <Wrapper>
@@ -56,11 +64,15 @@ const PaletteItem: FC<PaletteItemProps> = ({ color, deleteMarkerHandler }) => {
             </IconButton>
           </Tooltip>
         </SwatchContainer>
-        <div>{`rgb(
-    ${color.r},
-    ${color.g},
-    ${color.b}
-    )`}</div>
+        <ColorValue onClick={colorToClipboard}>
+          <Typography fontSize="small" ref={colorRef}>
+            {`rgb(
+          ${color.r},
+          ${color.g},
+          ${color.b}
+          )`}
+          </Typography>
+        </ColorValue>
       </ItemContent>
       <ItemControls>
         <Tooltip title="delete color">

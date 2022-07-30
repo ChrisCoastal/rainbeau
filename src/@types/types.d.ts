@@ -3,6 +3,7 @@ interface appState {
   images: Image[];
   currentImageData: IndexedPxColor[];
   paletteMarkers: PaletteMarkerXY[];
+  markerHistory: PaletteMarkerXY[][];
 }
 
 interface ReducerActions {
@@ -11,8 +12,9 @@ interface ReducerActions {
     | 'setCurrentImageData'
     | 'addMarker'
     | 'deleteMarker'
-    | 'replacePalette'
-    | 'setMarkerPosition';
+    | 'updatePalette'
+    | 'deletePalette'
+    | 'undoPalette';
   payload?: any;
 }
 

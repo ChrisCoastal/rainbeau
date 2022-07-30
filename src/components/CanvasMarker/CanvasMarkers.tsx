@@ -131,7 +131,7 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
     // updatedPalette[marker]
 
     // push updates to state
-    dispatch({ type: 'replacePalette', payload: updatedPalette });
+    dispatch({ type: 'updatePalette', payload: updatedPalette });
   };
 
   // FIXME: all markers rerender on each update

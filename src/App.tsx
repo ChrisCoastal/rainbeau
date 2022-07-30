@@ -12,6 +12,7 @@ function App() {
     images: [],
     currentImageData: [],
     paletteMarkers: [],
+    markerHistory: [],
   };
 
   const [state, dispatch] = useReducer(reducer, initialState);
