@@ -166,7 +166,7 @@ const filterChannel = (
     (colorName) => Math.abs(colorName[channelName] - channelValue) < 4
   );
 
-export function rgbToColorName(paletteColor: PaletteMarkerXY) {
+export function rgbToColorName(rgb: rgbType | IndexedPxColor | ColorMarker) {
   const name = COLOR_NAMES.reduce(
     (acc, colorName) => {
       let diff = 0;
@@ -174,7 +174,7 @@ export function rgbToColorName(paletteColor: PaletteMarkerXY) {
         if (channel === 'r' || channel === 'g' || channel === 'b') {
           diff += Math.abs(
             (colorName[channel as keyof typeof colorName] as number) -
-              (paletteColor[channel as keyof typeof paletteColor] as number)
+              (rgb[channel as keyof typeof rgb] as number)
           );
         }
       }
@@ -197,7 +197,7 @@ export function rgbToColorName(paletteColor: PaletteMarkerXY) {
   return name.name;
 }
 
-export function hslToColorName(rgbPaletteColor: PaletteMarkerXY) {
+export function hslToColorName(rgbPaletteColor: ColorMarker) {
   const rgbColor = {
     r: rgbPaletteColor.r,
     g: rgbPaletteColor.g,

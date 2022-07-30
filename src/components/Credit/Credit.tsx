@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material';
 import React, { FC } from 'react';
 
 import { Wrapper } from './Credit.styles';
@@ -8,7 +9,9 @@ interface CreditProps {
 const Credit: FC<CreditProps> = ({ name }) => {
   return (
     <Wrapper>
-      <p>by {name} on UnSplash</p>
+      <Typography fontSize="small" pt={0.8}>
+        via {name} on UnSplash
+      </Typography>
     </Wrapper>
   );
 };

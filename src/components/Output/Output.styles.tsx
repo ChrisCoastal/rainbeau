@@ -10,8 +10,13 @@ export const Wrapper = styled.div`
 export const TextArea = styled.textarea`
   resize: none;
   width: 98%;
-  height: 87%;
+  height: 75%;
   border-radius: 6px;
   border: solid 1px #ddd;
   overflow-y: scroll;
+`;
+
+export const FormatContainer = styled.div`
+  height: 100%;
+  margin-top: 1rem;
 `;

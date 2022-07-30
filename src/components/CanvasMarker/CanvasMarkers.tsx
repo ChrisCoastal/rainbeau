@@ -8,7 +8,12 @@ import type { FC } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 // helpers
-import { getPxGroupIndex, getPxGroupXY, rgbToHsl } from '../../utils/helpers';
+import {
+  getPxGroupIndex,
+  getPxGroupXY,
+  rgbToColorName,
+  rgbToHsl,
+} from '../../utils/helpers';
 
 // config
 import { CANVAS_RESOLUTION, RGBA_GROUP } from '../../utils/config';
@@ -20,7 +25,7 @@ import Marker from './Marker';
 import { Wrapper } from './CanvasMarkers.styles';
 
 interface CanvasMarkerProps {
-  paletteMarkers: PaletteMarkerXY[];
+  paletteMarkers: ColorMarker[];
   currentImageData: IndexedPxColor[];
   canvasBound: DOMRect | undefined;
   canvasXY: (number | undefined)[];
@@ -124,7 +129,8 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
     const { r, g, b } = updatedColor;
     const { h, s, l } = rgbToHsl({ r, g, b });
     const { i, xy } = updatedPalette[marker];
-    const updated = { r, g, b, h, s, l, i, xy };
+    const name = rgbToColorName({ r, g, b });
+    const updated = { r, g, b, h, s, l, i, xy, name };
 
     updatedPalette[marker] = updated;
 

@@ -35,6 +35,10 @@ export const FlipBox = styled.div<FlipBoxProps>`
   height: ${(props) => props.pxDimension / REM_RATIO}rem;
 `;
 
+export const ImageBox = styled.div`
+  text-align: right;
+`;
+
 export const ActionsBox = styled.section`
   width: 30rem;
   height: 50rem;

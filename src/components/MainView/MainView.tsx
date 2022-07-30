@@ -12,13 +12,13 @@ import purpleImage from '../../images/martin-brechtl-zs3HRrWW66A-unsplash.jpg';
 import CanvasImage from '../CanvasImage/CanvasImage';
 
 // helpers
-import { getPxGroupXY } from '../../utils/helpers';
+import { getPxGroupXY, rgbToColorName } from '../../utils/helpers';
 
 // config
 import { CANVAS_SIZE } from '../../utils/config';
 
 // styles
-import { Wrapper, FlipBox, ActionsBox } from './MainView.styles';
+import { Wrapper, FlipBox, ImageBox, ActionsBox } from './MainView.styles';
 import Palette from '../Palette/Palette';
 import Output from '../Output/Output';
 import Actions from '../Actions/Actions';
@@ -27,7 +27,7 @@ import Credit from '../Credit/Credit';
 interface MainViewProps {
   images: Image[];
   currentImageData: IndexedPxColor[];
-  paletteMarkers: PaletteMarkerXY[];
+  paletteMarkers: ColorMarker[];
   dispatch: React.Dispatch<ReducerActions>;
 }
 
@@ -63,7 +63,7 @@ const MainView: FC<MainViewProps> = ({
       markerQty: number = 1
     ) => {
       if (!currentImageData) return [];
-      const markers: PaletteMarkerXY[] = [];
+      const markers: ColorMarker[] = [];
       const totalPx = currentImageData.length; // 640000
       // sort by hue
       // const sortedPxGroups = getSortedPx([...currentImageData], 'h');
@@ -73,9 +73,14 @@ const MainView: FC<MainViewProps> = ({
       for (let loop = 0; loop < markerQty; loop++) {
         const randomIndex = Math.floor(Math.random() * totalPx);
         const randomPx = currentImageData[randomIndex];
+        const { r, g, b } = randomPx;
         console.log(randomPx);
 
-        markers.push({ ...randomPx, xy: getPxGroupXY(randomPx.i) });
+        markers.push({
+          ...randomPx,
+          xy: getPxGroupXY(randomPx.i),
+          name: rgbToColorName({ r, g, b }),
+        });
       }
       console.log(totalPx, markers);
 
@@ -94,7 +99,7 @@ const MainView: FC<MainViewProps> = ({
 
   return (
     <Wrapper>
-      <div>
+      <ImageBox>
         <FlipBox pxDimension={CANVAS_SIZE.med}>
           {/* <AvgColor bgColor={color}>Color</AvgColor> */}
           <Card sx={CardSx}>
@@ -111,7 +116,7 @@ const MainView: FC<MainViewProps> = ({
           {/* <Card sx={CardBackSx}></Card> */}
         </FlipBox>
         <Credit name={artist} />
-      </div>
+      </ImageBox>
       <ActionsBox>
         <Actions />
         <Palette
@@ -119,7 +124,7 @@ const MainView: FC<MainViewProps> = ({
           addMarkerHandler={addMarkerHandler}
           dispatch={dispatch}
         />
-        <Output />
+        <Output paletteMarkers={paletteMarkers} />
       </ActionsBox>
     </Wrapper>
   );

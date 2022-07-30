@@ -22,11 +22,11 @@ import UndoIcon from '@mui/icons-material/Undo';
 import SaveIcon from '@mui/icons-material/Save';
 
 interface PaletteProps {
-  paletteMarkers: PaletteMarkerXY[];
+  paletteMarkers: ColorMarker[];
   addMarkerHandler: (
     _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     markerQty?: number
-  ) => PaletteMarkerXY[];
+  ) => ColorMarker[];
   dispatch: React.Dispatch<ReducerActions>;
 }
 
@@ -39,7 +39,7 @@ const Palette: FC<PaletteProps> = ({
     dispatch({ type: 'deletePalette' });
   };
 
-  const deleteMarkerHandler = (marker: PaletteMarkerXY) => {
+  const deleteMarkerHandler = (marker: ColorMarker) => {
     // paletteMarkers
     dispatch({ type: 'deleteMarker', payload: marker });
   };
@@ -49,7 +49,7 @@ const Palette: FC<PaletteProps> = ({
     dispatch({ type: 'undoPalette' });
   };
 
-  const disableAddMarker = paletteMarkers.length > 8;
+  const disableAddMarker = paletteMarkers.length >= 8;
 
   return (
     <Wrapper>
@@ -85,7 +85,8 @@ const Palette: FC<PaletteProps> = ({
               key={uuidv4()}
               markerNum={i}
               color={color}
-              deleteMarkerHandler={deleteMarkerHandler}
+              // deleteMarkerHandler={deleteMarkerHandler}
+              dispatch={dispatch}
             />
           ))}
       </PaletteItemsContainer>

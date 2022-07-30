@@ -28,16 +28,13 @@ import {
 import { Typography } from '@mui/material';
 
 interface PaletteItemProps {
-  color: PaletteMarkerXY;
+  color: ColorMarker;
   markerNum: number;
-  deleteMarkerHandler: (marker: PaletteMarkerXY) => void;
+  dispatch: React.Dispatch<ReducerActions>;
+  // deleteMarkerHandler: (marker: ColorMarker) => void;
 }
 
-const PaletteItem: FC<PaletteItemProps> = ({
-  color,
-  markerNum,
-  deleteMarkerHandler,
-}) => {
+const PaletteItem: FC<PaletteItemProps> = ({ color, markerNum, dispatch }) => {
   const initialValue = color ? hslToColorName(color) : 'default-color-name';
   const inputRef = useRef<HTMLInputElement>(null);
   const colorRef = useRef<HTMLParagraphElement>(null);
@@ -50,6 +47,11 @@ const PaletteItem: FC<PaletteItemProps> = ({
   const colorToClipboard = () => {
     colorRef.current &&
       navigator.clipboard.writeText(colorRef.current?.innerText);
+  };
+
+  const deleteMarkerHandler = (marker: ColorMarker) => {
+    // paletteMarkers
+    dispatch({ type: 'deleteMarker', payload: marker });
   };
 
   return (

@@ -6,9 +6,9 @@ const useAddMarkers = (
   indexedImagePx: IndexedPxColor[],
   markerQty: number = 1
 ) => {
-  const [markersToAdd, setMarkersToAdd] = useState<PaletteMarkerXY[]>([]);
+  const [markersToAdd, setMarkersToAdd] = useState<ColorMarker[]>([]);
   const totalPx = indexedImagePx.length; // 640000
-  const markers: PaletteMarkerXY[] = [];
+  const markers: ColorMarker[] = [];
   // sort by hue
   // const sortedPxGroups = getSortedPx([...indexedImagePx], 'h');
   // console.log('SORTED', sortedPxGroups, 'UNSORTED', indexedImagePx);

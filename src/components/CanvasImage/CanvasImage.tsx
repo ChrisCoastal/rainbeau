@@ -20,15 +20,15 @@ import {
 } from '../../utils/config';
 
 // helpers
-import { getPxGroupXY, rgbToHsl } from '../../utils/helpers';
+import { getPxGroupXY, rgbToColorName, rgbToHsl } from '../../utils/helpers';
 
 // styles
 import { Wrapper, Canvas, ImageFallback } from './CanvasImage.styles';
 
 interface CanvasImageProps {
   imageURL: string;
-  paletteMarkers: PaletteMarkerXY[];
-  // addMarkers: (markerQty?: number) => PaletteMarkerXY[];
+  paletteMarkers: ColorMarker[];
+  // addMarkers: (markerQty?: number) => ColorMarker[];
   currentImageData: IndexedPxColor[];
   dispatch: React.Dispatch<ReducerActions>;
 }
@@ -328,7 +328,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
 
   const createMarkers = useCallback(
     (indexedImagePx: IndexedPxColor[], markerQty: number = 3) => {
-      const markers: PaletteMarkerXY[] = [];
+      const markers: ColorMarker[] = [];
       const totalPx = indexedImagePx.length; // 640000
       // sort by hue
       // const sortedPxGroups = getSortedPx([...indexedImagePx], 'h');
@@ -337,7 +337,12 @@ const CanvasImage: FC<CanvasImageProps> = ({
       for (let loop = 0; loop < markerQty; loop++) {
         const randomIndex = Math.floor(Math.random() * totalPx);
         const randomPx = indexedImagePx[randomIndex];
-        markers.push({ ...randomPx, xy: getPxGroupXY(randomPx.i) });
+        const { r, g, b } = randomPx;
+        markers.push({
+          ...randomPx,
+          xy: getPxGroupXY(randomPx.i),
+          name: rgbToColorName({ r, g, b }),
+        });
       }
 
       dispatch({ type: 'addMarker', payload: markers });
