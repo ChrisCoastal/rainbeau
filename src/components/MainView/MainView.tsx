@@ -1,4 +1,9 @@
-import React, { FC, useCallback, useState } from 'react';
+import type { FC } from 'react';
+import { useCallback, useState, useEffect } from 'react';
+
+// firestore
+import database from '../../firestore.config';
+import { doc, getDoc, collection } from 'firebase/firestore';
 
 // mui
 import Card from '@mui/material/Card';
@@ -15,7 +20,7 @@ import CanvasImage from '../CanvasImage/CanvasImage';
 import { getPxGroupXY, rgbToColorName } from '../../utils/helpers';
 
 // config
-import { CANVAS_SIZE } from '../../utils/config';
+import { CANVAS_SIZE, DUMMY_RESPONSE } from '../../utils/config';
 
 // styles
 import { Wrapper, FlipBox, ImageBox, ActionsBox } from './MainView.styles';
@@ -39,6 +44,56 @@ const MainView: FC<MainViewProps> = ({
 }) => {
   const [currentImage, setCurrentImage] = useState<number>(0);
 
+  // get images from api
+  useEffect(() => {
+    (async () => {
+      try {
+        const API_KEY = process.env!.REACT_APP_UNSPLASH_API_KEY;
+        ////////////// UNSPLASH API
+        //// get unsplash key from firestore
+        const keyRef = doc(database, 'unsplash_api', 'key');
+        const reponse = await getDoc(keyRef); //.then((response) => console.log(response));
+        const apiKey = reponse.data()?.key;
+        console.log(apiKey);
+
+        if (apiKey === undefined) throw new Error('No response from database');
+        // TODO: switch to apiKey for production
+        const response = await fetch(
+          `https://api.unsplash.com/photos/random?count=1&orientation=squarish&client_id=${API_KEY}`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept-Version': 'v1',
+            },
+          }
+        );
+        const data: APIResponse = await response.json();
+        /////////////
+
+        // test data from unsplash api
+        // const data = DUMMY_RESPONSE;
+
+        const imageData = data.map((image) => ({
+          altText: image.alt_description || image.description,
+          blurImage: image.blur_hash,
+          color: image.color,
+          imageDimensions: { x: image.width, y: image.height },
+          imageURL: image.urls.full,
+          imageThumb: image.urls.thumb,
+          downloadLink: image.links.download,
+          id: image.id,
+          artistName: image.user.name || image.user.username,
+          artistLink: image.user.portfolio_url,
+        }));
+        console.log(data, imageData);
+        dispatch({ type: 'setImages', payload: imageData });
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, []);
+
   const CardSx = {
     position: 'absolute',
     top: '0',
@@ -53,8 +108,9 @@ const MainView: FC<MainViewProps> = ({
     // },
   };
 
-  const changeCanvasImage = (indexStep: 1 | -1) => {
-    setCurrentImage((prev) => prev + indexStep);
+  const changeImageHandler = (e: React.MouseEvent, indexStep: number = 1) => {
+    if (images.length === currentImage)
+      setCurrentImage((prev) => prev + indexStep);
   };
 
   const addMarkerHandler = useCallback(
@@ -120,7 +176,12 @@ const MainView: FC<MainViewProps> = ({
         <Credit name={artistName} />
       </ImageBox>
       <ActionsBox>
-        <Actions imageDownloadURL={downloadLink} name={artistName} id={id} />
+        <Actions
+          changeImageHandler={changeImageHandler}
+          imageDownloadURL={downloadLink}
+          name={artistName}
+          id={id}
+        />
         <Palette
           paletteMarkers={paletteMarkers}
           addMarkerHandler={addMarkerHandler}

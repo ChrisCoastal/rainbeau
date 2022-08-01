@@ -18,25 +18,22 @@ import UploadIcon from '@mui/icons-material/Upload';
 import { Wrapper } from './Actions.styles';
 
 interface ActionsProps {
+  changeImageHandler: (e: React.MouseEvent) => void;
   imageDownloadURL: string | null;
   name: string | null;
   id: string | null;
 }
 
-const Actions: FC<ActionsProps> = ({ imageDownloadURL, name, id }) => {
+const Actions: FC<ActionsProps> = ({
+  changeImageHandler,
+  imageDownloadURL,
+  name,
+  id,
+}) => {
   const [open, setOpen] = useState<boolean>(false);
 
-  const handleOpenUploadModal = (visible: boolean) => {
+  const openModalHandler = (visible: boolean) => {
     setOpen(visible);
-  };
-
-  const flipHandler = () => {
-    console.log('FLIP');
-    // update context to sl
-  };
-
-  const downloadHandler = () => {
-    console.log('DOWNLOAD');
   };
 
   const uploadModal = {
@@ -44,11 +41,11 @@ const Actions: FC<ActionsProps> = ({ imageDownloadURL, name, id }) => {
     content: <div>drop here</div>,
     text: 'I am modal',
     confirmText: 'Upload',
-    handler: handleOpenUploadModal,
+    handler: openModalHandler,
     openModalButton: (
       <Tooltip title="upload image">
         <IconButton
-          onClick={() => handleOpenUploadModal(true)}
+          onClick={() => openModalHandler(true)}
           sx={{ transform: 'rotate: 180deg;' }}
         >
           <UploadIcon />
@@ -62,7 +59,7 @@ const Actions: FC<ActionsProps> = ({ imageDownloadURL, name, id }) => {
       Actions
       <div>
         <Tooltip title="new image">
-          <IconButton onClick={() => flipHandler()}>
+          <IconButton onClick={changeImageHandler}>
             <AddPhotoAlternateIcon />
           </IconButton>
         </Tooltip>
@@ -77,10 +74,7 @@ const Actions: FC<ActionsProps> = ({ imageDownloadURL, name, id }) => {
         {imageDownloadURL && (
           <Link href={imageDownloadURL} target="_blank">
             <Tooltip title="download image">
-              <IconButton
-                onClick={downloadHandler}
-                disabled={!imageDownloadURL}
-              >
+              <IconButton disabled={!imageDownloadURL}>
                 <DownloadIcon />
               </IconButton>
             </Tooltip>
