@@ -2,11 +2,10 @@ import { FC, useCallback } from 'react';
 import React, { useRef, useEffect, useState } from 'react';
 
 // hooks
-import useAddMarkers from '../../hooks/useAddMarkers';
-import useFetch from '../../hooks/useFetch';
+// import useAddMarkers from '../../hooks/useAddMarkers';
+// import useFetch from '../../hooks/useFetch';
 
 // images
-import redImage from '../../images/brennan-ehrhardt-HALe2SmkWAI-unsplash.jpg';
 import purpleImage from '../../images/martin-brechtl-zs3HRrWW66A-unsplash.jpg';
 
 // components
@@ -29,7 +28,10 @@ import { Wrapper, Canvas, ImageFallback } from './CanvasImage.styles';
 interface CanvasImageProps {
   imageURL: string | null;
   paletteMarkers: ColorMarker[];
-  // addMarkers: (markerQty?: number) => ColorMarker[];
+  addMarkers: (
+    _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    markerQty?: number
+  ) => ColorMarker[];
   currentImageData: IndexedPxColor[];
   dispatch: React.Dispatch<ReducerActions>;
 }
@@ -37,12 +39,11 @@ interface CanvasImageProps {
 const CanvasImage: FC<CanvasImageProps> = ({
   imageURL,
   paletteMarkers,
-  // addMarkers,
+  addMarkers,
   currentImageData,
   dispatch,
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<boolean>(false);
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
@@ -106,14 +107,14 @@ const CanvasImage: FC<CanvasImageProps> = ({
     [dispatch]
   );
 
-  useEffect(() => {
-    const canvasXY = {
-      x: canvasCtxRef.current?.canvas.width,
-      y: canvasCtxRef.current?.canvas.height,
-    };
+  // useEffect(() => {
+  //   const canvasXY = {
+  //     x: canvasCtxRef.current?.canvas.width,
+  //     y: canvasCtxRef.current?.canvas.height,
+  //   };
 
-    dispatch({ type: 'setCanvasXY', payload: canvasXY });
-  }, [canvasCtxRef.current]);
+  //   dispatch({ type: 'setCanvasXY', payload: canvasXY });
+  // }, [canvasCtxRef.current]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -174,7 +175,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
           dispatch={dispatch}
         />
         <Canvas ref={canvasRef}>
-          <ImageFallback src={redImage} alt="Fallback image" />
+          <ImageFallback src={purpleImage} alt="Fallback image" />
         </Canvas>
       </Wrapper>
     </>

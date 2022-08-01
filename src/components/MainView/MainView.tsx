@@ -10,8 +10,8 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 
 // images
-import redImage from '../../images/brennan-ehrhardt-HALe2SmkWAI-unsplash.jpg';
-import purpleImage from '../../images/martin-brechtl-zs3HRrWW66A-unsplash.jpg';
+// import redImage from '../../images/brennan-ehrhardt-HALe2SmkWAI-unsplash.jpg';
+// import purpleImage from '../../images/martin-brechtl-zs3HRrWW66A-unsplash.jpg';
 
 // components
 import CanvasImage from '../CanvasImage/CanvasImage';
@@ -48,31 +48,31 @@ const MainView: FC<MainViewProps> = ({
   useEffect(() => {
     (async () => {
       try {
-        const API_KEY = process.env!.REACT_APP_UNSPLASH_API_KEY;
         ////////////// UNSPLASH API
+        // const API_KEY = process.env!.REACT_APP_UNSPLASH_API_KEY;
         //// get unsplash key from firestore
-        const keyRef = doc(database, 'unsplash_api', 'key');
-        const reponse = await getDoc(keyRef); //.then((response) => console.log(response));
-        const apiKey = reponse.data()?.key;
-        console.log(apiKey);
+        // const keyRef = doc(database, 'unsplash_api', 'key');
+        // const reponse = await getDoc(keyRef); //.then((response) => console.log(response));
+        // const apiKey = reponse.data()?.key;
+        // console.log(apiKey);
 
-        if (apiKey === undefined) throw new Error('No response from database');
-        // TODO: switch to apiKey for production
-        const response = await fetch(
-          `https://api.unsplash.com/photos/random?count=1&orientation=squarish&client_id=${API_KEY}`,
-          {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept-Version': 'v1',
-            },
-          }
-        );
-        const data: APIResponse = await response.json();
+        // if (apiKey === undefined) throw new Error('No response from database');
+        // // TODO: switch to apiKey for production
+        // const response = await fetch(
+        //   `https://api.unsplash.com/photos/random?count=1&orientation=squarish&client_id=${API_KEY}`,
+        //   {
+        //     method: 'GET',
+        //     headers: {
+        //       'Content-Type': 'application/json',
+        //       'Accept-Version': 'v1',
+        //     },
+        //   }
+        // );
+        // const data: APIResponse = await response.json();
         /////////////
 
         // test data from unsplash api
-        // const data = DUMMY_RESPONSE;
+        const data = DUMMY_RESPONSE;
 
         const imageData = data.map((image) => ({
           altText: image.alt_description || image.description,
@@ -92,7 +92,7 @@ const MainView: FC<MainViewProps> = ({
         console.log(error);
       }
     })();
-  }, []);
+  }, [dispatch]);
 
   const CardSx = {
     position: 'absolute',
@@ -108,7 +108,10 @@ const MainView: FC<MainViewProps> = ({
     // },
   };
 
-  const changeImageHandler = (e: React.MouseEvent, indexStep: number = 1) => {
+  const changeImageHandler = (
+    _: React.MouseEvent<Element, MouseEvent>,
+    indexStep: number = 1
+  ) => {
     if (images.length === currentImage)
       setCurrentImage((prev) => prev + indexStep);
   };
@@ -146,10 +149,6 @@ const MainView: FC<MainViewProps> = ({
     [dispatch, currentImageData]
   );
 
-  const CardBackSx = {
-    ...CardSx,
-  };
-
   const artistName = images[currentImage]?.artistName || 'unknown artist';
   const id = images[currentImage]?.id || null;
   const imageURL = images[currentImage]?.imageURL || null;
@@ -159,19 +158,17 @@ const MainView: FC<MainViewProps> = ({
     <Wrapper>
       <ImageBox>
         <FlipBox pxDimension={CANVAS_SIZE.med}>
-          {/* <AvgColor bgColor={color}>Color</AvgColor> */}
           <Card sx={CardSx}>
             <CardContent sx={{ p: '0' }}>
               <CanvasImage
                 imageURL={imageURL}
                 paletteMarkers={paletteMarkers}
-                // addMarkers={addMarkers}
+                addMarkers={addMarkerHandler}
                 currentImageData={currentImageData}
                 dispatch={dispatch}
               />
             </CardContent>
           </Card>
-          {/* <Card sx={CardBackSx}></Card> */}
         </FlipBox>
         <Credit name={artistName} />
       </ImageBox>
