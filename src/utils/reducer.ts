@@ -3,6 +3,11 @@ import { ReducerAction } from 'react';
 export const reducer = (state: appState, action: ReducerActions): appState => {
   const { type, payload } = action;
   switch (type) {
+    case 'setCanvasXY':
+      return {
+        ...state,
+        canvasXY: payload,
+      };
     case 'setImages':
       return {
         ...state,

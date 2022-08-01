@@ -9,6 +9,7 @@ import MainView from './components/MainView/MainView';
 
 function App() {
   const initialState: appState = {
+    canvasXY: { x: 0, y: 0 },
     images: [],
     currentImageData: [],
     paletteMarkers: [],
@@ -17,6 +18,7 @@ function App() {
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  // TODO:
   // useEffect(() => {
   //   sessionStorage.setItem('palette', JSON.stringify(state.paletteMarkers));
   // }, [state.paletteMarkers]);

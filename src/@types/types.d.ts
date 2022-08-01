@@ -1,5 +1,6 @@
 // state and reducer
 interface appState {
+  canvasXY: { x: number; y: number };
   images: Image[];
   currentImageData: IndexedPxColor[];
   paletteMarkers: ColorMarker[];
@@ -8,6 +9,7 @@ interface appState {
 
 interface ReducerActions {
   type:
+    | 'setCanvasXY'
     | 'setImages'
     | 'setCurrentImageData'
     | 'addMarker'
