@@ -1,5 +1,5 @@
 // react
-import { useEffect, useState, useRef, useMemo } from 'react';
+import { useState } from 'react';
 
 // types
 import type { FC } from 'react';
@@ -8,15 +8,7 @@ import type { FC } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 // helpers
-import {
-  getPxGroupIndex,
-  getPxGroupXY,
-  rgbToColorName,
-  rgbToHsl,
-} from '../../utils/helpers';
-
-// config
-import { CANVAS_RESOLUTION, RGBA_GROUP } from '../../utils/config';
+import { getPxGroupIndex, rgbToColorName, rgbToHsl } from '../../utils/helpers';
 
 // components
 import Marker from './Marker';
@@ -32,11 +24,6 @@ interface CanvasMarkerProps {
   dispatch: React.Dispatch<ReducerActions>;
 }
 
-interface MarkerPos {
-  x: number;
-  y: number;
-}
-
 const CanvasMarkers: FC<CanvasMarkerProps> = ({
   paletteMarkers,
   currentImageData,
@@ -45,20 +32,6 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
   dispatch,
 }) => {
   const [clickOnMarker, setClickOnMarker] = useState<number>(-1);
-  // const [isMoving, setIsMoving] = useState<boolean>(false);
-  // const [prevMarkerPos, setPrevMarkerPos] = useState<MarkerPos>({ x, y });
-  // const [markerPos, setMarkerPos] = useState<MarkerPos>({ x, y });
-
-  // const markerDragHandler = (
-  //   e: React.MouseEvent<HTMLDivElement, MouseEvent>
-  // ) => {
-  //   console.log('Moving');
-
-  // };
-
-  // useEffect(() => {
-
-  // }, [xPos, yPos]);
 
   const clickHandler = (e: React.MouseEvent, num: number, clickPos = null) => {
     // console.log('mouseevent', e, num);
@@ -99,7 +72,10 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
     // )
     //   return;
     console.log(mouseX, mouseY);
+
     if (mouseX === 0 && mouseY === 0) return;
+    console.log('no catch');
+
     const updatedPalette = [...paletteMarkers];
 
     // update xy
@@ -107,10 +83,10 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
       xPos: (updatedPalette[marker].xy.xPos += mouseX),
       yPos: (updatedPalette[marker].xy.yPos += mouseY),
     };
-    // FIXME: not capping distance
+
     for (const coord in updatedPalette) {
-      // TODO: updatedPalette[marker].xy[coord as keyof coordinate] += mouseXY[coord]
       let dist = updatedPalette[marker].xy[coord as keyof coordinate];
+      // FIXME: not capping distance
       if (dist > MAX_XY)
         updatedPalette[marker].xy[coord as keyof coordinate] = MAX_XY;
       if (dist < MIN_XY)
@@ -121,6 +97,8 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
     const { xPos, yPos } = updatedPalette[marker].xy;
     // const { xPos, yPos } = getPxGroupXY(updatedPalette[marker].i); // if x,y not added to state
     const updatedIndex = getPxGroupIndex(xPos, yPos);
+
+    console.log('updated', updatedPalette, '\n prev', paletteMarkers);
 
     console.log('NEW INDEX', updatedIndex);
     const updatedColor = currentImageData[updatedIndex];
@@ -134,9 +112,6 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
 
     updatedPalette[marker] = updated;
 
-    // updatedPalette[marker]
-
-    // push updates to state
     dispatch({ type: 'updatePalette', payload: updatedPalette });
   };
 
@@ -157,7 +132,7 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
     );
   });
 
-  // need to set mouseMove listener on Wrapper (marker parent)
+  // mouseMove listener must be set on Wrapper (marker parent)
   // otherwise mouse will leave Marker div on fast drags
   return (
     <Wrapper

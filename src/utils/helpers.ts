@@ -69,19 +69,6 @@ export const getPxGroupIndex = (xPos: number, yPos: number) => {
   return pxIndex;
 };
 
-// export const getRgbAtPxGroup = (
-//   pxGroup = 4,
-//   sampleRate = 1,
-//   imageData: IndexedPxColor[]
-// ) => {
-//   let rgb = { r: 0, g: 0, b: 0 };
-//   for (let i = 0; i < pxGroup; i += sampleRate) {
-//     rgb.r = imageData[i];
-//     rgb.g = imageData[i + 1];
-//     rgb.b = imageData[i + 2];
-//   }
-// };
-
 // export const getImagePx = () => {
 
 // for (let i = 0; i < dataPoints; i += sampleRate) {
@@ -107,39 +94,44 @@ export const getDominantChannel = (rgbChannels: rgbType) => {
   if (r >= g && r >= b) return 'r';
   if (g >= r && g >= b) return 'g';
   if (b >= g && b >= r) return 'b';
+  // TODO: is this cleaner?
+  // const chanMax = Math.max(
+  //   channelTotal.current.r,
+  //   channelTotal.current.g,
+  //   channelTotal.current.b
+  // );
+  // const chanMin = Math.min(
+  //   channelTotal.current.r,
+  //   channelTotal.current.g,
+  //   channelTotal.current.b
+  // );
   return 'r';
 };
-// TODO: is this cleaner?
-// const chanMax = Math.max(
-//   channelTotal.current.r,
-//   channelTotal.current.g,
-//   channelTotal.current.b
-// );
-// const chanMin = Math.min(
-//   channelTotal.current.r,
-//   channelTotal.current.g,
-//   channelTotal.current.b
-// );
 
-// export const getSortedPx = (
-//   imagePx: IndexedPxColor[],
-//   sortBy: keyof IndexedPxColor
-// ) => {
-//   const sortedPx = imagePx.sort(pxSort);
+export const getSortedPx = (
+  imagePx: IndexedPxColor[],
+  sortBy: keyof IndexedPxColor
+) => {
+  const sortedPx = imagePx.sort(pxSort);
 
-//   // comparator (low to high sort)
-//   function pxSort(a: IndexedPxColor, b: IndexedPxColor) {
-//     if (a[sortBy] < b[sortBy]) {
-//       return -1;
-//     }
-//     if (a[sortBy] > b[sortBy]) {
-//       return 1;
-//     }
-//     return 0;
-//   }
-//   return sortedPx;
+  // comparator (low to high sort)
+  function pxSort(a: IndexedPxColor, b: IndexedPxColor) {
+    if (a[sortBy] < b[sortBy]) {
+      return -1;
+    }
+    if (a[sortBy] > b[sortBy]) {
+      return 1;
+    }
+    return 0;
+  }
+  return sortedPx;
+};
+
+// determine lower/upper
+// const sampleSize = {
+//   lowerLimit: Math.floor(sampledPxData.current.length * 0.5),
+//   upperLimit: Math.floor(sampledPxData.current.length * 0.5) + 1,
 // };
-
 export const getMedianColor = (
   imagePx: IndexedPxColor[],
   lowerLimit: number,

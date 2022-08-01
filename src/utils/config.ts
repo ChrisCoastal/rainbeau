@@ -1,6 +1,97 @@
 // unsplash api
 export const IMAGE_BASE_URL = 'https://api.unsplash.com/photos/';
 
+export const DUMMY_RESPONSE = [
+  {
+    alt_description: null,
+    blur_hash: 'L5I=faX9WS-DpwWI1cI-E4S*E[^0',
+    categories: [],
+    color: '#c0d9f3',
+    created_at: '2022-06-20T10:19:27Z',
+    current_user_collections: [],
+    description:
+      'Chip design: “AI is set to revolutionise chip design. Chips are specifically made for each specific task on an AI. They are designed to perform at their best capacity in a computer vision algorithm as visualised through this artwork.” Artist: Champ Panupong Techawongthawon',
+    downloads: 1366,
+    exif: {
+      make: null,
+      model: null,
+      name: null,
+      exposure_time: null,
+      aperture: null,
+    },
+    height: 4000,
+    id: 'fOwb7GrCg5I',
+    liked_by_user: false,
+    likes: 33,
+    links: {
+      download:
+        'https://unsplash.com/photos/fOwb7GrCg5I/download?ixid=MnwzNDUxODl8MHwxfHJhbmRvbXx8fHx8fHx8fDE2NTg5MDQxMjU',
+      download_location:
+        'https://api.unsplash.com/photos/fOwb7GrCg5I/download?ixid=MnwzNDUxODl8MHwxfHJhbmRvbXx8fHx8fHx8fDE2NTg5MDQxMjU',
+      html: 'https://unsplash.com/photos/fOwb7GrCg5I',
+      self: 'https://api.unsplash.com/photos/fOwb7GrCg5I',
+    },
+    location: { title: null, name: null, city: null, country: null },
+    promoted_at: '2022-07-01T06:56:01Z',
+    sponsorship: null,
+    topic_submissions: {},
+    updated_at: '2022-07-26T07:28:05Z',
+    urls: {
+      full: 'https://images.unsplash.com/photo-1655720028125-d5979d4bf62f?crop=entropy&cs=tinysrgb&fm=jpg&ixid=MnwzNDUxODl8MHwxfHJhbmRvbXx8fHx8fHx8fDE2NTg5MDQxMjU&ixlib=rb-1.2.1&q=80',
+      raw: 'https://images.unsplash.com/photo-1655720028125-d5979d4bf62f?ixid=MnwzNDUxODl8MHwxfHJhbmRvbXx8fHx8fHx8fDE2NTg5MDQxMjU&ixlib=rb-1.2.1',
+      regular:
+        'https://images.unsplash.com/photo-1655720028125-d5979d4bf62f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNDUxODl8MHwxfHJhbmRvbXx8fHx8fHx8fDE2NTg5MDQxMjU&ixlib=rb-1.2.1&q=80&w=1080',
+      small:
+        'https://images.unsplash.com/photo-1655720028125-d5979d4bf62f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNDUxODl8MHwxfHJhbmRvbXx8fHx8fHx8fDE2NTg5MDQxMjU&ixlib=rb-1.2.1&q=80&w=400',
+      small_s3:
+        'https://s3.us-west-2.amazonaws.com/images.unsplash.com/small/photo-1655720028125-d5979d4bf62f',
+      thumb:
+        'https://images.unsplash.com/photo-1655720028125-d5979d4bf62f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNDUxODl8MHwxfHJhbmRvbXx8fHx8fHx8fDE2NTg5MDQxMjU&ixlib=rb-1.2.1&q=80&w=200',
+    },
+    user: {
+      accepted_tos: true,
+      bio: 'We’re a team of scientists, engineers, ethicists and more, committed to solving intelligence, to advance science and benefit humanity.',
+      first_name: 'DeepMind',
+      for_hire: false,
+      id: '1yTi39xvCxo',
+      instagram_username: 'visualising.ai',
+      last_name: null,
+      links: {
+        self: 'https://api.unsplash.com/users/deepmind',
+        html: 'https://unsplash.com/@deepmind',
+        photos: 'https://api.unsplash.com/users/deepmind/photos',
+        likes: 'https://api.unsplash.com/users/deepmind/likes',
+        portfolio: 'https://api.unsplash.com/users/deepmind/portfolio',
+      },
+      location: null,
+      name: 'DeepMind',
+      portfolio_url: 'http://www.deepmind.com',
+      profile_image: {
+        small:
+          'https://images.unsplash.com/profile-1655482131364-…mage?ixlib=rb-1.2.1&crop=faces&fit=crop&w=32&h=32',
+        medium:
+          'https://images.unsplash.com/profile-1655482131364-…mage?ixlib=rb-1.2.1&crop=faces&fit=crop&w=64&h=64',
+        large:
+          'https://images.unsplash.com/profile-1655482131364-…ge?ixlib=rb-1.2.1&crop=faces&fit=crop&w=128&h=128',
+      },
+      social: {
+        instagram_username: 'visualising.ai',
+        portfolio_url: 'http://www.deepmind.com',
+        twitter_username: 'deepmind',
+        paypal_email: null,
+      },
+      total_collections: 4,
+      total_likes: 0,
+      total_photos: 46,
+      twitter_username: 'deepmind',
+      updated_at: '2022-07-27T06:35:39Z',
+      username: 'deepmind',
+    },
+    views: 261139,
+    width: 4000,
+  },
+];
+
 // firestore
 export const FIRESTORE_BASE_URL = 'https://api.unsplash.com/photos/';
 
@@ -9,7 +100,7 @@ export const REM_RATIO = 16;
 
 export const RGBA_GROUP = 4; // fixed jpg rgb px grouping (do not change)
 
-export const MEASUREMENT_PRECISION = 1; // can be adjusted FIXME: check for num > 1
+export const MEASUREMENT_PRECISION = 1; // can be adjusted? FIXME: check for num > 1
 
 export const CANVAS_RESOLUTION = { low: 400, med: 800, high: 1000, max: 1600 };
 export const CANVAS_SIZE = { low: 400, med: 800, high: 1000, max: 1600 };
