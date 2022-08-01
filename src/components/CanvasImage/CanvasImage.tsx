@@ -3,6 +3,7 @@ import React, { useRef, useEffect, useState } from 'react';
 
 // hooks
 import useAddMarkers from '../../hooks/useAddMarkers';
+import useFetch from '../../hooks/useFetch';
 
 // images
 import redImage from '../../images/brennan-ehrhardt-HALe2SmkWAI-unsplash.jpg';
@@ -380,9 +381,16 @@ const CanvasImage: FC<CanvasImageProps> = ({
     },
     [dispatch]
   );
+  // const { data: apiData, error: fetchError } = useFetch();
+  // console.log(data, fetchError);
+
+  const getImages = async () => {
+    const { data, fetch } = useFetch();
+  };
 
   // get images from api
   useEffect(() => {
+    const API_KEY = process.env!.UNSPLASH_API_KEY;
     (async () => {
       try {
         // const response = await fetch();
@@ -398,6 +406,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
         // }
         // const data: APIResponse= await response.json();
         // const data: APIResponse = DUMMY_RESPONSE;
+        const images = await getImages();
         const data = DUMMY_RESPONSE;
         const imageData = data.map((image) => ({
           altText: image.alt_description || image.description,
@@ -417,7 +426,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
         console.log(error);
       }
     })();
-  }, [dispatch]);
+  }, []);
 
   // create initial markers
   useEffect(() => {

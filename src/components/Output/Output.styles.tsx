@@ -8,12 +8,13 @@ export const Wrapper = styled.div`
 `;
 
 export const TextArea = styled.textarea`
-  resize: none;
   width: 98%;
   height: 75%;
+  line-height: 125%;
+  resize: none;
   border-radius: 6px;
   border: solid 1px #ddd;
-  overflow-y: scroll;
+  overflow: scroll;
 `;
 
 export const FormatContainer = styled.div`

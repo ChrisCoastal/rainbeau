@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { getPxGroupXY } from '../utils/helpers';
+import { getPxGroupXY, rgbToColorName } from '../utils/helpers';
 
 const useAddMarkers = (
   indexedImagePx: IndexedPxColor[],
@@ -16,7 +16,12 @@ const useAddMarkers = (
   for (let loop = 0; loop < markerQty; loop++) {
     const randomPxIndex = Math.floor(Math.random() * totalPx);
     const randomMarker = indexedImagePx[randomPxIndex];
-    markers.push({ ...randomMarker, xy: getPxGroupXY(randomMarker.i) });
+    const { r, g, b } = randomMarker;
+    markers.push({
+      ...randomMarker,
+      xy: getPxGroupXY(randomMarker.i),
+      name: rgbToColorName({ r, g, b }),
+    });
   }
   setMarkersToAdd(markers);
 

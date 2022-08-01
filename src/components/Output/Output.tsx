@@ -19,30 +19,83 @@ interface Format {
 
 interface Styles {
   tailwind: Format;
+  mui: Format;
+  styled: Format;
+  css: Format;
 }
 
 const Output: FC<OutputProps> = ({ paletteMarkers }) => {
-  const [format, setFormat] = useState<keyof Styles>('tailwind');
-  const markerColors = paletteMarkers
+  const [format, setFormat] = useState<keyof Styles>('styled');
+  const cssMarkerColors = paletteMarkers
+    .map((marker) => {
+      const { r, g, b } = marker;
+      return `--${marker.name}: 'rgb(${r},${g},${b})'`;
+    })
+    .join(',\n      ');
+
+  const twMarkerColors = paletteMarkers
     .map((marker) => {
       const { r, g, b } = marker;
       return `'${marker.name}': 'rgb(${r},${g},${b})'`;
     })
     .join(',\n        ');
 
-  const tailwind = {
-    detail: 'add to tailwind.config.js',
+  const muiMarkerColors = paletteMarkers
+    .map((marker) => {
+      const { r, g, b } = marker;
+      return `${marker.name}: 'rgb(${r},${g},${b})'`;
+    })
+    .join(',\n        ');
+
+  const muiFormatted = {
+    detail: '*add to mui theme',
+    text: `
+  import { createTheme } from '@mui/material/styles';
+
+  const theme = createTheme({
+    palette: {
+      custom: {
+        ${muiMarkerColors}
+      },
+    },
+  });
+    `,
+  };
+
+  const tailwindFormatted = {
+    detail: '*add to tailwind.config.js',
     text: `
   module.exports = {
     theme: {
       colors: {
-        ${markerColors}
+        ${twMarkerColors}
       },
   `,
   };
 
+  const cssFormatted = {
+    detail: '*add to css/scss stylesheet',
+    text: `
+  :root {
+      ${cssMarkerColors}
+    },
+  `,
+  };
+
+  const styledFormatted = {
+    detail: '*pass theme object to ThemeProvider',
+    text: `
+  const theme = {
+        ${muiMarkerColors}
+    },
+  `,
+  };
+
   const style: Styles = {
-    tailwind: tailwind,
+    css: cssFormatted,
+    tailwind: tailwindFormatted,
+    styled: styledFormatted,
+    mui: muiFormatted,
   };
 
   return (
@@ -52,8 +105,8 @@ const Output: FC<OutputProps> = ({ paletteMarkers }) => {
         css scss tailwind mui styled emotion
       </Typography>
       <FormatContainer>
+        <TextArea value={style[format].text} wrap="off" spellCheck={false} />
         <Typography fontSize="small">{style[format].detail}</Typography>
-        <TextArea value={style[format].text} spellCheck={false} />
       </FormatContainer>
     </Wrapper>
   );

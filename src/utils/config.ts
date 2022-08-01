@@ -1,3 +1,7 @@
+// unsplash api
+export const IMAGE_BASE_URL = 'https://api.unsplash.com/photos/';
+
+// image canvas / color
 export const REM_RATIO = 16;
 
 export const RGBA_GROUP = 4; // fixed jpg rgb px grouping (do not change)
