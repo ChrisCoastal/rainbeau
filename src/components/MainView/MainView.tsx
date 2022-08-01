@@ -138,20 +138,21 @@ const MainView: FC<MainViewProps> = ({
   };
 
   const changeImageHandler = async (
-    _: React.MouseEvent<Element, MouseEvent>,
+    _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     indexStep: number = 1
   ) => {
     console.log('CHANGE IMAGE');
 
-    if (images.length > 0 && images.length < currentImageIndex)
+    if (images.length > 0 && images.length < currentImageIndex) {
       setCurrentImageIndex((prev) => prev + indexStep);
-
-    if (images.length >= currentImageIndex) {
+    } else if (images.length >= currentImageIndex) {
       const apiKey = await fetchAPIKey();
       const images = await fetchImages(apiKey);
       images && setImagesState(images);
       setCurrentImageIndex(0);
     }
+
+    deletePaletteHandler();
   };
 
   const addMarkerHandler = useCallback(
@@ -187,6 +188,10 @@ const MainView: FC<MainViewProps> = ({
     [dispatch, currentImageData]
   );
 
+  const deletePaletteHandler = async () => {
+    dispatch({ type: 'deletePalette' });
+  };
+
   const artistName = images[currentImageIndex]?.artistName || 'unknown artist';
   const id = images[currentImageIndex]?.id || null;
   const imageURL = images[currentImageIndex]?.imageURL || null;
@@ -220,6 +225,7 @@ const MainView: FC<MainViewProps> = ({
         <Palette
           paletteMarkers={paletteMarkers}
           addMarkerHandler={addMarkerHandler}
+          deletePaletteHandler={deletePaletteHandler}
           dispatch={dispatch}
         />
         <Output paletteMarkers={paletteMarkers} />

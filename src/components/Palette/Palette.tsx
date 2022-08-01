@@ -29,12 +29,14 @@ interface PaletteProps {
     _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     markerQty?: number
   ) => ColorMarker[];
+  deletePaletteHandler: () => void;
   dispatch: React.Dispatch<ReducerActions>;
 }
 
 const Palette: FC<PaletteProps> = ({
   paletteMarkers,
   addMarkerHandler,
+  deletePaletteHandler,
   dispatch,
 }) => {
   const [open, setOpen] = useState<boolean>(false);
@@ -42,10 +44,6 @@ const Palette: FC<PaletteProps> = ({
   const modalHandler = (isVisible: boolean, action?: string) => {
     setOpen(isVisible);
     if (action === 'delete') deletePaletteHandler();
-  };
-
-  const deletePaletteHandler = () => {
-    dispatch({ type: 'deletePalette' });
   };
 
   const undoHandler = () => {

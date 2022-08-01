@@ -18,7 +18,10 @@ import UploadIcon from '@mui/icons-material/Upload';
 import { Wrapper } from './Actions.styles';
 
 interface ActionsProps {
-  changeImageHandler: (e: React.MouseEvent) => void;
+  changeImageHandler: (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    indexStep?: number
+  ) => void;
   imageDownloadURL: string | null;
   name: string | null;
   id: string | null;
