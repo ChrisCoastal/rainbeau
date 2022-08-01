@@ -72,7 +72,7 @@ const Palette: FC<PaletteProps> = ({
             </IconButton>
           </Tooltip>
           <Tooltip title="save palette">
-            <IconButton onClick={() => console.log('SAVED')}>
+            <IconButton onClick={() => console.log('SAVED')} disabled={true}>
               <SaveIcon />
             </IconButton>
           </Tooltip>
@@ -85,7 +85,6 @@ const Palette: FC<PaletteProps> = ({
               key={uuidv4()}
               markerNum={i}
               color={color}
-              // deleteMarkerHandler={deleteMarkerHandler}
               dispatch={dispatch}
             />
           ))}

@@ -105,8 +105,23 @@ const Output: FC<OutputProps> = ({ paletteMarkers }) => {
         css scss tailwind mui styled emotion
       </Typography>
       <FormatContainer>
-        <TextArea value={style[format].text} wrap="off" spellCheck={false} />
-        <Typography fontSize="small">{style[format].detail}</Typography>
+        {paletteMarkers.length !== 0 ? (
+          <>
+            <TextArea
+              value={style[format].text}
+              wrap="off"
+              spellCheck={false}
+            />
+            <Typography fontSize="small">{style[format].detail}</Typography>
+          </>
+        ) : (
+          <TextArea
+            value={`\n  No palette markers...`}
+            readOnly={true}
+            wrap="off"
+            spellCheck={false}
+          />
+        )}
       </FormatContainer>
     </Wrapper>
   );

@@ -94,8 +94,10 @@ const MainView: FC<MainViewProps> = ({
     ...CardSx,
   };
 
-  const artist = images[currentImage]?.artistName ?? 'unknown artist';
-  const imageURL = images[currentImage]?.imageURL;
+  const artistName = images[currentImage]?.artistName || 'unknown artist';
+  const id = images[currentImage]?.id || null;
+  const imageURL = images[currentImage]?.imageURL || null;
+  const downloadLink = images[currentImage]?.downloadLink || null;
 
   return (
     <Wrapper>
@@ -115,10 +117,10 @@ const MainView: FC<MainViewProps> = ({
           </Card>
           {/* <Card sx={CardBackSx}></Card> */}
         </FlipBox>
-        <Credit name={artist} />
+        <Credit name={artistName} />
       </ImageBox>
       <ActionsBox>
-        <Actions />
+        <Actions imageDownloadURL={downloadLink} name={artistName} id={id} />
         <Palette
           paletteMarkers={paletteMarkers}
           addMarkerHandler={addMarkerHandler}

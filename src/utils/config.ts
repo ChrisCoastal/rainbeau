@@ -1,6 +1,9 @@
 // unsplash api
 export const IMAGE_BASE_URL = 'https://api.unsplash.com/photos/';
 
+// firestore
+export const FIRESTORE_BASE_URL = 'https://api.unsplash.com/photos/';
+
 // image canvas / color
 export const REM_RATIO = 16;
 

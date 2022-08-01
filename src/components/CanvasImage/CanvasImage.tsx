@@ -1,6 +1,10 @@
 import { FC, useCallback } from 'react';
 import React, { useRef, useEffect, useState } from 'react';
 
+// firestore
+import database from '../../firestore.config';
+import { doc, getDoc, collection } from 'firebase/firestore';
+
 // hooks
 import useAddMarkers from '../../hooks/useAddMarkers';
 import useFetch from '../../hooks/useFetch';
@@ -11,7 +15,7 @@ import purpleImage from '../../images/martin-brechtl-zs3HRrWW66A-unsplash.jpg';
 
 // components
 import CanvasMarkers from '../CanvasMarker/CanvasMarkers';
-import LoadingSpinner from '../../UI/LoadingSpinner';
+import LoadingSpinner from '../../UI/LoadingSpinner/LoadingSpinner';
 
 // config
 import {
@@ -27,7 +31,7 @@ import { getPxGroupXY, rgbToColorName, rgbToHsl } from '../../utils/helpers';
 import { Wrapper, Canvas, ImageFallback } from './CanvasImage.styles';
 
 interface CanvasImageProps {
-  imageURL: string;
+  imageURL: string | null;
   paletteMarkers: ColorMarker[];
   // addMarkers: (markerQty?: number) => ColorMarker[];
   currentImageData: IndexedPxColor[];
@@ -384,29 +388,37 @@ const CanvasImage: FC<CanvasImageProps> = ({
   // const { data: apiData, error: fetchError } = useFetch();
   // console.log(data, fetchError);
 
-  const getImages = async () => {
-    const { data, fetch } = useFetch();
-  };
+  // const { data, fetch } = useFetch();
 
   // get images from api
   useEffect(() => {
-    const API_KEY = process.env!.UNSPLASH_API_KEY;
+    const API_KEY = process.env!.REACT_APP_UNSPLASH_API_KEY;
     (async () => {
       try {
-        // const response = await fetch();
-        // 'https://api.unsplash.com/photos/random?client_id=CLIENT_ID',
-        // TODO: add query
-        // 'https://api.unsplash.com/photos/random?count=1&orientation=squarish&client_id=CLIENT_ID',
-        // {
-        //   method: 'GET',
-        //   headers: {
-        //     'Content-Type': 'application/json',
-        //     'Accept-Version': 'v1',
-        //   },
-        // }
-        // const data: APIResponse= await response.json();
+        //////////////// UNSPLASH API
+        // const col = await collection(database, 'unsplash_api');
+        // const keyRef = doc(database, 'unsplash_api', 'key');
+        // const reponse = await getDoc(keyRef); //.then((response) => console.log(response));
+        // const apiKey = reponse.data()?.key;
+        // console.log(apiKey);
+
+        // if (apiKey === undefined) throw new Error('No response from database');
+        // const response = await fetch(
+        //   // 'https://api.unsplash.com/photos/random?client_id=API_KEY',
+        //   // TODO: switch to apiKey for production
+        //   `https://api.unsplash.com/photos/random?count=1&orientation=squarish&client_id=${API_KEY}`,
+        //   {
+        //     method: 'GET',
+        //     headers: {
+        //       'Content-Type': 'application/json',
+        //       'Accept-Version': 'v1',
+        //     },
+        //   }
+        // );
+        // const data: APIResponse = await response.json();
+        ///////////////
         // const data: APIResponse = DUMMY_RESPONSE;
-        const images = await getImages();
+        // const images = await getImages();
         const data = DUMMY_RESPONSE;
         const imageData = data.map((image) => ({
           altText: image.alt_description || image.description,
@@ -417,7 +429,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
           imageThumb: image.urls.thumb,
           downloadLink: image.links.download,
           id: image.id,
-          artist: image.user.name || image.user.username,
+          artistName: image.user.name || image.user.username,
           artistLink: image.user.portfolio_url,
         }));
         console.log(data, imageData);
@@ -431,6 +443,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
   // create initial markers
   useEffect(() => {
     setIsLoading(true);
+    if (imageURL === null) return;
     if (canvasRef.current) {
       canvasCtxRef.current = canvasRef.current.getContext('2d');
       const ctx = canvasCtxRef.current;
