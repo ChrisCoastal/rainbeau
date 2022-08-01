@@ -42,35 +42,64 @@ const MainView: FC<MainViewProps> = ({
   paletteMarkers,
   dispatch,
 }) => {
-  const [currentImage, setCurrentImage] = useState<number>(0);
+  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
 
-  // get images from api
+  const fetchAPIKey = async () => {
+    try {
+      // const API_KEY = process.env!.REACT_APP_UNSPLASH_API_KEY;
+      // get unsplash key from firestore
+      const keyRef = doc(database, 'unsplash_api', 'key');
+      const reponse = await getDoc(keyRef); //.then((response) => console.log(response));
+      const apiKey = reponse.data()?.key;
+
+      if (apiKey === undefined) throw new Error('No response from database');
+      console.log(apiKey);
+      return apiKey;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const fetchImages = async (key: string) => {
+    try {
+      const response = await fetch(
+        `https://api.unsplash.com/photos/random?count=1&orientation=squarish&client_id=${key}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept-Version': 'v1',
+          },
+        }
+      );
+      const data: APIResponse = await response.json();
+      return data;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const setImagesState = (dataFromAPI: APIResponse) => {
+    const imageData = dataFromAPI.map((image) => ({
+      altText: image.alt_description || image.description,
+      blurImage: image.blur_hash,
+      color: image.color,
+      imageDimensions: { x: image.width, y: image.height },
+      imageURL: image.urls.full,
+      imageThumb: image.urls.thumb,
+      downloadLink: image.links.download,
+      id: image.id,
+      artistName: image.user.name || image.user.username,
+      artistLink: image.user.portfolio_url,
+    }));
+    console.log(dataFromAPI, imageData);
+
+    dispatch({ type: 'setImages', payload: imageData });
+  };
+
   useEffect(() => {
     (async () => {
       try {
-        ////////////// UNSPLASH API
-        // const API_KEY = process.env!.REACT_APP_UNSPLASH_API_KEY;
-        //// get unsplash key from firestore
-        // const keyRef = doc(database, 'unsplash_api', 'key');
-        // const reponse = await getDoc(keyRef); //.then((response) => console.log(response));
-        // const apiKey = reponse.data()?.key;
-        // console.log(apiKey);
-
-        // if (apiKey === undefined) throw new Error('No response from database');
-        // // TODO: switch to apiKey for production
-        // const response = await fetch(
-        //   `https://api.unsplash.com/photos/random?count=1&orientation=squarish&client_id=${API_KEY}`,
-        //   {
-        //     method: 'GET',
-        //     headers: {
-        //       'Content-Type': 'application/json',
-        //       'Accept-Version': 'v1',
-        //     },
-        //   }
-        // );
-        // const data: APIResponse = await response.json();
-        /////////////
-
         // test data from unsplash api
         const data = DUMMY_RESPONSE;
 
@@ -108,12 +137,21 @@ const MainView: FC<MainViewProps> = ({
     // },
   };
 
-  const changeImageHandler = (
+  const changeImageHandler = async (
     _: React.MouseEvent<Element, MouseEvent>,
     indexStep: number = 1
   ) => {
-    if (images.length === currentImage)
-      setCurrentImage((prev) => prev + indexStep);
+    console.log('CHANGE IMAGE');
+
+    if (images.length > 0 && images.length < currentImageIndex)
+      setCurrentImageIndex((prev) => prev + indexStep);
+
+    if (images.length >= currentImageIndex) {
+      const apiKey = await fetchAPIKey();
+      const images = await fetchImages(apiKey);
+      images && setImagesState(images);
+      setCurrentImageIndex(0);
+    }
   };
 
   const addMarkerHandler = useCallback(
@@ -149,10 +187,10 @@ const MainView: FC<MainViewProps> = ({
     [dispatch, currentImageData]
   );
 
-  const artistName = images[currentImage]?.artistName || 'unknown artist';
-  const id = images[currentImage]?.id || null;
-  const imageURL = images[currentImage]?.imageURL || null;
-  const downloadLink = images[currentImage]?.downloadLink || null;
+  const artistName = images[currentImageIndex]?.artistName || 'unknown artist';
+  const id = images[currentImageIndex]?.id || null;
+  const imageURL = images[currentImageIndex]?.imageURL || null;
+  const downloadLink = images[currentImageIndex]?.downloadLink || null;
 
   return (
     <Wrapper>
