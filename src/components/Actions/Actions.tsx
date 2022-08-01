@@ -32,24 +32,26 @@ const Actions: FC<ActionsProps> = ({
 }) => {
   const [open, setOpen] = useState<boolean>(false);
 
-  const openModalHandler = (visible: boolean) => {
-    setOpen(visible);
+  const modalHandler = (isVisible: boolean) => {
+    setOpen(isVisible);
   };
 
   const uploadModal = {
     openState: open,
     content: <div>drop here</div>,
     text: 'I am modal',
-    confirmText: 'Upload',
-    handler: openModalHandler,
+    buttons: [{ text: 'Image From File' }, { text: 'Upload' }],
+    handler: modalHandler,
     openModalButton: (
       <Tooltip title="upload image">
-        <IconButton
-          onClick={() => openModalHandler(true)}
-          sx={{ transform: 'rotate: 180deg;' }}
-        >
-          <UploadIcon />
-        </IconButton>
+        <span>
+          <IconButton
+            onClick={() => modalHandler(true)}
+            sx={{ transform: 'rotate: 180deg;' }}
+          >
+            <UploadIcon />
+          </IconButton>
+        </span>
       </Tooltip>
     ),
   };
@@ -68,7 +70,7 @@ const Actions: FC<ActionsProps> = ({
           openModalButton={uploadModal.openModalButton}
           content={uploadModal.content}
           text={uploadModal.text}
-          confirmText={uploadModal.confirmText}
+          buttons={uploadModal.buttons}
           modalHandler={uploadModal.handler}
         />
         {imageDownloadURL && (

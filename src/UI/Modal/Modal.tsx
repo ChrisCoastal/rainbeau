@@ -1,13 +1,11 @@
-import { useState, forwardRef } from 'react';
+import { useState } from 'react';
 
 // types
 import type { FC, ReactElement } from 'react';
-import type { TransitionProps } from '@mui/material/transitions';
 
 // mui
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import Slide from '@mui/material/Slide';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -21,8 +19,12 @@ interface ModalProps {
   openModalButton: ReactElement;
   content?: ReactElement;
   text?: string;
-  confirmText: string;
-  modalHandler: (visible: boolean) => void;
+  buttons: {
+    text: string;
+    action?: string;
+    disabled?: boolean;
+  }[];
+  modalHandler: (isVisible: boolean, action?: string) => void;
 }
 
 const Modal: FC<ModalProps> = ({
@@ -30,9 +32,20 @@ const Modal: FC<ModalProps> = ({
   openModalButton,
   content,
   text,
-  confirmText,
+  buttons,
   modalHandler,
 }) => {
+  const modalButtons = buttons.map((button) => {
+    return (
+      <Button
+        onClick={() => modalHandler(false, button.action)}
+        disabled={button?.disabled ?? false}
+      >
+        {button.text}
+      </Button>
+    );
+  });
+
   return (
     <Wrapper>
       {openModalButton}
@@ -43,8 +56,7 @@ const Modal: FC<ModalProps> = ({
           <DialogContentText>{text}</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => modalHandler(false)}>{confirmText}</Button>
-          <Button onClick={() => modalHandler(false)}>{confirmText}</Button>
+          {modalButtons}
           <Button onClick={() => modalHandler(false)}>Cancel</Button>
         </DialogActions>
       </Dialog>

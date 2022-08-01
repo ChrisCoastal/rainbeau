@@ -1,7 +1,9 @@
-import React, { FC } from 'react';
+import type { FC } from 'react';
+import { useState } from 'react';
 
 // components
 import PaletteItem from '../PaletteItem/PaletteItem';
+import Modal from '../../UI/Modal/Modal';
 
 // uuid
 import { v4 as uuidv4 } from 'uuid';
@@ -35,21 +37,44 @@ const Palette: FC<PaletteProps> = ({
   addMarkerHandler,
   dispatch,
 }) => {
+  const [open, setOpen] = useState<boolean>(false);
+
+  const modalHandler = (isVisible: boolean, action?: string) => {
+    setOpen(isVisible);
+    if (action === 'delete') deletePaletteHandler();
+  };
+
   const deletePaletteHandler = () => {
     dispatch({ type: 'deletePalette' });
   };
 
-  const deleteMarkerHandler = (marker: ColorMarker) => {
-    // paletteMarkers
-    dispatch({ type: 'deleteMarker', payload: marker });
-  };
-
   const undoHandler = () => {
-    // paletteMarkers
     dispatch({ type: 'undoPalette' });
   };
 
+  const disableDeletePalette = paletteMarkers.length === 0;
   const disableAddMarker = paletteMarkers.length >= 8;
+
+  const uploadModal = {
+    openState: open,
+    content: <div>drop here</div>,
+    text: 'Are you sure you want to delete the current palette?',
+    buttons: [{ text: 'Delete', action: 'delete' }],
+    handler: modalHandler,
+    openModalButton: (
+      <Tooltip title="clear palette">
+        <span>
+          <IconButton
+            onClick={() => modalHandler(true)}
+            sx={{ transform: 'rotate: 180deg;' }}
+            disabled={disableDeletePalette}
+          >
+            <RemoveCircleIcon />
+          </IconButton>
+        </span>
+      </Tooltip>
+    ),
+  };
 
   return (
     <Wrapper>
@@ -57,19 +82,37 @@ const Palette: FC<PaletteProps> = ({
         <p>Palette</p>
         <div>
           <Tooltip title="add marker">
-            <IconButton onClick={addMarkerHandler} disabled={disableAddMarker}>
-              <AddCircleIcon />
-            </IconButton>
+            <span>
+              <IconButton
+                onClick={addMarkerHandler}
+                disabled={disableAddMarker}
+              >
+                <AddCircleIcon />
+              </IconButton>
+            </span>
           </Tooltip>
-          <Tooltip title="clear palette">
-            <IconButton onClick={deletePaletteHandler}>
+          <Modal
+            openState={uploadModal.openState}
+            openModalButton={uploadModal.openModalButton}
+            content={uploadModal.content}
+            text={uploadModal.text}
+            buttons={uploadModal.buttons}
+            modalHandler={uploadModal.handler}
+          />
+          {/* <Tooltip title="clear palette">
+            <IconButton
+              onClick={deletePaletteHandler}
+              disabled={disableDeletePalette}
+            >
               <RemoveCircleIcon />
             </IconButton>
-          </Tooltip>
+          </Tooltip> */}
           <Tooltip title="undo">
-            <IconButton onClick={undoHandler}>
-              <UndoIcon />
-            </IconButton>
+            <span>
+              <IconButton onClick={undoHandler} disabled={true}>
+                <UndoIcon />
+              </IconButton>
+            </span>
           </Tooltip>
           <Tooltip title="save palette">
             <span>
