@@ -20,7 +20,7 @@ interface CanvasMarkerProps {
   paletteMarkers: ColorMarker[];
   currentImageData: IndexedPxColor[];
   canvasBound: DOMRect | undefined;
-  canvasXY: (number | undefined)[];
+  canvasXY: { x: number | undefined; y: number | undefined };
   dispatch: React.Dispatch<ReducerActions>;
 }
 
@@ -52,29 +52,11 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
     e.stopPropagation();
     const MAX_XY = 800;
     const MIN_XY = 0;
-    // const mouseX = Math.min(e.clientX, MAX_XY);
-    // const mouseY = Math.min(e.clientY, MAX_XY);
+
     const mouseX = e.movementX;
     const mouseY = e.movementY;
 
-    // isMoving && setPrevMarkerPos({ x, y });
-    // isMoving &&
-    //   setMarkerPos((prev) => ({ x: prev.x + mouseX, y: prev.y + mouseY }));
-
-    // if (
-    //   palette[marker].xy.xPos + mouseX > MAX_XY ||
-    //   palette[marker].xy.xPos + mouseX < MIN_XY
-    // )
-    //   return;
-    // if (
-    //   palette[marker].xy.yPos + mouseY > MAX_XY ||
-    //   palette[marker].xy.yPos + mouseY < MIN_XY
-    // )
-    //   return;
-    console.log(mouseX, mouseY);
-
     if (mouseX === 0 && mouseY === 0) return;
-    console.log('no catch');
 
     const updatedPalette = [...paletteMarkers];
 
@@ -100,9 +82,7 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
 
     console.log('updated', updatedPalette, '\n prev', paletteMarkers);
 
-    console.log('NEW INDEX', updatedIndex);
     const updatedColor = currentImageData[updatedIndex];
-    console.log('UPDATED COLOR', updatedColor);
 
     const { r, g, b } = updatedColor;
     const { h, s, l } = rgbToHsl({ r, g, b });

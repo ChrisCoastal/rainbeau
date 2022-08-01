@@ -51,13 +51,10 @@ const CanvasImage: FC<CanvasImageProps> = ({
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
-  const canvasXY = [
-    canvasCtxRef.current?.canvas.width,
-    canvasCtxRef.current?.canvas.height,
-  ];
-  console.log(canvasXY);
-
-  console.log(paletteMarkers);
+  const canvasXY = {
+    x: canvasCtxRef.current?.canvas.width,
+    y: canvasCtxRef.current?.canvas.height,
+  };
 
   // px color/position data for current image
   const sampledPxData = useRef<IndexedPxColor[]>([]);
@@ -92,6 +89,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
       const dataPoints = imageData.length;
       // imageData[] format is [r,g,b,a,r,g,b,a...]
       const sampleRate = RGBA_GROUP * MEASUREMENT_PRECISION;
+      console.log('calculating image data...');
 
       for (let i = 0; i < dataPoints; i += sampleRate) {
         const r = imageData[i];
@@ -115,9 +113,9 @@ const CanvasImage: FC<CanvasImageProps> = ({
 
   // get images from api
   useEffect(() => {
-    const API_KEY = process.env!.REACT_APP_UNSPLASH_API_KEY;
     (async () => {
       try {
+        const API_KEY = process.env!.REACT_APP_UNSPLASH_API_KEY;
         //////////////// UNSPLASH API
         // get unsplash key from firestore
         // const col = await collection(database, 'unsplash_api');
@@ -164,7 +162,15 @@ const CanvasImage: FC<CanvasImageProps> = ({
     })();
   }, []);
 
-  // create initial markers
+  useEffect(() => {
+    const canvasXY = {
+      x: canvasCtxRef.current?.canvas.width,
+      y: canvasCtxRef.current?.canvas.height,
+    };
+
+    dispatch({ type: 'setCanvasXY', payload: canvasXY });
+  }, [canvasCtxRef.current]);
+
   useEffect(() => {
     setIsLoading(true);
     if (imageURL === null) return;

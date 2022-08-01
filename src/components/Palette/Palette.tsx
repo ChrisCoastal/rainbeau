@@ -72,9 +72,11 @@ const Palette: FC<PaletteProps> = ({
             </IconButton>
           </Tooltip>
           <Tooltip title="save palette">
-            <IconButton onClick={() => console.log('SAVED')} disabled={true}>
-              <SaveIcon />
-            </IconButton>
+            <span>
+              <IconButton onClick={() => console.log('SAVED')} disabled={true}>
+                <SaveIcon />
+              </IconButton>
+            </span>
           </Tooltip>
         </div>
       </PaletteActions>
