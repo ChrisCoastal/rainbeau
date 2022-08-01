@@ -55,7 +55,7 @@ const Palette: FC<PaletteProps> = ({
   const disableDeletePalette = paletteMarkers.length === 0;
   const disableAddMarker = paletteMarkers.length >= 8;
 
-  const uploadModal = {
+  const deletePaletteModal = {
     openState: open,
     content: <div>drop here</div>,
     text: 'Are you sure you want to delete the current palette?',
@@ -66,7 +66,6 @@ const Palette: FC<PaletteProps> = ({
         <span>
           <IconButton
             onClick={() => modalHandler(true)}
-            sx={{ transform: 'rotate: 180deg;' }}
             disabled={disableDeletePalette}
           >
             <RemoveCircleIcon />
@@ -92,21 +91,13 @@ const Palette: FC<PaletteProps> = ({
             </span>
           </Tooltip>
           <Modal
-            openState={uploadModal.openState}
-            openModalButton={uploadModal.openModalButton}
-            content={uploadModal.content}
-            text={uploadModal.text}
-            buttons={uploadModal.buttons}
-            modalHandler={uploadModal.handler}
+            openState={deletePaletteModal.openState}
+            openModalButton={deletePaletteModal.openModalButton}
+            content={deletePaletteModal.content}
+            text={deletePaletteModal.text}
+            buttons={deletePaletteModal.buttons}
+            modalHandler={deletePaletteModal.handler}
           />
-          {/* <Tooltip title="clear palette">
-            <IconButton
-              onClick={deletePaletteHandler}
-              disabled={disableDeletePalette}
-            >
-              <RemoveCircleIcon />
-            </IconButton>
-          </Tooltip> */}
           <Tooltip title="undo">
             <span>
               <IconButton onClick={undoHandler} disabled={true}>
