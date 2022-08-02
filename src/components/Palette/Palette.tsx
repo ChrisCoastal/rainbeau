@@ -76,7 +76,8 @@ const Palette: FC<PaletteProps> = ({
   const paletteItems = paletteMarkers.map((marker, i) => {
     return (
       <PaletteItem
-        key={uuidv4()}
+        // key={uuidv4()}
+        key={Math.random()}
         markerNum={i}
         marker={marker}
         dispatch={dispatch}
@@ -124,15 +125,7 @@ const Palette: FC<PaletteProps> = ({
         </div>
       </PaletteActions>
       <PaletteItemsContainer>
-        {paletteMarkers.length > 0 &&
-          paletteMarkers.map((marker, i) => (
-            <PaletteItem
-              key={uuidv4()}
-              markerNum={i}
-              marker={marker}
-              dispatch={dispatch}
-            />
-          ))}
+        {paletteMarkers.length > 0 && paletteItems}
       </PaletteItemsContainer>
     </Wrapper>
   );

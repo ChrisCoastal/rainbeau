@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useMemo, useRef } from 'react';
 
 // hooks
 import useInput from '../../hooks/useInput';
@@ -34,9 +34,12 @@ interface PaletteItemProps {
 }
 
 const PaletteItem: FC<PaletteItemProps> = ({ marker, markerNum, dispatch }) => {
-  // const initialValue = marker ? hslToColorName(marker) : 'default-color-name';
+  // ts-expect-error
+  const initialValue = hslToColorName(marker);
+
   // const initialValue = marker?.name || 'default-color-name';
-  const [inputValue, setInputValue] = useState<string>(hslToColorName(marker));
+  const [inputValue, setInputValue] = useState<string>('');
+  const [focus, setFocus] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const colorRef = useRef<HTMLParagraphElement>(null);
   // const { inputValueHandler, inputValue, inputReset } = useInput(
@@ -46,8 +49,6 @@ const PaletteItem: FC<PaletteItemProps> = ({ marker, markerNum, dispatch }) => {
   //   dispatch,
   //   initialValue
   // );
-
-  // const inputValue = initialValue;
 
   const inputValueHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log(event.target.value);
@@ -72,15 +73,42 @@ const PaletteItem: FC<PaletteItemProps> = ({ marker, markerNum, dispatch }) => {
     //   type: 'updateColorNames',
     //   payload: { index: markerNum, updatedColorName: '' },
     // });
-    if (inputRef.current) inputRef.current.focus();
+    if (inputRef.current) {
+      inputRef.current.focus();
+      setFocus(true);
+    }
+  };
+
+  const focusHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('focus', event);
+    if (event.type === 'focus') setFocus(true);
+
+    if (event.type === 'blur' && focus) {
+      dispatch({
+        type: 'updateColorNames',
+        payload: { index: markerNum, updatedColorName: inputValue },
+      });
+    }
+    if (event.type === 'blur') setFocus(false);
   };
 
   // useEffect(() => {
+  // dispatch({
+  // type: 'updateColorNames',
+  // payload: { index: markerNum, updatedColorName: inputValue },
+  // });
   //   dispatch({
-  //     type: 'updatePalette',
-  //     payload: { markerNum, updatedMarker: { ...marker, name: inputValue } },
-  //   });
+  //   type: 'updatePalette',
+  //   payload: { markerNum, updatedMarker: { ...marker, name: inputValue } },
+  // });
   // }, [inputValue]);
+
+  const keyDownHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      inputRef.current && inputRef.current.blur();
+      setFocus(false);
+    }
+  };
 
   const deleteMarkerHandler = (marker: ColorMarker) => {
     dispatch({ type: 'deleteMarker', payload: marker });
@@ -106,6 +134,10 @@ const PaletteItem: FC<PaletteItemProps> = ({ marker, markerNum, dispatch }) => {
           <input
             value={inputValue}
             onChange={inputValueHandler}
+            // autoFocus={focus}
+            onFocus={focusHandler}
+            onBlur={focusHandler}
+            onKeyDown={(event) => keyDownHandler(event)}
             ref={inputRef}
           ></input>
           <Tooltip title="clear color name">
