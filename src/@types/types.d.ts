@@ -87,7 +87,7 @@ interface coordinate {
 
 interface ColorMarker extends IndexedPxColor {
   xy: coordinate;
-  name: string;
+  name?: string;
 }
 
 interface ColorName {

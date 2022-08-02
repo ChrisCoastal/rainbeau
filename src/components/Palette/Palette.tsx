@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 
 // components
 import PaletteItem from '../PaletteItem/PaletteItem';
@@ -73,6 +73,17 @@ const Palette: FC<PaletteProps> = ({
     ),
   };
 
+  const paletteItems = paletteMarkers.map((marker, i) => {
+    return (
+      <PaletteItem
+        key={uuidv4()}
+        markerNum={i}
+        marker={marker}
+        dispatch={dispatch}
+      />
+    );
+  });
+
   return (
     <Wrapper>
       <PaletteActions>
@@ -114,11 +125,11 @@ const Palette: FC<PaletteProps> = ({
       </PaletteActions>
       <PaletteItemsContainer>
         {paletteMarkers.length > 0 &&
-          paletteMarkers.map((color, i) => (
+          paletteMarkers.map((marker, i) => (
             <PaletteItem
               key={uuidv4()}
               markerNum={i}
-              color={color}
+              marker={marker}
               dispatch={dispatch}
             />
           ))}

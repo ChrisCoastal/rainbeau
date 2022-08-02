@@ -31,23 +31,24 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
   canvasBound,
   dispatch,
 }) => {
-  const [clickOnMarker, setClickOnMarker] = useState<number>(-1);
+  const [activeMarkerNum, setActiveMarkerNum] = useState<number>(-1);
 
   const clickHandler = (e: React.MouseEvent, num: number, clickPos = null) => {
     // console.log('mouseevent', e, num);
-    if (e.type === 'mouseenter' && clickOnMarker === num) return;
-    if (e.type === 'mousedown') setClickOnMarker(num);
+    if (e.type === 'mouseenter' && activeMarkerNum === num) return;
+    if (e.type === 'mousedown') setActiveMarkerNum(num);
     if (
       e.type === 'mouseenter' ||
       e.type === 'mouseleave' ||
       e.type === 'mouseup'
     )
-      setClickOnMarker(-1);
+      setActiveMarkerNum(-1);
   };
 
   const moveMarkerHandler = (e: React.MouseEvent) => {
-    if (clickOnMarker === -1) return;
-    const marker = clickOnMarker;
+    if (activeMarkerNum === -1) return;
+
+    const marker = paletteMarkers[activeMarkerNum];
     e.preventDefault();
     e.stopPropagation();
     const MAX_XY = 800;
@@ -58,44 +59,64 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
 
     if (mouseX === 0 && mouseY === 0) return;
 
-    const updatedPalette = [...paletteMarkers];
+    // const updatedPalette = [...paletteMarkers];
 
     // update xy
-    updatedPalette[marker].xy = {
-      xPos: (updatedPalette[marker].xy.xPos += mouseX),
-      yPos: (updatedPalette[marker].xy.yPos += mouseY),
+    const updatedXY = {
+      xPos: (marker.xy.xPos += mouseX),
+      yPos: (marker.xy.yPos += mouseY),
     };
+    console.log('XY', updatedXY);
 
-    for (const coord in updatedPalette) {
-      let dist = updatedPalette[marker].xy[coord as keyof coordinate];
-      // FIXME: not capping distance
-      if (dist > MAX_XY)
-        updatedPalette[marker].xy[coord as keyof coordinate] = MAX_XY;
-      if (dist < MIN_XY)
-        updatedPalette[marker].xy[coord as keyof coordinate] = MIN_XY;
-    }
+    // updatedPalette[marker].xy = {
+    //   xPos: (updatedPalette[marker].xy.xPos += mouseX),
+    //   yPos: (updatedPalette[marker].xy.yPos += mouseY),
+    // };
+
+    // for (const coord in updatedPalette) {
+    //   let dist = updatedPalette[marker].xy[coord as keyof coordinate];
+    //   // FIXME: not capping distance
+    //   if (dist > MAX_XY)
+    //     updatedPalette[marker].xy[coord as keyof coordinate] = MAX_XY;
+    //   if (dist < MIN_XY)
+    //     updatedPalette[marker].xy[coord as keyof coordinate] = MIN_XY;
+    // }
 
     // get color at new coordinates
-    const { xPos, yPos } = updatedPalette[marker].xy;
+    // const { xPos, yPos } = updatedPalette[marker].xy;
     // const { xPos, yPos } = getPxGroupXY(updatedPalette[marker].i); // if x,y not added to state
-    const updatedIndex = getPxGroupIndex(xPos, yPos);
+    const updatedIndex = getPxGroupIndex(updatedXY.xPos, updatedXY.yPos);
 
-    console.log('updated', updatedPalette, '\n prev', paletteMarkers);
+    // console.log('updated', updatedPalette, '\n prev', paletteMarkers);
+    const updatedPx = currentImageData[updatedIndex];
+    const updatedName = rgbToColorName(updatedPx);
+    const updatedMarker = {
+      ...updatedPx,
+      xy: updatedXY,
+      name: updatedName,
+    };
+    console.log('UPDATED MARKER', updatedMarker);
 
-    const updatedColor = currentImageData[updatedIndex];
+    // const updatedColor = currentImageData[updatedIndex];
 
-    const { r, g, b } = updatedColor;
-    const { h, s, l } = rgbToHsl({ r, g, b });
-    const { i, xy } = updatedPalette[marker];
-    const name = rgbToColorName({ r, g, b });
-    const updated = { r, g, b, h, s, l, i, xy, name };
+    // const { r, g, b } = updatedColor;
+    // const { h, s, l } = rgbToHsl({ r, g, b });
+    // const { i, xy } = updatedPalette[marker];
+    // const name = rgbToColorName({ r, g, b });
+    // const updated = { r, g, b, h, s, l, i, xy, name };
 
-    updatedPalette[marker] = updated;
+    // updatedPalette[marker] = updated;
 
-    dispatch({ type: 'updatePalette', payload: updatedPalette });
+    // dispatch({ type: 'updatePalette', payload: updatedPalette });
+    dispatch({
+      type: 'updatePalette',
+      payload: { markerNum: activeMarkerNum, updatedMarker },
+    });
   };
 
   // FIXME: all markers rerender on each update
+  console.log(paletteMarkers);
+
   const markersPos = paletteMarkers.map((marker, index) => {
     const { xPos, yPos } = marker.xy;
     console.log(xPos, yPos);

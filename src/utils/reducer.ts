@@ -1,3 +1,5 @@
+import { palette } from '@mui/system';
+
 export const reducer = (state: appState, action: ReducerActions): appState => {
   const { type, payload } = action;
   switch (type) {
@@ -33,9 +35,11 @@ export const reducer = (state: appState, action: ReducerActions): appState => {
         // markerHistory: [...state.markerHistory, state.paletteMarkers],
       };
     case 'updatePalette':
+      const newPaletteMarkersState = [...state.paletteMarkers];
+      newPaletteMarkersState[payload.markerNum] = payload.updatedMarker;
       return {
         ...state,
-        paletteMarkers: payload,
+        paletteMarkers: newPaletteMarkersState,
         // markerHistory: [...state.markerHistory, state.paletteMarkers],
       };
     case 'deletePalette':
