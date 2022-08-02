@@ -29,7 +29,7 @@ interface CanvasImageProps {
   imageURL: string | null;
   paletteMarkers: ColorMarker[];
   addMarkers: (
-    _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    _: React.MouseEvent<HTMLButtonElement, MouseEvent> | null,
     markerQty?: number
   ) => ColorMarker[];
   currentImageData: IndexedPxColor[];
@@ -58,6 +58,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
   const createMarkers = useCallback(
     (indexedImagePx: IndexedPxColor[], markerQty: number = 3) => {
       const markers: ColorMarker[] = [];
+      const colorNames: string[] = [];
       const totalPx = indexedImagePx.length; // 640000
       // TODO: sort by hue
       // const sortedPxGroups = getSortedPx([...indexedImagePx], 'h');
@@ -70,11 +71,14 @@ const CanvasImage: FC<CanvasImageProps> = ({
         markers.push({
           ...randomPx,
           xy: getPxGroupXY(randomPx.i),
-          name: rgbToColorName({ r, g, b }),
+          // name: rgbToColorName({ r, g, b }),
         });
+        colorNames.push(rgbToColorName({ r, g, b }));
       }
 
       dispatch({ type: 'addMarker', payload: markers });
+      dispatch({ type: 'addColorName', payload: colorNames });
+      // dispatch({ type: 'addColorName', payload: markers });
       return markers;
     },
     [dispatch]
@@ -153,6 +157,8 @@ const CanvasImage: FC<CanvasImageProps> = ({
 
         const indexedImagePx = setImageDataState(imageData);
         const markers = createMarkers(indexedImagePx);
+        // setImageDataState(imageData);
+        // addMarkers(null, 3);
 
         console.log(canvasRef.current?.getBoundingClientRect());
       };

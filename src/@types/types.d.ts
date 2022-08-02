@@ -4,6 +4,7 @@ interface appState {
   images: Image[];
   currentImageData: IndexedPxColor[];
   paletteMarkers: ColorMarker[];
+  colorNames: string[];
   markerHistory: ColorMarker[][];
 }
 
@@ -14,6 +15,8 @@ interface ReducerActions {
     | 'setCurrentImageData'
     | 'addMarker'
     | 'deleteMarker'
+    | 'addColorName'
+    | 'updateColorNames'
     | 'updatePalette'
     | 'deletePalette'
     | 'undoPalette';
@@ -87,7 +90,6 @@ interface coordinate {
 
 interface ColorMarker extends IndexedPxColor {
   xy: coordinate;
-  name?: string;
 }
 
 interface ColorName {

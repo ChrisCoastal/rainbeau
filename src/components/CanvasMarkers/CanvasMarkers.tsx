@@ -89,11 +89,11 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
 
     // console.log('updated', updatedPalette, '\n prev', paletteMarkers);
     const updatedPx = currentImageData[updatedIndex];
-    const updatedName = rgbToColorName(updatedPx);
+    // const updatedName = rgbToColorName(updatedPx);
     const updatedMarker = {
       ...updatedPx,
       xy: updatedXY,
-      name: updatedName,
+      // name: updatedName,
     };
     console.log('UPDATED MARKER', updatedMarker);
 

@@ -10,6 +10,7 @@ import { Wrapper, TextArea, FormatContainer } from './Output.styles';
 
 interface OutputProps {
   paletteMarkers: ColorMarker[];
+  colorNames: string[];
 }
 
 interface Format {
@@ -24,26 +25,26 @@ interface Styles {
   css: Format;
 }
 
-const Output: FC<OutputProps> = ({ paletteMarkers }) => {
+const Output: FC<OutputProps> = ({ paletteMarkers, colorNames }) => {
   const [format, setFormat] = useState<keyof Styles>('styled');
   const cssMarkerColors = paletteMarkers
-    .map((marker) => {
+    .map((marker, i) => {
       const { r, g, b } = marker;
-      return `--${marker.name}: 'rgb(${r},${g},${b})'`;
+      return `--${colorNames[i]}: 'rgb(${r},${g},${b})'`;
     })
     .join(',\n      ');
 
   const twMarkerColors = paletteMarkers
-    .map((marker) => {
+    .map((marker, i) => {
       const { r, g, b } = marker;
-      return `'${marker.name}': 'rgb(${r},${g},${b})'`;
+      return `'${colorNames[i]}': 'rgb(${r},${g},${b})'`;
     })
     .join(',\n        ');
 
   const muiMarkerColors = paletteMarkers
-    .map((marker) => {
+    .map((marker, i) => {
       const { r, g, b } = marker;
-      return `${marker.name}: 'rgb(${r},${g},${b})'`;
+      return `${colorNames[i]}: 'rgb(${r},${g},${b})'`;
     })
     .join(',\n        ');
 

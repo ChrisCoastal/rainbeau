@@ -33,6 +33,7 @@ interface MainViewProps {
   images: Image[];
   currentImageData: IndexedPxColor[];
   paletteMarkers: ColorMarker[];
+  colorNames: string[];
   dispatch: React.Dispatch<ReducerActions>;
 }
 
@@ -40,6 +41,7 @@ const MainView: FC<MainViewProps> = ({
   images,
   currentImageData,
   paletteMarkers,
+  colorNames,
   dispatch,
 }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
@@ -157,11 +159,12 @@ const MainView: FC<MainViewProps> = ({
 
   const addMarkerHandler = useCallback(
     (
-      _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+      _: React.MouseEvent<HTMLButtonElement, MouseEvent> | null,
       markerQty: number = 1
     ) => {
       if (!currentImageData) return [];
       const markers: ColorMarker[] = [];
+      const colorNames: string[] = [];
       const totalPx = currentImageData.length; // 640000
       // sort by hue
       // const sortedPxGroups = getSortedPx([...currentImageData], 'h');
@@ -177,12 +180,13 @@ const MainView: FC<MainViewProps> = ({
         markers.push({
           ...randomPx,
           xy: getPxGroupXY(randomPx.i),
-          name: rgbToColorName({ r, g, b }),
         });
+        colorNames.push(rgbToColorName({ r, g, b }));
       }
       console.log(totalPx, markers);
 
       dispatch({ type: 'addMarker', payload: markers });
+      dispatch({ type: 'addColorName', payload: colorNames });
       return markers;
     },
     [dispatch, currentImageData]
@@ -228,7 +232,7 @@ const MainView: FC<MainViewProps> = ({
           deletePaletteHandler={deletePaletteHandler}
           dispatch={dispatch}
         />
-        <Output paletteMarkers={paletteMarkers} />
+        <Output paletteMarkers={paletteMarkers} colorNames={colorNames} />
       </ActionsBox>
     </Wrapper>
   );

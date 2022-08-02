@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useState, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 // hooks
 import useInput from '../../hooks/useInput';
@@ -36,13 +36,15 @@ interface PaletteItemProps {
 const PaletteItem: FC<PaletteItemProps> = ({ marker, markerNum, dispatch }) => {
   // const initialValue = marker ? hslToColorName(marker) : 'default-color-name';
   // const initialValue = marker?.name || 'default-color-name';
-  const [inputValue, setInputValue] = useState<string>('hello');
+  const [inputValue, setInputValue] = useState<string>(hslToColorName(marker));
   const inputRef = useRef<HTMLInputElement>(null);
   const colorRef = useRef<HTMLParagraphElement>(null);
   // const { inputValueHandler, inputValue, inputReset } = useInput(
-  //// validateInput,
-  // inputRef,
-  // initialValue
+  //   // validateInput,
+  //   inputRef,
+  //   markerNum,
+  //   dispatch,
+  //   initialValue
   // );
 
   // const inputValue = initialValue;
@@ -50,13 +52,13 @@ const PaletteItem: FC<PaletteItemProps> = ({ marker, markerNum, dispatch }) => {
   const inputValueHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log(event.target.value);
     const userInput = (event.target as HTMLInputElement).value;
-    const updatedMarker = { ...marker, name: userInput };
-    console.log(updatedMarker);
+    // const updatedMarker = { ...marker, name: userInput };
+    // console.log(updatedMarker);
 
     setInputValue(userInput);
     // dispatch({
-    //   type: 'updatePalette',
-    //   payload: { markerNum, updatedMarker: updatedMarker },
+    //   type: 'updateColorNames',
+    //   payload: { index: markerNum, updatedColorName: userInput },
     // });
   };
 
@@ -66,8 +68,19 @@ const PaletteItem: FC<PaletteItemProps> = ({ marker, markerNum, dispatch }) => {
     //   type: 'updatePalette',
     //   payload: { markerNum, updatedMarker: { ...marker, name: '' } },
     // });
+    // dispatch({
+    //   type: 'updateColorNames',
+    //   payload: { index: markerNum, updatedColorName: '' },
+    // });
     if (inputRef.current) inputRef.current.focus();
   };
+
+  // useEffect(() => {
+  //   dispatch({
+  //     type: 'updatePalette',
+  //     payload: { markerNum, updatedMarker: { ...marker, name: inputValue } },
+  //   });
+  // }, [inputValue]);
 
   const deleteMarkerHandler = (marker: ColorMarker) => {
     dispatch({ type: 'deleteMarker', payload: marker });

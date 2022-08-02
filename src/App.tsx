@@ -13,6 +13,7 @@ function App() {
     images: [],
     currentImageData: [],
     paletteMarkers: [],
+    colorNames: [],
     markerHistory: [],
   };
 
@@ -30,6 +31,7 @@ function App() {
         images={state.images}
         currentImageData={state.currentImageData}
         paletteMarkers={state.paletteMarkers}
+        colorNames={state.colorNames}
         dispatch={dispatch}
       />
     </div>
