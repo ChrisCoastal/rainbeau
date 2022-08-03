@@ -71,13 +71,13 @@ const CanvasImage: FC<CanvasImageProps> = ({
         markers.push({
           ...randomPx,
           xy: getPxGroupXY(randomPx.i),
-          // name: rgbToColorName({ r, g, b }),
+          name: rgbToColorName({ r, g, b }),
         });
         colorNames.push(rgbToColorName({ r, g, b }));
       }
 
       dispatch({ type: 'addMarker', payload: markers });
-      dispatch({ type: 'addColorName', payload: colorNames });
+      // dispatch({ type: 'addColorName', payload: colorNames });
       // dispatch({ type: 'addColorName', payload: markers });
       return markers;
     },

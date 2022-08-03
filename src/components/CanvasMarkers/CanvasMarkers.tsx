@@ -93,7 +93,7 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
     const updatedMarker = {
       ...updatedPx,
       xy: updatedXY,
-      // name: updatedName,
+      name: updatedName,
     };
     console.log('UPDATED MARKER', updatedMarker);
 
@@ -112,10 +112,10 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
       type: 'updatePalette',
       payload: { markerNum: activeMarkerNum, updatedMarker },
     });
-    dispatch({
-      type: 'updateColorNames',
-      payload: { index: activeMarkerNum, updatedColorName: updatedName },
-    });
+    // dispatch({
+    //   type: 'updateColorNames',
+    //   payload: { index: activeMarkerNum, updatedColorName: updatedName },
+    // });
   };
 
   // FIXME: all markers rerender on each update

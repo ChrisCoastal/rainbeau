@@ -30,21 +30,27 @@ const Output: FC<OutputProps> = ({ paletteMarkers, colorNames }) => {
   const cssMarkerColors = paletteMarkers
     .map((marker, i) => {
       const { r, g, b } = marker;
-      return `--${colorNames[i]}: 'rgb(${r},${g},${b})'`;
+      return `--${
+        paletteMarkers[i].customName || paletteMarkers[i].name
+      }: 'rgb(${r},${g},${b})'`;
     })
     .join(',\n      ');
 
   const twMarkerColors = paletteMarkers
     .map((marker, i) => {
       const { r, g, b } = marker;
-      return `'${colorNames[i]}': 'rgb(${r},${g},${b})'`;
+      return `'${
+        paletteMarkers[i].customName || paletteMarkers[i].name
+      }': 'rgb(${r},${g},${b})'`;
     })
     .join(',\n        ');
 
   const muiMarkerColors = paletteMarkers
     .map((marker, i) => {
       const { r, g, b } = marker;
-      return `${colorNames[i]}: 'rgb(${r},${g},${b})'`;
+      return `${
+        paletteMarkers[i].customName || paletteMarkers[i].name
+      }: 'rgb(${r},${g},${b})'`;
     })
     .join(',\n        ');
 

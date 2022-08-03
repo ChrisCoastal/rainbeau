@@ -180,13 +180,14 @@ const MainView: FC<MainViewProps> = ({
         markers.push({
           ...randomPx,
           xy: getPxGroupXY(randomPx.i),
+          name: rgbToColorName({ r, g, b }),
         });
-        colorNames.push(rgbToColorName({ r, g, b }));
+        // colorNames.push(rgbToColorName({ r, g, b }));
       }
       console.log(totalPx, markers);
 
       dispatch({ type: 'addMarker', payload: markers });
-      dispatch({ type: 'addColorName', payload: colorNames });
+      // dispatch({ type: 'addColorName', payload: colorNames });
       return markers;
     },
     [dispatch, currentImageData]

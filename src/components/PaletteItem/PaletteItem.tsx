@@ -15,7 +15,7 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import DragHandleIcon from '@mui/icons-material/DragHandle';
 
 // helpers
-import { hslToColorName } from '../../utils/helpers';
+import { rgbToColorName } from '../../utils/helpers';
 
 // styles
 import {
@@ -34,11 +34,11 @@ interface PaletteItemProps {
 }
 
 const PaletteItem: FC<PaletteItemProps> = ({ marker, markerNum, dispatch }) => {
-  // ts-expect-error
-  const initialValue = hslToColorName(marker);
+  // const initialValue = color ? rgbToColorName(color) : 'default-color-name';
+  const initialValue = marker.customName || marker.name;
 
   // const initialValue = marker?.name || 'default-color-name';
-  const [inputValue, setInputValue] = useState<string>('');
+  const [inputValue, setInputValue] = useState<string>(initialValue);
   const [focus, setFocus] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const colorRef = useRef<HTMLParagraphElement>(null);
@@ -84,9 +84,16 @@ const PaletteItem: FC<PaletteItemProps> = ({ marker, markerNum, dispatch }) => {
     if (event.type === 'focus') setFocus(true);
 
     if (event.type === 'blur' && focus) {
+      // dispatch({
+      //   type: 'updateColorNames',
+      //   payload: { index: markerNum, updatedColorName: inputValue },
+      // });
       dispatch({
-        type: 'updateColorNames',
-        payload: { index: markerNum, updatedColorName: inputValue },
+        type: 'updatePalette',
+        payload: {
+          markerNum,
+          updatedMarker: { ...marker, customName: inputValue },
+        },
       });
     }
     if (event.type === 'blur') setFocus(false);

@@ -90,6 +90,8 @@ interface coordinate {
 
 interface ColorMarker extends IndexedPxColor {
   xy: coordinate;
+  name: string;
+  customName?: string;
 }
 
 interface ColorName {
