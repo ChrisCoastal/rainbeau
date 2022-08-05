@@ -132,19 +132,19 @@ const MainView: FC<MainViewProps> = ({
     //   transform: 'rotateY(-180deg)',
     // },
   };
-
+  console.log(images.length);
   const changeImageHandler = async (
     _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     indexStep: number = 1
   ) => {
     try {
-      console.log(currentImageIndex);
+      console.log(images.length, currentImageIndex);
       setIsError(false);
       setIsLoading(true);
 
-      if (images.length > 0 && images.length < currentImageIndex) {
+      if (images.length > 0 && images.length > currentImageIndex + 1) {
         setCurrentImageIndex((prev) => prev + indexStep);
-      } else if (images.length >= currentImageIndex) {
+      } else if (currentImageIndex + 1 >= images.length) {
         const apiKey = (await fetchAPIKey()) as string;
         const images = await fetchImages(apiKey);
 
@@ -215,6 +215,7 @@ const MainView: FC<MainViewProps> = ({
                 addMarkers={addMarkerHandler}
                 currentImageData={currentImageData}
                 isLoading={isLoading}
+                isError={isError}
                 onImageDraw={onImageDraw}
                 dispatch={dispatch}
               />

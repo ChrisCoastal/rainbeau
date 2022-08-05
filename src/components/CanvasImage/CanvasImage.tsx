@@ -1,9 +1,5 @@
 import { FC, useCallback } from 'react';
-import React, { useRef, useEffect, useState } from 'react';
-
-// hooks
-// import useAddMarkers from '../../hooks/useAddMarkers';
-// import useFetch from '../../hooks/useFetch';
+import React, { useRef, useEffect } from 'react';
 
 // images
 import purpleImage from '../../images/martin-brechtl-zs3HRrWW66A-unsplash.jpg';
@@ -34,6 +30,7 @@ interface CanvasImageProps {
   ) => ColorMarker[];
   currentImageData: IndexedPxColor[];
   isLoading: boolean;
+  isError: boolean;
   onImageDraw: (imageDrawn: boolean) => void;
   dispatch: React.Dispatch<ReducerActions>;
 }
@@ -43,11 +40,10 @@ const CanvasImage: FC<CanvasImageProps> = ({
   paletteMarkers,
   currentImageData,
   isLoading,
+  isError,
   onImageDraw,
   dispatch,
 }) => {
-  // const [isLoading, setIsLoading] = useState<boolean>(false);
-
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
   const canvasXY = {
@@ -155,14 +151,12 @@ const CanvasImage: FC<CanvasImageProps> = ({
 
         const indexedImagePx = setImageDataState(imageData);
         const markers = createMarkers(indexedImagePx);
-        // setImageDataState(imageData);
-        // addMarkers(null, 3);
 
         console.log(canvasRef.current?.getBoundingClientRect());
       };
 
       // asign image to canvas context
-      // canvasImage.src = redImage;
+      // canvasImage.src = redImage; //test image
       canvasImage.src = imageURL;
     }
   }, [imageURL, createMarkers, setImageDataState, onImageDraw]);
@@ -171,6 +165,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
     <>
       <Wrapper>
         {isLoading && <LoadingSpinner />}
+        {isError && <p>There was an error. Please try again.</p>}
         <CanvasMarkers
           paletteMarkers={paletteMarkers}
           currentImageData={currentImageData}

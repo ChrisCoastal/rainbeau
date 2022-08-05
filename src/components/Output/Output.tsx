@@ -3,9 +3,17 @@ import { useState } from 'react';
 
 // mui
 import Typography from '@mui/material/Typography';
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 // styles
-import { Wrapper, TextArea, FormatContainer } from './Output.styles';
+import {
+  Wrapper,
+  CopyIconWrapper,
+  TextArea,
+  FormatContainer,
+} from './Output.styles';
 
 interface OutputProps {
   paletteMarkers: ColorMarker[];
@@ -25,6 +33,7 @@ interface Styles {
 
 const Output: FC<OutputProps> = ({ paletteMarkers }) => {
   const [format, setFormat] = useState<keyof Styles>('styled');
+
   const cssMarkerColors = paletteMarkers
     .map((marker, i) => {
       const { r, g, b } = marker;
@@ -103,31 +112,40 @@ const Output: FC<OutputProps> = ({ paletteMarkers }) => {
     mui: muiFormatted,
   };
 
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(style[format].text);
+  };
+
+  const stylesTextArea = (
+    <FormatContainer>
+      <TextArea value={style[format].text} wrap="off" spellCheck={false} />
+      <CopyIconWrapper>
+        <Tooltip title="copy">
+          <IconButton onClick={copyToClipboard}>
+            <ContentCopyIcon />
+          </IconButton>
+        </Tooltip>
+      </CopyIconWrapper>
+      <Typography fontSize="small">{style[format].detail}</Typography>
+    </FormatContainer>
+  );
+
+  const fallbackTextArea = (
+    <TextArea
+      value={`\n  No palette markers...`}
+      readOnly={true}
+      wrap="off"
+      spellCheck={false}
+    />
+  );
+
   return (
     <Wrapper>
       <div>Output</div>
       <Typography fontSize="small">
         css scss tailwind mui styled emotion
       </Typography>
-      <FormatContainer>
-        {paletteMarkers.length !== 0 ? (
-          <>
-            <TextArea
-              value={style[format].text}
-              wrap="off"
-              spellCheck={false}
-            />
-            <Typography fontSize="small">{style[format].detail}</Typography>
-          </>
-        ) : (
-          <TextArea
-            value={`\n  No palette markers...`}
-            readOnly={true}
-            wrap="off"
-            spellCheck={false}
-          />
-        )}
-      </FormatContainer>
+      {paletteMarkers.length !== 0 ? stylesTextArea : fallbackTextArea}
     </Wrapper>
   );
 };

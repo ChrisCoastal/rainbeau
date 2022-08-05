@@ -6,6 +6,11 @@ export const Wrapper = styled.div`
   border-radius: 6px;
   border: solid 1px #ddd;
 `;
+export const CopyIconWrapper = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+`;
 
 export const TextArea = styled.textarea`
   width: 98%;
@@ -15,9 +20,18 @@ export const TextArea = styled.textarea`
   border-radius: 6px;
   border: solid 1px #ddd;
   overflow: scroll;
+
+  &:hover {
+    border-color: #7dffbe;
+  }
 `;
 
 export const FormatContainer = styled.div`
+  position: relative;
   height: 100%;
   margin-top: 1rem;
+
+  &:hover {
+    border-color: #7dffbe;
+  }
 `;
