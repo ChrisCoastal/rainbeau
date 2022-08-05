@@ -33,17 +33,20 @@ interface CanvasImageProps {
     markerQty?: number
   ) => ColorMarker[];
   currentImageData: IndexedPxColor[];
+  isLoading: boolean;
+  onImageDraw: (imageDrawn: boolean) => void;
   dispatch: React.Dispatch<ReducerActions>;
 }
 
 const CanvasImage: FC<CanvasImageProps> = ({
   imageURL,
   paletteMarkers,
-  addMarkers,
   currentImageData,
+  isLoading,
+  onImageDraw,
   dispatch,
 }) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  // const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
@@ -115,7 +118,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
   // }, [canvasCtxRef.current]);
 
   useEffect(() => {
-    setIsLoading(true);
+    // setIsLoading(true);
     if (imageURL === null) return;
     if (canvasRef.current) {
       canvasCtxRef.current = canvasRef.current.getContext('2d');
@@ -140,14 +143,15 @@ const CanvasImage: FC<CanvasImageProps> = ({
 
         // drawImage(image, startx, starty, widthx, widthy)
         ctx?.drawImage(canvasImage, 0, 0, ctx.canvas.width, ctx.canvas.height);
-        setIsLoading(false);
-
+        // setIsLoading(false);
         const imageData = ctx!.getImageData(
           0,
           0,
           ctx!.canvas.width,
           ctx!.canvas.height
         ).data;
+
+        onImageDraw(!!imageData);
 
         const indexedImagePx = setImageDataState(imageData);
         const markers = createMarkers(indexedImagePx);
@@ -161,7 +165,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
       // canvasImage.src = redImage;
       canvasImage.src = imageURL;
     }
-  }, [imageURL, createMarkers, setImageDataState]);
+  }, [imageURL, createMarkers, setImageDataState, onImageDraw]);
 
   return (
     <>

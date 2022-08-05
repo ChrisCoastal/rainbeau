@@ -42,6 +42,8 @@ const MainView: FC<MainViewProps> = ({
   dispatch,
 }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
 
   const fetchAPIKey = async () => {
     try {
@@ -137,6 +139,8 @@ const MainView: FC<MainViewProps> = ({
   ) => {
     try {
       console.log(currentImageIndex);
+      setIsError(false);
+      setIsLoading(true);
 
       if (images.length > 0 && images.length < currentImageIndex) {
         setCurrentImageIndex((prev) => prev + indexStep);
@@ -151,7 +155,9 @@ const MainView: FC<MainViewProps> = ({
         setCurrentImageIndex(0);
       }
       deletePaletteHandler();
+      // setIsLoading(false);
     } catch (err) {
+      setIsLoading(false);
       console.log(err);
     }
   };
@@ -188,8 +194,12 @@ const MainView: FC<MainViewProps> = ({
     dispatch({ type: 'deletePalette' });
   };
 
+  const onImageDraw = useCallback((imageDrawn: boolean) => {
+    if (!imageDrawn) setIsError(true);
+    setIsLoading(false);
+  }, []);
+
   const artistName = images[currentImageIndex]?.artistName || 'unknown artist';
-  const id = images[currentImageIndex]?.id || null;
   const imageURL = images[currentImageIndex]?.imageURL || null;
   const downloadLink = images[currentImageIndex]?.downloadLink || null;
 
@@ -204,6 +214,8 @@ const MainView: FC<MainViewProps> = ({
                 paletteMarkers={paletteMarkers}
                 addMarkers={addMarkerHandler}
                 currentImageData={currentImageData}
+                isLoading={isLoading}
+                onImageDraw={onImageDraw}
                 dispatch={dispatch}
               />
             </CardContent>
