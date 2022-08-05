@@ -37,6 +37,7 @@ const PaletteItem: FC<PaletteItemProps> = ({ marker, markerNum, dispatch }) => {
   const initialValue = marker.customName || marker.name;
   const { r, g, b } = marker;
 
+  const [prevInputValue, setPrevInputValue] = useState<string>('');
   const [inputValue, setInputValue] = useState<string>(initialValue);
   const [focus, setFocus] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -48,6 +49,7 @@ const PaletteItem: FC<PaletteItemProps> = ({ marker, markerNum, dispatch }) => {
   };
 
   const inputReset = () => {
+    setPrevInputValue(inputValue);
     setInputValue('');
 
     if (inputRef.current) {
@@ -59,6 +61,7 @@ const PaletteItem: FC<PaletteItemProps> = ({ marker, markerNum, dispatch }) => {
   const focusHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.type === 'focus') setFocus(true);
     if (event.type === 'blur' && focus) {
+      !inputValue && setInputValue(prevInputValue);
       dispatch({
         type: 'updatePalette',
         payload: {

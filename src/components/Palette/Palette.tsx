@@ -22,6 +22,8 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import UndoIcon from '@mui/icons-material/Undo';
 import SaveIcon from '@mui/icons-material/Save';
+import Collapse from '@mui/material/Collapse';
+import { TransitionGroup } from 'react-transition-group';
 
 interface PaletteProps {
   paletteMarkers: ColorMarker[];
@@ -73,17 +75,14 @@ const Palette: FC<PaletteProps> = ({
     ),
   };
 
-  const paletteItems = paletteMarkers.map((marker, i) => {
-    return (
-      <PaletteItem
-        // key={uuidv4()}
-        key={Math.random()}
-        markerNum={i}
-        marker={marker}
-        dispatch={dispatch}
-      />
-    );
-  });
+  const paletteItems = paletteMarkers.map((marker, i) => (
+    <PaletteItem
+      key={uuidv4()}
+      markerNum={i}
+      marker={marker}
+      dispatch={dispatch}
+    />
+  ));
 
   return (
     <Wrapper>
