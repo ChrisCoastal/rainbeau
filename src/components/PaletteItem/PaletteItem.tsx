@@ -75,6 +75,13 @@ const PaletteItem: FC<PaletteItemProps> = ({ marker, markerNum, dispatch }) => {
 
   const keyDownHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
+      // setPrevInputValue(inputValue);
+      inputRef.current && inputRef.current.blur();
+      // TODO: this should call the focusHandler??
+      setFocus(false);
+    }
+    if (event.key === 'Escape') {
+      // setInputValue(prevInputValue);
       inputRef.current && inputRef.current.blur();
       setFocus(false);
     }

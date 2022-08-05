@@ -155,7 +155,9 @@ const Output: FC<OutputProps> = ({ paletteMarkers }) => {
           </IconButton>
         </Tooltip>
       </CopyIconWrapper>
-      <Typography fontSize="small">{style[format].detail}</Typography>
+      <Typography fontSize="small" color={'#555'}>
+        {style[format].detail}
+      </Typography>
     </FormatContainer>
   );
 

@@ -30,4 +30,5 @@ export const FormatContainer = styled.div`
   position: relative;
   height: 100%;
   margin-top: 1rem;
+  text-align: right;
 `;
