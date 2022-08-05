@@ -118,7 +118,12 @@ const Output: FC<OutputProps> = ({ paletteMarkers }) => {
 
   const stylesTextArea = (
     <FormatContainer>
-      <TextArea value={style[format].text} wrap="off" spellCheck={false} />
+      <TextArea
+        value={style[format].text}
+        wrap="off"
+        readOnly={true}
+        spellCheck={false}
+      />
       <CopyIconWrapper>
         <Tooltip title="copy">
           <IconButton onClick={copyToClipboard}>

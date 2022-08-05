@@ -8,8 +8,8 @@ export const Wrapper = styled.div`
 `;
 export const CopyIconWrapper = styled.div`
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 10px;
+  right: 10px;
 `;
 
 export const TextArea = styled.textarea`
@@ -30,8 +30,4 @@ export const FormatContainer = styled.div`
   position: relative;
   height: 100%;
   margin-top: 1rem;
-
-  &:hover {
-    border-color: #7dffbe;
-  }
 `;
