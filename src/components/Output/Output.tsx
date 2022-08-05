@@ -140,7 +140,7 @@ const Output: FC<OutputProps> = ({ paletteMarkers }) => {
         <Tooltip title="copy">
           <IconButton onClick={copyToClipboard}>
             {copied ? (
-              <Fade in={copied}>
+              <Fade in={copied} timeout={600}>
                 <CheckIcon
                   sx={{
                     color: '#7dffbe',
@@ -148,7 +148,9 @@ const Output: FC<OutputProps> = ({ paletteMarkers }) => {
                 />
               </Fade>
             ) : (
-              <ContentCopyIcon />
+              <Zoom in={!copied} appear={true}>
+                <ContentCopyIcon />
+              </Zoom>
             )}
           </IconButton>
         </Tooltip>
