@@ -2,15 +2,14 @@ import type { FC } from 'react';
 import { useCallback, useState, useEffect } from 'react';
 
 // firestore
-import database from '../../firestore.config';
-import { doc, getDoc, collection } from 'firebase/firestore';
+import { functions } from '../../firestore.config';
+import { httpsCallable } from 'firebase/functions';
 
 // mui
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 
 // images
-// import redImage from '../../images/brennan-ehrhardt-HALe2SmkWAI-unsplash.jpg';
 // import purpleImage from '../../images/martin-brechtl-zs3HRrWW66A-unsplash.jpg';
 
 // components
@@ -48,14 +47,9 @@ const MainView: FC<MainViewProps> = ({
 
   const fetchAPIKey = async () => {
     try {
-      // const API_KEY = process.env!.REACT_APP_UNSPLASH_API_KEY;
-      // get unsplash key from firestore
-      const keyRef = doc(database, 'unsplash_api', 'key');
-      const reponse = await getDoc(keyRef); //.then((response) => console.log(response));
-      const apiKey = reponse.data()?.key;
-
-      if (apiKey === undefined) throw new Error('No response from database');
-      console.log(apiKey);
+      const getUnsplashAPIKey = httpsCallable(functions, 'getUnsplashAPIKey');
+      const apiKey = await getUnsplashAPIKey().then((res) => res.data);
+      if (!apiKey) throw new Error('No response from database');
       return apiKey;
     } catch (err) {
       console.log(err);
@@ -148,7 +142,7 @@ const MainView: FC<MainViewProps> = ({
     if (images.length > 0 && images.length < currentImageIndex) {
       setCurrentImageIndex((prev) => prev + indexStep);
     } else if (images.length >= currentImageIndex) {
-      const apiKey = await fetchAPIKey();
+      const apiKey = (await fetchAPIKey()) as string;
       const images = await fetchImages(apiKey);
       images && setImagesState(images);
       setCurrentImageIndex(0);
@@ -164,7 +158,7 @@ const MainView: FC<MainViewProps> = ({
     ) => {
       if (!currentImageData) return [];
       const markers: ColorMarker[] = [];
-      const colorNames: string[] = [];
+      // const colorNames: string[] = [];
       const totalPx = currentImageData.length; // 640000
       // sort by hue
       // const sortedPxGroups = getSortedPx([...currentImageData], 'h');
