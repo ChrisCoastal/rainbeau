@@ -32,7 +32,6 @@ interface MainViewProps {
   images: Image[];
   currentImageData: IndexedPxColor[];
   paletteMarkers: ColorMarker[];
-  colorNames: string[];
   dispatch: React.Dispatch<ReducerActions>;
 }
 
@@ -40,7 +39,6 @@ const MainView: FC<MainViewProps> = ({
   images,
   currentImageData,
   paletteMarkers,
-  colorNames,
   dispatch,
 }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
@@ -59,7 +57,7 @@ const MainView: FC<MainViewProps> = ({
   const fetchImages = async (key: string) => {
     try {
       const response = await fetch(
-        `https://api.unsplash.com/photos/random?count=1&orientation=squarish&client_id=${key}`,
+        `https://api.unsplash.com/photos/random?count=4&orientation=squarish&client_id=${key}`,
         {
           method: 'GET',
           headers: {
@@ -137,18 +135,25 @@ const MainView: FC<MainViewProps> = ({
     _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     indexStep: number = 1
   ) => {
-    console.log('CHANGE IMAGE');
+    try {
+      console.log(currentImageIndex);
 
-    if (images.length > 0 && images.length < currentImageIndex) {
-      setCurrentImageIndex((prev) => prev + indexStep);
-    } else if (images.length >= currentImageIndex) {
-      const apiKey = (await fetchAPIKey()) as string;
-      const images = await fetchImages(apiKey);
-      images && setImagesState(images);
-      setCurrentImageIndex(0);
+      if (images.length > 0 && images.length < currentImageIndex) {
+        setCurrentImageIndex((prev) => prev + indexStep);
+      } else if (images.length >= currentImageIndex) {
+        const apiKey = (await fetchAPIKey()) as string;
+        const images = await fetchImages(apiKey);
+
+        if (!apiKey || !images)
+          throw new Error('Failed to load new image; please try again.');
+
+        setImagesState(images);
+        setCurrentImageIndex(0);
+      }
+      deletePaletteHandler();
+    } catch (err) {
+      console.log(err);
     }
-
-    deletePaletteHandler();
   };
 
   const addMarkerHandler = useCallback(
@@ -158,30 +163,22 @@ const MainView: FC<MainViewProps> = ({
     ) => {
       if (!currentImageData) return [];
       const markers: ColorMarker[] = [];
-      // const colorNames: string[] = [];
       const totalPx = currentImageData.length; // 640000
-      // sort by hue
-      // const sortedPxGroups = getSortedPx([...currentImageData], 'h');
-      // console.log('SORTED', sortedPxGroups, 'UNSORTED', currentImageData);
-      console.log(markerQty);
 
+      // create random marker(s)
       for (let loop = 0; loop < markerQty; loop++) {
         const randomIndex = Math.floor(Math.random() * totalPx);
         const randomPx = currentImageData[randomIndex];
         const { r, g, b } = randomPx;
-        console.log(randomPx);
 
         markers.push({
           ...randomPx,
           xy: getPxGroupXY(randomPx.i),
           name: rgbToColorName({ r, g, b }),
         });
-        // colorNames.push(rgbToColorName({ r, g, b }));
       }
-      console.log(totalPx, markers);
-
       dispatch({ type: 'addMarker', payload: markers });
-      // dispatch({ type: 'addColorName', payload: colorNames });
+
       return markers;
     },
     [dispatch, currentImageData]
@@ -218,8 +215,6 @@ const MainView: FC<MainViewProps> = ({
         <Actions
           changeImageHandler={changeImageHandler}
           imageDownloadURL={downloadLink}
-          name={artistName}
-          id={id}
         />
         <Palette
           paletteMarkers={paletteMarkers}
@@ -227,7 +222,7 @@ const MainView: FC<MainViewProps> = ({
           deletePaletteHandler={deletePaletteHandler}
           dispatch={dispatch}
         />
-        <Output paletteMarkers={paletteMarkers} colorNames={colorNames} />
+        <Output paletteMarkers={paletteMarkers} />
       </ActionsBox>
     </Wrapper>
   );

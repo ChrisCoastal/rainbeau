@@ -23,15 +23,11 @@ interface ActionsProps {
     indexStep?: number
   ) => void;
   imageDownloadURL: string | null;
-  name: string | null;
-  id: string | null;
 }
 
 const Actions: FC<ActionsProps> = ({
   changeImageHandler,
   imageDownloadURL,
-  name,
-  id,
 }) => {
   const [open, setOpen] = useState<boolean>(false);
 

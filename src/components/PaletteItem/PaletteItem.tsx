@@ -34,45 +34,22 @@ interface PaletteItemProps {
 }
 
 const PaletteItem: FC<PaletteItemProps> = ({ marker, markerNum, dispatch }) => {
-  // const initialValue = color ? rgbToColorName(color) : 'default-color-name';
   const initialValue = marker.customName || marker.name;
+  const { r, g, b } = marker;
 
-  // const initialValue = marker?.name || 'default-color-name';
   const [inputValue, setInputValue] = useState<string>(initialValue);
   const [focus, setFocus] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const colorRef = useRef<HTMLParagraphElement>(null);
-  // const { inputValueHandler, inputValue, inputReset } = useInput(
-  //   // validateInput,
-  //   inputRef,
-  //   markerNum,
-  //   dispatch,
-  //   initialValue
-  // );
 
   const inputValueHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.value);
     const userInput = (event.target as HTMLInputElement).value;
-    // const updatedMarker = { ...marker, name: userInput };
-    // console.log(updatedMarker);
-
     setInputValue(userInput);
-    // dispatch({
-    //   type: 'updateColorNames',
-    //   payload: { index: markerNum, updatedColorName: userInput },
-    // });
   };
 
   const inputReset = () => {
     setInputValue('');
-    // dispatch({
-    //   type: 'updatePalette',
-    //   payload: { markerNum, updatedMarker: { ...marker, name: '' } },
-    // });
-    // dispatch({
-    //   type: 'updateColorNames',
-    //   payload: { index: markerNum, updatedColorName: '' },
-    // });
+
     if (inputRef.current) {
       inputRef.current.focus();
       setFocus(true);
@@ -80,14 +57,8 @@ const PaletteItem: FC<PaletteItemProps> = ({ marker, markerNum, dispatch }) => {
   };
 
   const focusHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('focus', event);
     if (event.type === 'focus') setFocus(true);
-
     if (event.type === 'blur' && focus) {
-      // dispatch({
-      //   type: 'updateColorNames',
-      //   payload: { index: markerNum, updatedColorName: inputValue },
-      // });
       dispatch({
         type: 'updatePalette',
         payload: {
@@ -98,17 +69,6 @@ const PaletteItem: FC<PaletteItemProps> = ({ marker, markerNum, dispatch }) => {
     }
     if (event.type === 'blur') setFocus(false);
   };
-
-  // useEffect(() => {
-  // dispatch({
-  // type: 'updateColorNames',
-  // payload: { index: markerNum, updatedColorName: inputValue },
-  // });
-  //   dispatch({
-  //   type: 'updatePalette',
-  //   payload: { markerNum, updatedMarker: { ...marker, name: inputValue } },
-  // });
-  // }, [inputValue]);
 
   const keyDownHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
@@ -126,8 +86,6 @@ const PaletteItem: FC<PaletteItemProps> = ({ marker, markerNum, dispatch }) => {
       navigator.clipboard.writeText(colorRef.current?.innerText);
     }
   };
-
-  const { r, g, b } = marker;
 
   // TODO: add dnd change item order
   return (

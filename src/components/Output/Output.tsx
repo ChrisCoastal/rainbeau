@@ -3,14 +3,12 @@ import { useState } from 'react';
 
 // mui
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Typography';
 
 // styles
 import { Wrapper, TextArea, FormatContainer } from './Output.styles';
 
 interface OutputProps {
   paletteMarkers: ColorMarker[];
-  colorNames: string[];
 }
 
 interface Format {
@@ -25,7 +23,7 @@ interface Styles {
   css: Format;
 }
 
-const Output: FC<OutputProps> = ({ paletteMarkers, colorNames }) => {
+const Output: FC<OutputProps> = ({ paletteMarkers }) => {
   const [format, setFormat] = useState<keyof Styles>('styled');
   const cssMarkerColors = paletteMarkers
     .map((marker, i) => {

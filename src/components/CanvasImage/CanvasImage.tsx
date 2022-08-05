@@ -58,11 +58,8 @@ const CanvasImage: FC<CanvasImageProps> = ({
   const createMarkers = useCallback(
     (indexedImagePx: IndexedPxColor[], markerQty: number = 3) => {
       const markers: ColorMarker[] = [];
-      const colorNames: string[] = [];
       const totalPx = indexedImagePx.length; // 640000
       // TODO: sort by hue
-      // const sortedPxGroups = getSortedPx([...indexedImagePx], 'h');
-      // console.log('SORTED', sortedPxGroups, 'UNSORTED', indexedImagePx);
 
       for (let loop = 0; loop < markerQty; loop++) {
         const randomIndex = Math.floor(Math.random() * totalPx);
@@ -73,12 +70,9 @@ const CanvasImage: FC<CanvasImageProps> = ({
           xy: getPxGroupXY(randomPx.i),
           name: rgbToColorName({ r, g, b }),
         });
-        colorNames.push(rgbToColorName({ r, g, b }));
       }
 
       dispatch({ type: 'addMarker', payload: markers });
-      // dispatch({ type: 'addColorName', payload: colorNames });
-      // dispatch({ type: 'addColorName', payload: markers });
       return markers;
     },
     [dispatch]

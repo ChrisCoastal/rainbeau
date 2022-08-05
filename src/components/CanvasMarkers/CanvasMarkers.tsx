@@ -8,7 +8,7 @@ import type { FC } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 // helpers
-import { getPxGroupIndex, rgbToColorName, rgbToHsl } from '../../utils/helpers';
+import { getPxGroupIndex, rgbToColorName } from '../../utils/helpers';
 
 // components
 import Marker from './Marker';
@@ -34,7 +34,6 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
   const [activeMarkerNum, setActiveMarkerNum] = useState<number>(-1);
 
   const clickHandler = (e: React.MouseEvent, num: number, clickPos = null) => {
-    // console.log('mouseevent', e, num);
     if (e.type === 'mouseenter' && activeMarkerNum === num) return;
     if (e.type === 'mousedown') setActiveMarkerNum(num);
     if (
@@ -51,6 +50,7 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
     const marker = paletteMarkers[activeMarkerNum];
     e.preventDefault();
     e.stopPropagation();
+    // TODO: add bounds to markers
     const MAX_XY = 800;
     const MIN_XY = 0;
 
@@ -59,35 +59,12 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
 
     if (mouseX === 0 && mouseY === 0) return;
 
-    // const updatedPalette = [...paletteMarkers];
-
-    // update xy
+    // update marker values
     const updatedXY = {
       xPos: (marker.xy.xPos += mouseX),
       yPos: (marker.xy.yPos += mouseY),
     };
-    console.log('XY', updatedXY);
-
-    // updatedPalette[marker].xy = {
-    //   xPos: (updatedPalette[marker].xy.xPos += mouseX),
-    //   yPos: (updatedPalette[marker].xy.yPos += mouseY),
-    // };
-
-    // for (const coord in updatedPalette) {
-    //   let dist = updatedPalette[marker].xy[coord as keyof coordinate];
-    //   // FIXME: not capping distance
-    //   if (dist > MAX_XY)
-    //     updatedPalette[marker].xy[coord as keyof coordinate] = MAX_XY;
-    //   if (dist < MIN_XY)
-    //     updatedPalette[marker].xy[coord as keyof coordinate] = MIN_XY;
-    // }
-
-    // get color at new coordinates
-    // const { xPos, yPos } = updatedPalette[marker].xy;
-    // const { xPos, yPos } = getPxGroupXY(updatedPalette[marker].i); // if x,y not added to state
     const updatedIndex = getPxGroupIndex(updatedXY.xPos, updatedXY.yPos);
-
-    // console.log('updated', updatedPalette, '\n prev', paletteMarkers);
     const updatedPx = currentImageData[updatedIndex];
     const updatedName = rgbToColorName(updatedPx);
     const updatedMarker = {
@@ -95,35 +72,15 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
       xy: updatedXY,
       name: updatedName,
     };
-    console.log('UPDATED MARKER', updatedMarker);
-
-    // const updatedColor = currentImageData[updatedIndex];
-
-    // const { r, g, b } = updatedColor;
-    // const { h, s, l } = rgbToHsl({ r, g, b });
-    // const { i, xy } = updatedPalette[marker];
-    // const name = rgbToColorName({ r, g, b });
-    // const updated = { r, g, b, h, s, l, i, xy, name };
-
-    // updatedPalette[marker] = updated;
-
-    // dispatch({ type: 'updatePalette', payload: updatedPalette });
     dispatch({
       type: 'updatePalette',
       payload: { markerNum: activeMarkerNum, updatedMarker },
     });
-    // dispatch({
-    //   type: 'updateColorNames',
-    //   payload: { index: activeMarkerNum, updatedColorName: updatedName },
-    // });
   };
 
   // FIXME: all markers rerender on each update
-  console.log(paletteMarkers);
-
   const markersPos = paletteMarkers.map((marker, index) => {
     const { xPos, yPos } = marker.xy;
-    console.log(xPos, yPos);
 
     return (
       <Marker
@@ -131,7 +88,6 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
         y={yPos}
         x={xPos}
         num={index}
-        canvasBound={canvasBound}
         clickHandler={clickHandler}
       />
     );

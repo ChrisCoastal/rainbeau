@@ -4,7 +4,6 @@ interface appState {
   images: Image[];
   currentImageData: IndexedPxColor[];
   paletteMarkers: ColorMarker[];
-  colorNames: string[];
   markerHistory: ColorMarker[][];
 }
 

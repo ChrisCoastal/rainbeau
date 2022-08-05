@@ -34,20 +34,6 @@ export const reducer = (state: appState, action: ReducerActions): appState => {
         ),
         // markerHistory: [...state.markerHistory, state.paletteMarkers],
       };
-    case 'addColorName':
-      return {
-        ...state,
-        colorNames: [...state.colorNames, ...payload],
-        // markerHistory: [...state.markerHistory, state.paletteMarkers],
-      };
-    case 'updateColorNames':
-      const updatedColorNames = [...state.colorNames];
-      updatedColorNames[payload.index] = payload.updatedColorName;
-      return {
-        ...state,
-        colorNames: updatedColorNames,
-        // markerHistory: [...state.markerHistory, state.paletteMarkers],
-      };
     case 'updatePalette':
       const updatedPaletteMarkers = [...state.paletteMarkers];
       updatedPaletteMarkers[payload.markerNum] = payload.updatedMarker;
