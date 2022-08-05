@@ -8,6 +8,11 @@ import purpleImage from '../../images/martin-brechtl-zs3HRrWW66A-unsplash.jpg';
 import CanvasMarkers from '../CanvasMarkers/CanvasMarkers';
 import LoadingSpinner from '../../UI/LoadingSpinner/LoadingSpinner';
 
+// mui
+import Checkbox from '@mui/material/Checkbox';
+import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
+import Favorite from '@mui/icons-material/Favorite';
+
 // config
 import {
   CANVAS_RESOLUTION,
@@ -162,22 +167,21 @@ const CanvasImage: FC<CanvasImageProps> = ({
   }, [imageURL, createMarkers, setImageDataState, onImageDraw]);
 
   return (
-    <>
-      <Wrapper>
-        {isLoading && <LoadingSpinner />}
-        {isError && <p>There was an error. Please try again.</p>}
-        <CanvasMarkers
-          paletteMarkers={paletteMarkers}
-          currentImageData={currentImageData}
-          canvasXY={canvasXY}
-          canvasBound={canvasRef.current?.getBoundingClientRect()}
-          dispatch={dispatch}
-        />
-        <Canvas ref={canvasRef}>
-          <ImageFallback src={purpleImage} alt="Fallback image" />
-        </Canvas>
-      </Wrapper>
-    </>
+    <Wrapper>
+      {isLoading && <LoadingSpinner />}
+      {isError && <p>There was an error. Please try again.</p>}
+      <CanvasMarkers
+        paletteMarkers={paletteMarkers}
+        currentImageData={currentImageData}
+        canvasXY={canvasXY}
+        canvasBound={canvasRef.current?.getBoundingClientRect()}
+        dispatch={dispatch}
+      />
+      <Canvas ref={canvasRef}>
+        <ImageFallback src={purpleImage} alt="Fallback image" />
+      </Canvas>
+      <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} />
+    </Wrapper>
   );
 };
 

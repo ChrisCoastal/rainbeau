@@ -160,12 +160,14 @@ const Output: FC<OutputProps> = ({ paletteMarkers }) => {
   );
 
   const fallbackTextArea = (
-    <TextArea
-      value={`\n  No palette markers...`}
-      readOnly={true}
-      wrap="off"
-      spellCheck={false}
-    />
+    <FormatContainer>
+      <TextArea
+        value={`\n  No palette markers...`}
+        readOnly={true}
+        wrap="off"
+        spellCheck={false}
+      />
+    </FormatContainer>
   );
 
   return (
