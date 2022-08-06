@@ -33,6 +33,8 @@ interface Styles {
   tailwind: Format;
   mui: Format;
   styled: Format;
+  emotion: Format;
+  scss: Format;
   css: Format;
 }
 
@@ -113,8 +115,10 @@ const Output: FC<OutputProps> = ({ paletteMarkers }) => {
 
   const style: Styles = {
     css: cssFormatted,
+    scss: cssFormatted,
     tailwind: tailwindFormatted,
     styled: styledFormatted,
+    emotion: styledFormatted,
     mui: muiFormatted,
   };
 
