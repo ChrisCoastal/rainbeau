@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 
 // components
 import PaletteItem from '../PaletteItem/PaletteItem';
@@ -22,8 +22,6 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import UndoIcon from '@mui/icons-material/Undo';
 import SaveIcon from '@mui/icons-material/Save';
-import Collapse from '@mui/material/Collapse';
-import { TransitionGroup } from 'react-transition-group';
 
 interface PaletteProps {
   paletteMarkers: ColorMarker[];
