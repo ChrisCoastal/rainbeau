@@ -15,7 +15,7 @@ import DownloadIcon from '@mui/icons-material/Download';
 import UploadIcon from '@mui/icons-material/Upload';
 
 // styles
-import { Wrapper } from './Actions.styles';
+import { Wrapper, DropArea } from './Actions.styles';
 
 interface ActionsProps {
   changeImageHandler: (
@@ -37,8 +37,12 @@ const Actions: FC<ActionsProps> = ({
 
   const uploadModal = {
     openState: open,
-    content: <div>drop here</div>,
-    text: 'I am modal',
+    content: (
+      <DropArea>
+        <UploadIcon />
+        <p>drag and drop an image here to upload</p>
+      </DropArea>
+    ),
     buttons: [{ text: 'Image From File' }, { text: 'Upload' }],
     handler: modalHandler,
     openModalButton: (
@@ -68,7 +72,6 @@ const Actions: FC<ActionsProps> = ({
           openState={uploadModal.openState}
           openModalButton={uploadModal.openModalButton}
           content={uploadModal.content}
-          text={uploadModal.text}
           buttons={uploadModal.buttons}
           modalHandler={uploadModal.handler}
         />
