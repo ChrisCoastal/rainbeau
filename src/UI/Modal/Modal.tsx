@@ -55,7 +55,6 @@ const Modal: FC<ModalProps> = ({
       {openModalButton}
       <Dialog open={openState} keepMounted onClose={() => modalHandler(false)}>
         <DialogContent>
-          <Typography>upload image</Typography>
           {content}
           <DialogContentText>{text}</DialogContentText>
         </DialogContent>

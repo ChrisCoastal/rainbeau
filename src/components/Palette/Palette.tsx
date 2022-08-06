@@ -57,7 +57,6 @@ const Palette: FC<PaletteProps> = ({
 
   const deletePaletteModal = {
     openState: open,
-    content: <div>drop here</div>,
     text: 'Are you sure you want to delete the current palette?',
     buttons: [{ text: 'Delete', action: 'delete' }],
     handler: modalHandler,
@@ -102,7 +101,6 @@ const Palette: FC<PaletteProps> = ({
           <Modal
             openState={deletePaletteModal.openState}
             openModalButton={deletePaletteModal.openModalButton}
-            content={deletePaletteModal.content}
             text={deletePaletteModal.text}
             buttons={deletePaletteModal.buttons}
             modalHandler={deletePaletteModal.handler}
