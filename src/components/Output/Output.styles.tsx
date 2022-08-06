@@ -6,6 +6,12 @@ export const Wrapper = styled.div`
   border-radius: 6px;
   border: solid 1px #ddd;
 `;
+
+export const OutputActions = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
 export const CopyIconWrapper = styled.div`
   position: absolute;
   top: 10px;
@@ -14,7 +20,7 @@ export const CopyIconWrapper = styled.div`
 
 export const TextArea = styled.textarea`
   width: 98%;
-  height: 75%;
+  height: 60%;
   line-height: 125%;
   resize: none;
   border-radius: 6px;
@@ -29,6 +35,6 @@ export const TextArea = styled.textarea`
 export const FormatContainer = styled.div`
   position: relative;
   height: 100%;
-  margin-top: 1rem;
+  /* margin-top: 1rem; */
   text-align: right;
 `;

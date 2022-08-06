@@ -13,10 +13,12 @@ import CheckIcon from '@mui/icons-material/Check';
 // styles
 import {
   Wrapper,
+  OutputActions,
   CopyIconWrapper,
   TextArea,
   FormatContainer,
 } from './Output.styles';
+import SelectFormatButton from './SelectFormatButton';
 
 interface OutputProps {
   paletteMarkers: ColorMarker[];
@@ -117,7 +119,7 @@ const Output: FC<OutputProps> = ({ paletteMarkers }) => {
   };
 
   const copyToClipboard = () => {
-    setCopied(() => !copied);
+    setCopied(true);
     navigator.clipboard.writeText(style[format].text);
   };
 
@@ -176,12 +178,18 @@ const Output: FC<OutputProps> = ({ paletteMarkers }) => {
     </FormatContainer>
   );
 
+  const formatOptions = ['css', 'scss', 'tailwind', 'mui', 'styled', 'emotion'];
+
   return (
     <Wrapper>
-      <div>Output</div>
-      <Typography fontSize="small">
-        css scss tailwind mui styled emotion
-      </Typography>
+      <OutputActions>
+        <Typography>Output</Typography>
+        <SelectFormatButton
+          options={formatOptions}
+          format={format}
+          setFormat={setFormat}
+        />
+      </OutputActions>
       {paletteMarkers.length !== 0 ? stylesTextArea : fallbackTextArea}
     </Wrapper>
   );
