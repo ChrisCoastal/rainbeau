@@ -137,9 +137,9 @@ const Output: FC<OutputProps> = ({ paletteMarkers }) => {
         spellCheck={false}
       />
       <CopyIconWrapper>
-        <Tooltip title="copy">
-          <IconButton onClick={copyToClipboard}>
-            {copied ? (
+        {copied ? (
+          <Tooltip title="copied!">
+            <IconButton onClick={copyToClipboard}>
               <Fade in={copied} timeout={600}>
                 <CheckIcon
                   sx={{
@@ -147,13 +147,17 @@ const Output: FC<OutputProps> = ({ paletteMarkers }) => {
                   }}
                 />
               </Fade>
-            ) : (
+            </IconButton>
+          </Tooltip>
+        ) : (
+          <Tooltip title="copy">
+            <IconButton onClick={copyToClipboard}>
               <Zoom in={!copied} appear={true}>
                 <ContentCopyIcon />
               </Zoom>
-            )}
-          </IconButton>
-        </Tooltip>
+            </IconButton>
+          </Tooltip>
+        )}
       </CopyIconWrapper>
       <Typography fontSize="small" color={'#555'}>
         {style[format].detail}

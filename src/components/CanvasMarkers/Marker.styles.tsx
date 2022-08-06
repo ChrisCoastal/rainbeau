@@ -22,7 +22,7 @@ export const Circle = styled.div<CircleProps>`
 
   & span {
     /* content: ${(props) => props.num}; */
-    top: 52%;
+    top: 50%;
     left: 50%;
     height: 1px;
     width: 2.4rem;
@@ -31,10 +31,10 @@ export const Circle = styled.div<CircleProps>`
     background-color: white;
 
     &:nth-of-type(odd) {
-      transform: translate(-51%, -51%) rotate(45deg);
+      transform: translate(-50%, -50%) rotate(45deg);
     }
     &:nth-of-type(even) {
-      transform: translate(-51%, -51%) rotate(-45deg);
+      transform: translate(-50%, -50%) rotate(-45deg);
     }
   }
 
