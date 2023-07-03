@@ -29,6 +29,7 @@ import Actions from '../Actions/Actions';
 import Credit from '../Credit/Credit';
 
 interface MainViewProps {
+  size: WindowSize;
   images: Image[];
   currentImageData: IndexedPxColor[];
   paletteMarkers: ColorMarker[];
@@ -107,6 +108,7 @@ const MainView: FC<MainViewProps> = ({
           imageURL: image.urls.full,
           imageThumb: image.urls.thumb,
           downloadLink: image.links.download,
+          unsplashLink: image.links.html,
           id: image.id,
           artistName: image.user.name || image.user.username,
           artistLink: image.user.portfolio_url,
@@ -202,6 +204,7 @@ const MainView: FC<MainViewProps> = ({
   const artistName = images[currentImageIndex]?.artistName || 'unknown artist';
   const imageURL = images[currentImageIndex]?.imageURL || null;
   const downloadLink = images[currentImageIndex]?.downloadLink || null;
+  const unsplashLink = images[currentImageIndex]?.unsplashLink;
 
   return (
     <Wrapper>
@@ -222,7 +225,7 @@ const MainView: FC<MainViewProps> = ({
             </CardContent>
           </Card>
         </FlipBox>
-        <Credit name={artistName} />
+        <Credit name={artistName} link={unsplashLink} />
       </ImageBox>
       <ActionsBox>
         <Actions

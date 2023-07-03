@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 
 export const Wrapper = styled.div`
   height: 36vh;
-  padding: 1rem;
+  padding: 1rem 1.5rem;
   border-radius: 6px;
   border: solid 1px #ddd;
 `;
@@ -25,7 +25,7 @@ export const TextArea = styled.textarea`
   resize: none;
   border-radius: 6px;
   border: solid 1px #ddd;
-  overflow: scroll;
+  /* overflow: scroll; */
 
   &:hover {
     border-color: #7dffbe;

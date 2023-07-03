@@ -1,7 +1,10 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { useReducer } from 'react';
 
 // reducer
 import { reducer } from './utils/reducer';
+
+// hooks
+import useWindowSize from './hooks/useResizeWindow';
 
 // components
 import Header from './components/Header/Header';
@@ -23,10 +26,13 @@ function App() {
   //   sessionStorage.setItem('palette', JSON.stringify(state.paletteMarkers));
   // }, [state.paletteMarkers]);
 
+  const size = useWindowSize();
+
   return (
     <div className="App">
       <Header />
       <MainView
+        size={size}
         images={state.images}
         currentImageData={state.currentImageData}
         paletteMarkers={state.paletteMarkers}

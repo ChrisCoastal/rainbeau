@@ -155,7 +155,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
         onImageDraw(!!imageData);
 
         const indexedImagePx = setImageDataState(imageData);
-        const markers = createMarkers(indexedImagePx);
+        createMarkers(indexedImagePx);
 
         console.log(canvasRef.current?.getBoundingClientRect());
       };

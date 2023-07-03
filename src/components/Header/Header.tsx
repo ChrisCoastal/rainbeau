@@ -1,13 +1,12 @@
 import React from 'react';
 
 import { Wrapper } from './Header.styles';
+import logo from '../../assets/rainbeau-logo.png';
 
-type Props = {};
-
-const Header = (props: Props) => {
+const Header = () => {
   return (
     <Wrapper>
-      <p>RAINBEAU</p>
+      <img src={logo} alt="rainbeau wordmark" />
     </Wrapper>
   );
 };

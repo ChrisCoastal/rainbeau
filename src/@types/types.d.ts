@@ -1,3 +1,24 @@
+declare module '*.mp4';
+
+declare module '*.jpeg';
+
+declare module '*.png';
+
+declare module '*.jpg';
+
+declare module '*.webm';
+
+declare module '*.svg';
+
+declare module '*.gif';
+
+// canvas and windowSize
+
+type WindowSize = {
+  clientWidth: number;
+  clientHeight: number;
+};
+
 // state and reducer
 interface appState {
   canvasXY: { x: number; y: number };
@@ -32,6 +53,7 @@ interface APIImageData {
   width: number;
   id: string;
   links: {
+    html: string;
     download: string;
   };
   urls: {
@@ -58,6 +80,7 @@ interface Image {
   imageURL: string;
   imageThumb: string;
   downloadLink: string;
+  unsplashLink: string;
   id: string;
   artistName: string | null;
   artistLink: string | null;

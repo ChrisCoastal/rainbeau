@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { useState, useMemo, useRef } from 'react';
 
 // hooks
@@ -97,6 +97,26 @@ const PaletteItem: FC<PaletteItemProps> = ({ marker, markerNum, dispatch }) => {
     }
   };
 
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (closeButtonRef.current) {
+      closeButtonRef.current.focus();
+    }
+  }, []);
+
+  // return (
+  //   // ... other JSX
+  //   <button
+  //     aria-label="Close"
+  //     className={theme.close.base}
+  //     type="button"
+  //     onClick={onClose}
+  //     ref={closeButtonRef}
+  //   >
+  //     <HiOutlineX aria-hidden className={theme.close.icon} />
+  //   </button>
+  // );
   // TODO: add dnd change item order
   return (
     <Wrapper>

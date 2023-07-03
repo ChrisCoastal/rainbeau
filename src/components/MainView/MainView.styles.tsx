@@ -43,6 +43,7 @@ export const ActionsBox = styled.section`
   width: 30rem;
   height: 50rem;
   display: flex;
+  row-gap: 1rem;
   flex-direction: column;
   justify-content: space-between;
 `;
