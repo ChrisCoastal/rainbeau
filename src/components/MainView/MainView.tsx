@@ -9,9 +9,6 @@ import { httpsCallable } from 'firebase/functions';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 
-// images
-// import purpleImage from '../../assets/images/martin-brechtl-zs3HRrWW66A-unsplash.jpg';
-
 // components
 import CanvasImage from '../CanvasImage/CanvasImage';
 
@@ -36,9 +33,10 @@ interface MainViewProps {
 
 const MainView: FC<MainViewProps> = ({ state, dispatch }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isError, setIsError] = useState<boolean>(false);
-  const { images, currentImageData, paletteMarkers, loading, error } = state;
+  // const [isLoading, setIsLoading] = useState<boolean>(false);
+  // const [isError, setIsError] = useState<boolean>(false);
+  const { images, currentImageData, paletteMarkers, isLoading, isError } =
+    state;
 
   const fetchAPIKey = async () => {
     try {
@@ -136,7 +134,7 @@ const MainView: FC<MainViewProps> = ({ state, dispatch }) => {
   ) => {
     try {
       console.log(images.length, currentImageIndex);
-      dispatch({ type: 'setError', payload: false });
+      dispatch({ type: 'setError', payload: null });
       dispatch({ type: 'setLoading', payload: true });
 
       if (images.length > 0 && images.length > currentImageIndex + 1) {
@@ -152,10 +150,10 @@ const MainView: FC<MainViewProps> = ({ state, dispatch }) => {
         setCurrentImageIndex(0);
       }
       deletePaletteHandler();
-      // setIsLoading(false);
+      dispatch({ type: 'setLoading', payload: false });
     } catch (err) {
-      setIsLoading(false);
-      setIsError(true);
+      dispatch({ type: 'setError', payload: err });
+      dispatch({ type: 'setLoading', payload: false });
       console.log(err);
     }
   };
@@ -192,10 +190,18 @@ const MainView: FC<MainViewProps> = ({ state, dispatch }) => {
     dispatch({ type: 'deletePalette' });
   };
 
-  const onImageDraw = useCallback((imageDrawn: boolean) => {
-    if (!imageDrawn) setIsError(true);
-    setIsLoading(false);
-  }, []);
+  const onImageDraw = useCallback(
+    (imageDrawn: boolean) => {
+      if (!imageDrawn) {
+        dispatch({ type: 'setError', payload: false });
+        dispatch({
+          type: 'setLoading',
+          payload: 'Failed to load new image; please try again.',
+        });
+      }
+    },
+    [dispatch]
+  );
 
   const artistName = images[currentImageIndex]?.artistName || 'unknown artist';
   const imageURL = images[currentImageIndex]?.imageURL || null;

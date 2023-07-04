@@ -21,12 +21,12 @@ export const reducer = (state: AppState, action: ReducerActions): AppState => {
     case 'setLoading':
       return {
         ...state,
-        loading: payload,
+        isLoading: payload,
       };
     case 'setError':
       return {
         ...state,
-        error: payload,
+        isError: payload,
       };
     case 'addMarker':
       return {

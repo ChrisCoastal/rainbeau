@@ -26,8 +26,8 @@ interface AppState {
   currentImageData: IndexedPxColor[];
   paletteMarkers: ColorMarker[];
   markerHistory: ColorMarker[][];
-  loading: boolean;
-  error: boolean;
+  isLoading: boolean;
+  isError: boolean;
 }
 
 interface ReducerActions {
