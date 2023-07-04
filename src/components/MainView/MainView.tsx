@@ -30,21 +30,15 @@ import Credit from '../Credit/Credit';
 
 interface MainViewProps {
   size: WindowSize;
-  images: Image[];
-  currentImageData: IndexedPxColor[];
-  paletteMarkers: ColorMarker[];
+  state: AppState;
   dispatch: React.Dispatch<ReducerActions>;
 }
 
-const MainView: FC<MainViewProps> = ({
-  images,
-  currentImageData,
-  paletteMarkers,
-  dispatch,
-}) => {
+const MainView: FC<MainViewProps> = ({ state, dispatch }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
+  const { images, currentImageData, paletteMarkers, loading, error } = state;
 
   const fetchAPIKey = async () => {
     try {
@@ -142,8 +136,8 @@ const MainView: FC<MainViewProps> = ({
   ) => {
     try {
       console.log(images.length, currentImageIndex);
-      setIsError(false);
-      setIsLoading(true);
+      dispatch({ type: 'setError', payload: false });
+      dispatch({ type: 'setLoading', payload: true });
 
       if (images.length > 0 && images.length > currentImageIndex + 1) {
         setCurrentImageIndex((prev) => prev + indexStep);
@@ -161,6 +155,7 @@ const MainView: FC<MainViewProps> = ({
       // setIsLoading(false);
     } catch (err) {
       setIsLoading(false);
+      setIsError(true);
       console.log(err);
     }
   };

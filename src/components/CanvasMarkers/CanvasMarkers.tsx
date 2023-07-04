@@ -32,7 +32,7 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
   dispatch,
 }) => {
   const [activeMarkerNum, setActiveMarkerNum] = useState<number | null>(null);
-  // const touchMoveRef = useRef<{ x: number; y: number } | null>(null);
+  const touchMoveRef = useRef<{ x: number; y: number } | null>(null);
 
   const moveMarkerHandler = (e: React.MouseEvent) => {
     if (activeMarkerNum === null) return;
@@ -88,6 +88,16 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
     });
   };
 
+  const touchStartHandler = (e: React.TouchEvent) => {
+    if (activeMarkerNum === null) return;
+    console.log('touchStartHandler', e);
+  };
+
+  const touchEndHandler = (e: React.TouchEvent) => {
+    setActiveMarkerNum(null);
+    console.log('touchEndHandler', e);
+  };
+
   const markers = paletteMarkers.map((marker, index) => {
     const { xPos, yPos } = marker.xy;
 
@@ -108,7 +118,8 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
       onMouseMove={moveMarkerHandler}
       onTouchMove={moveMarkerTouchHandler}
       onMouseUp={() => setActiveMarkerNum(null)}
-      onTouchEnd={() => setActiveMarkerNum(null)}
+      onTouchStart={touchStartHandler}
+      onTouchEnd={touchEndHandler}
       onMouseLeave={() => setActiveMarkerNum(null)}
     >
       {markers}

@@ -1,4 +1,4 @@
-export const reducer = (state: appState, action: ReducerActions): appState => {
+export const reducer = (state: AppState, action: ReducerActions): AppState => {
   const { type, payload } = action;
   switch (type) {
     case 'setCanvasXY':
@@ -17,6 +17,16 @@ export const reducer = (state: appState, action: ReducerActions): appState => {
         ...state,
         currentImageData: payload,
         // markerHistory: [...state.markerHistory, state.paletteMarkers],
+      };
+    case 'setLoading':
+      return {
+        ...state,
+        loading: payload,
+      };
+    case 'setError':
+      return {
+        ...state,
+        error: payload,
       };
     case 'addMarker':
       return {

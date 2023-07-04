@@ -120,50 +120,47 @@ const CanvasImage: FC<CanvasImageProps> = ({
 
   useEffect(() => {
     // setIsLoading(true);
-    if (imageURL === null) return;
-    if (canvasRef.current) {
-      canvasCtxRef.current = canvasRef.current.getContext('2d');
-      const ctx = canvasCtxRef.current;
+    if (imageURL === null || canvasRef.current === null) return;
+    canvasCtxRef.current = canvasRef.current.getContext('2d')!;
+    const ctx = canvasCtxRef.current;
 
-      // define canvas resolution
-      ctx!.canvas.width = CANVAS_RESOLUTION.med;
-      ctx!.canvas.height = CANVAS_RESOLUTION.med;
+    // define canvas resolution
+    ctx.canvas.width = CANVAS_RESOLUTION.med;
+    ctx.canvas.height = CANVAS_RESOLUTION.med;
 
-      // dev test marker accuracy (if testing, comment out ctx.drawImage)
-      // ctx!.fillStyle = '#FF0000';
-      // ctx!.fillRect(0, 0, 400, 800);
-      // ctx!.fillStyle = '#00FF00';
-      // ctx!.fillRect(400, 0, 800, 800);
+    // dev test marker accuracy (if testing, comment out ctx.drawImage)
+    // ctx!.fillStyle = '#FF0000';
+    // ctx!.fillRect(0, 0, 400, 800);
+    // ctx!.fillStyle = '#00FF00';
+    // ctx!.fillRect(400, 0, 800, 800);
 
-      const canvasImage = new Image();
-      canvasImage.setAttribute('crossOrigin', 'anonymous');
+    const canvasImage = new Image();
+    canvasImage.setAttribute('crossOrigin', 'anonymous');
 
-      // after image is loaded
-      canvasImage.onload = () => {
-        sampledPxData.current = []; // reset from previous image
+    // after image is loaded
+    canvasImage.onload = () => {
+      sampledPxData.current = []; // reset from previous image
 
-        // drawImage(image, startx, starty, widthx, widthy)
-        ctx?.drawImage(canvasImage, 0, 0, ctx.canvas.width, ctx.canvas.height);
-        // setIsLoading(false);
-        const imageData = ctx!.getImageData(
-          0,
-          0,
-          ctx!.canvas.width,
-          ctx!.canvas.height
-        ).data;
+      // drawImage(image, startx, starty, widthx, widthy)
+      ctx.drawImage(canvasImage, 0, 0, ctx.canvas.width, ctx.canvas.height);
+      // setIsLoading(false);
+      const imageData = ctx!.getImageData(
+        0,
+        0,
+        ctx.canvas.width,
+        ctx.canvas.height
+      ).data;
 
-        onImageDraw(!!imageData);
+      onImageDraw(!!imageData);
 
-        const indexedImagePx = setImageDataState(imageData);
-        createMarkers(indexedImagePx);
+      const indexedImagePx = setImageDataState(imageData);
+      createMarkers(indexedImagePx);
 
-        console.log(canvasRef.current?.getBoundingClientRect());
-      };
+      console.log(canvasRef.current?.getBoundingClientRect());
+    };
 
-      // asign image to canvas context
-      // canvasImage.src = redImage; //test image
-      canvasImage.src = imageURL;
-    }
+    // asign image to canvas context
+    canvasImage.src = imageURL;
   }, [imageURL, createMarkers, setImageDataState, onImageDraw]);
 
   return (

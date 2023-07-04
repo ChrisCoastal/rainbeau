@@ -20,12 +20,14 @@ type WindowSize = {
 };
 
 // state and reducer
-interface appState {
+interface AppState {
   canvasXY: { x: number; y: number };
   images: Image[];
   currentImageData: IndexedPxColor[];
   paletteMarkers: ColorMarker[];
   markerHistory: ColorMarker[][];
+  loading: boolean;
+  error: boolean;
 }
 
 interface ReducerActions {
@@ -33,6 +35,8 @@ interface ReducerActions {
     | 'setCanvasXY'
     | 'setImages'
     | 'setCurrentImageData'
+    | 'setLoading'
+    | 'setError'
     | 'addMarker'
     | 'deleteMarker'
     | 'addColorName'

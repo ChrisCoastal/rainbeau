@@ -11,12 +11,14 @@ import Header from './components/Header/Header';
 import MainView from './components/MainView/MainView';
 
 function App() {
-  const initialState: appState = {
+  const initialState: AppState = {
     canvasXY: { x: 0, y: 0 },
     images: [],
     currentImageData: [],
     paletteMarkers: [],
     markerHistory: [],
+    loading: false,
+    error: false,
   };
 
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -27,17 +29,12 @@ function App() {
   // }, [state.paletteMarkers]);
 
   const size = useWindowSize();
+  console.log('devicePx', devicePixelRatio);
 
   return (
     <div className="App">
       <Header />
-      <MainView
-        size={size}
-        images={state.images}
-        currentImageData={state.currentImageData}
-        paletteMarkers={state.paletteMarkers}
-        dispatch={dispatch}
-      />
+      <MainView size={size} state={state} dispatch={dispatch} />
     </div>
   );
 }

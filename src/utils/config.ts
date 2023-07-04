@@ -1,6 +1,15 @@
 // unsplash api
 export const IMAGE_BASE_URL = 'https://api.unsplash.com/photos/';
 
+export const breakPoints = {
+  xs: 420,
+  sm: 640,
+  md: 768,
+  lg: 1024,
+  xl: 1280,
+  '2xl': 1536,
+} as const;
+
 export const DUMMY_RESPONSE = [
   {
     alt_description: null,
