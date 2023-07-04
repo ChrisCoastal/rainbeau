@@ -70,7 +70,7 @@ interface APIImageData {
     username: string;
     portfolio_url: string;
   };
-  [key: string]: string | number | null;
+  [key: string]: any;
 }
 
 type APIResponse = APIImageData[];

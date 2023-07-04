@@ -33,8 +33,6 @@ interface MainViewProps {
 
 const MainView: FC<MainViewProps> = ({ state, dispatch }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
-  // const [isLoading, setIsLoading] = useState<boolean>(false);
-  // const [isError, setIsError] = useState<boolean>(false);
   const { images, currentImageData, paletteMarkers, isLoading, isError } =
     state;
 
@@ -46,6 +44,7 @@ const MainView: FC<MainViewProps> = ({ state, dispatch }) => {
       return apiKey;
     } catch (err) {
       console.log(err);
+      dispatch({ type: 'setError', payload: true });
     }
   };
 
@@ -64,55 +63,39 @@ const MainView: FC<MainViewProps> = ({ state, dispatch }) => {
       const data: APIResponse = await response.json();
       return data;
     } catch (err) {
+      dispatch({ type: 'setError', payload: true });
       console.log(err);
     }
   };
 
-  const setImagesState = (dataFromAPI: APIResponse) => {
-    const imageData = dataFromAPI.map((image) => ({
-      altText: image.alt_description || image.description,
-      blurImage: image.blur_hash,
-      color: image.color,
-      imageDimensions: { x: image.width, y: image.height },
-      imageURL: image.urls.full,
-      imageThumb: image.urls.thumb,
-      downloadLink: image.links.download,
-      unsplashLink: image.links.html,
-      id: image.id,
-      artistName: image.user.name || image.user.username,
-      artistLink: image.user.portfolio_url,
-    }));
-    console.log(dataFromAPI, imageData);
+  const setImagesState = useCallback(
+    (dataFromAPI: APIResponse) => {
+      const imageData = dataFromAPI.map((image) => ({
+        altText: image.alt_description || image.description,
+        blurImage: image.blur_hash,
+        color: image.color,
+        imageDimensions: { x: image.width, y: image.height },
+        imageURL: image.urls.full,
+        imageThumb: image.urls.thumb,
+        downloadLink: image.links.download,
+        unsplashLink: image.links.html,
+        id: image.id,
+        artistName: image.user.name || image.user.username,
+        artistLink: image.user.portfolio_url,
+      }));
+      console.log(dataFromAPI, imageData);
 
-    dispatch({ type: 'setImages', payload: imageData });
-  };
+      dispatch({ type: 'setImages', payload: imageData });
+    },
+    [dispatch]
+  );
 
   useEffect(() => {
-    (async () => {
-      try {
-        // test data from unsplash api
-        const data = DUMMY_RESPONSE;
+    // test data from unsplash api
+    const data = DUMMY_RESPONSE;
 
-        const imageData = data.map((image) => ({
-          altText: image.alt_description || image.description,
-          blurImage: image.blur_hash,
-          color: image.color,
-          imageDimensions: { x: image.width, y: image.height },
-          imageURL: image.urls.full,
-          imageThumb: image.urls.thumb,
-          downloadLink: image.links.download,
-          unsplashLink: image.links.html,
-          id: image.id,
-          artistName: image.user.name || image.user.username,
-          artistLink: image.user.portfolio_url,
-        }));
-        console.log(data, imageData);
-        dispatch({ type: 'setImages', payload: imageData });
-      } catch (error) {
-        console.log(error);
-      }
-    })();
-  }, [dispatch]);
+    setImagesState(data);
+  }, [dispatch, setImagesState]);
 
   const CardSx = {
     position: 'absolute',
@@ -123,11 +106,9 @@ const MainView: FC<MainViewProps> = ({ state, dispatch }) => {
     borderRadius: '8px',
     boxShadow: '0 0.8rem 2rem 0 #3333333e',
     transition: 'all 1.2s ease',
-    // '&:hover': {
-    //   transform: 'rotateY(-180deg)',
-    // },
   };
   console.log(images.length);
+
   const changeImageHandler = async (
     _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     indexStep: number = 1
@@ -193,10 +174,10 @@ const MainView: FC<MainViewProps> = ({ state, dispatch }) => {
   const onImageDraw = useCallback(
     (imageDrawn: boolean) => {
       if (!imageDrawn) {
-        dispatch({ type: 'setError', payload: false });
+        dispatch({ type: 'setError', payload: true });
         dispatch({
           type: 'setLoading',
-          payload: 'Failed to load new image; please try again.',
+          payload: false,
         });
       }
     },
@@ -229,7 +210,7 @@ const MainView: FC<MainViewProps> = ({ state, dispatch }) => {
         </FlipBox>
         <Credit name={artistName} link={unsplashLink} />
       </ImageBox>
-      <ActionsBox>
+      {/* <ActionsBox>
         <Actions
           changeImageHandler={changeImageHandler}
           imageDownloadURL={downloadLink}
@@ -241,7 +222,7 @@ const MainView: FC<MainViewProps> = ({ state, dispatch }) => {
           dispatch={dispatch}
         />
         <Output paletteMarkers={paletteMarkers} />
-      </ActionsBox>
+      </ActionsBox> */}
     </Wrapper>
   );
 };

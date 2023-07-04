@@ -2,7 +2,7 @@
 import { useState, useRef } from 'react';
 
 // types
-import type { FC } from 'react';
+import type { FC, TouchEvent, MouseEvent } from 'react';
 
 // uuid
 import { v4 as uuidv4 } from 'uuid';
@@ -32,40 +32,39 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
   dispatch,
 }) => {
   const [activeMarkerNum, setActiveMarkerNum] = useState<number | null>(null);
-  const touchMoveRef = useRef<{ x: number; y: number } | null>(null);
+  const prevTouchRef = useRef<{ x: number; y: number } | null>(null);
 
-  const moveMarkerHandler = (e: React.MouseEvent) => {
+  const moveMarkerHandler = (e: React.MouseEvent | React.TouchEvent) => {
     if (activeMarkerNum === null) return;
-    console.log('moveMarkerHandler', e);
+
+    e.preventDefault();
+    e.stopPropagation();
+
     const marker = paletteMarkers[activeMarkerNum];
-    e.preventDefault();
-    e.stopPropagation();
-    // TODO: add bounds to markers
-    const MAX_XY = 800;
-    const MIN_XY = 0;
+    //   console.log('marker', marker);
+    let moveX = 0;
+    let moveY = 0;
+    console.log(e);
+    if (e.type === 'mousemove') {
+      moveX = (e as MouseEvent).movementX;
+      moveY = (e as MouseEvent).movementY;
+    }
+    if (e.type === 'touchmove') {
+      console.log('touchmove');
+      const touch = (e as TouchEvent).touches[0];
+      if (!prevTouchRef.current)
+        prevTouchRef.current = { x: touch.clientX, y: touch.clientY };
+      const prev = prevTouchRef.current;
 
-    const mouseX = e.movementX;
-    const mouseY = e.movementY;
+      moveX = touch.clientX - prev.x;
+      moveY = touch.clientY - prev.y;
+      prevTouchRef.current = { x: touch.clientX, y: touch.clientY };
+    }
 
-    if (mouseX === 0 && mouseY === 0) return;
-
-    // update marker values
+    // FIXME: only works with +=
     const updatedXY = {
-      xPos: (marker.xy.xPos += mouseX),
-      yPos: (marker.xy.yPos += mouseY),
-    };
-    updateMarker(activeMarkerNum, updatedXY);
-  };
-
-  const moveMarkerTouchHandler = (e: React.TouchEvent) => {
-    if (activeMarkerNum === null) return;
-    e.preventDefault();
-    e.stopPropagation();
-
-    // touches[0] is the event from the first finger on the screen
-    const updatedXY = {
-      xPos: e.nativeEvent.touches[0].clientX,
-      yPos: e.nativeEvent.touches[0].clientY,
+      xPos: (marker.xy.xPos += moveX),
+      yPos: (marker.xy.yPos += moveY),
     };
     updateMarker(activeMarkerNum, updatedXY);
   };
@@ -116,7 +115,7 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
     <Wrapper
       className="field"
       onMouseMove={moveMarkerHandler}
-      onTouchMove={moveMarkerTouchHandler}
+      onTouchMove={moveMarkerHandler}
       onMouseUp={() => setActiveMarkerNum(null)}
       onTouchStart={touchStartHandler}
       onTouchEnd={touchEndHandler}

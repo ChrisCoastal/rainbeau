@@ -123,10 +123,11 @@ const CanvasImage: FC<CanvasImageProps> = ({
     if (imageURL === null || canvasRef.current === null) return;
     canvasCtxRef.current = canvasRef.current.getContext('2d')!;
     const ctx = canvasCtxRef.current;
+    const devicePixelRatio = window.devicePixelRatio || 1;
 
     // define canvas resolution
-    ctx.canvas.width = CANVAS_RESOLUTION.med;
-    ctx.canvas.height = CANVAS_RESOLUTION.med;
+    ctx.canvas.width = CANVAS_RESOLUTION.med / devicePixelRatio;
+    ctx.canvas.height = CANVAS_RESOLUTION.med / devicePixelRatio;
 
     // dev test marker accuracy (if testing, comment out ctx.drawImage)
     // ctx!.fillStyle = '#FF0000';
