@@ -1,5 +1,5 @@
 // react
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 // types
 import type { FC } from 'react';
@@ -31,22 +31,12 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
   canvasBound,
   dispatch,
 }) => {
-  const [activeMarkerNum, setActiveMarkerNum] = useState<number>(-1);
-
-  const clickHandler = (e: React.MouseEvent, num: number, clickPos = null) => {
-    if (e.type === 'mouseenter' && activeMarkerNum === num) return;
-    if (e.type === 'mousedown') setActiveMarkerNum(num);
-    if (
-      e.type === 'mouseenter' ||
-      e.type === 'mouseleave' ||
-      e.type === 'mouseup'
-    )
-      setActiveMarkerNum(-1);
-  };
+  const [activeMarkerNum, setActiveMarkerNum] = useState<number | null>(null);
+  // const touchMoveRef = useRef<{ x: number; y: number } | null>(null);
 
   const moveMarkerHandler = (e: React.MouseEvent) => {
-    if (activeMarkerNum === -1) return;
-
+    if (activeMarkerNum === null) return;
+    console.log('moveMarkerHandler', e);
     const marker = paletteMarkers[activeMarkerNum];
     e.preventDefault();
     e.stopPropagation();
@@ -64,6 +54,26 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
       xPos: (marker.xy.xPos += mouseX),
       yPos: (marker.xy.yPos += mouseY),
     };
+    updateMarker(activeMarkerNum, updatedXY);
+  };
+
+  const moveMarkerTouchHandler = (e: React.TouchEvent) => {
+    if (activeMarkerNum === null) return;
+    e.preventDefault();
+    e.stopPropagation();
+
+    // touches[0] is the event from the first finger on the screen
+    const updatedXY = {
+      xPos: e.nativeEvent.touches[0].clientX,
+      yPos: e.nativeEvent.touches[0].clientY,
+    };
+    updateMarker(activeMarkerNum, updatedXY);
+  };
+
+  const updateMarker = (
+    activeMarkerNum: number,
+    updatedXY: { xPos: number; yPos: number }
+  ) => {
     const updatedIndex = getPxGroupIndex(updatedXY.xPos, updatedXY.yPos);
     const updatedPx = currentImageData[updatedIndex];
     const updatedName = rgbToColorName(updatedPx);
@@ -78,8 +88,7 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
     });
   };
 
-  // FIXME: all markers rerender on each update
-  const markersPos = paletteMarkers.map((marker, index) => {
+  const markers = paletteMarkers.map((marker, index) => {
     const { xPos, yPos } = marker.xy;
 
     return (
@@ -88,21 +97,21 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
         y={yPos}
         x={xPos}
         num={index}
-        clickHandler={clickHandler}
+        setActive={setActiveMarkerNum}
       />
     );
   });
 
-  // mouseMove listener must be set on Wrapper (marker parent)
-  // otherwise mouse will leave Marker div on fast drags
   return (
     <Wrapper
       className="field"
       onMouseMove={moveMarkerHandler}
-      onMouseUp={(e) => clickHandler(e, -1)}
-      onMouseLeave={(e) => clickHandler(e, -1)}
+      onTouchMove={moveMarkerTouchHandler}
+      onMouseUp={() => setActiveMarkerNum(null)}
+      onTouchEnd={() => setActiveMarkerNum(null)}
+      onMouseLeave={() => setActiveMarkerNum(null)}
     >
-      {markersPos}
+      {markers}
     </Wrapper>
   );
 };

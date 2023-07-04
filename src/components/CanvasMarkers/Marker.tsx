@@ -1,31 +1,38 @@
-import type { FC } from 'react';
+import type { FC, Dispatch, SetStateAction } from 'react';
 
 // styles
-import { Circle } from './Marker.styles';
+import { MarkerTarget } from './Marker.styles';
 
 interface MarkerProps {
   y: number;
   x: number;
   num: number;
   // canvasBound: DOMRect | undefined;
-  clickHandler: (e: React.MouseEvent, num: number) => void;
+  setActive: Dispatch<SetStateAction<number | null>>;
+  // clickHandler: (e: React.MouseEvent, num: number) => void;
 }
 
-const Marker: FC<MarkerProps> = ({ x, y, num, clickHandler }) => {
+const Marker: FC<MarkerProps> = ({ x, y, num, setActive }) => {
+  function handleTouchStart(e: React.TouchEvent) {
+    console.log(e);
+    setActive(num);
+  }
+
   return (
-    <Circle
+    <MarkerTarget
       x={x}
       y={y}
       num={num}
       tabIndex={1}
-      onMouseDown={(e) => clickHandler(e, num)}
-      onMouseEnter={(e) => clickHandler(e, num)}
-      onDragStart={() => false}
-      onMouseUp={(e) => clickHandler(e, num)}
+      onMouseDown={() => setActive(num)}
+      onTouchStart={handleTouchStart}
+      // onMouseEnter={(e) => clickHandler(e, num)}
+      // onDragStart={() => false}
+      onMouseUp={() => setActive(null)}
     >
       <span></span>
       <span></span>
-    </Circle>
+    </MarkerTarget>
   );
 };
 

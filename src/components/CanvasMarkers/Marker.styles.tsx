@@ -1,12 +1,12 @@
 import styled from '@emotion/styled';
 
-interface CircleProps {
+interface MarkerTargetProps {
   y: number;
   x: number;
   num: number;
 }
 
-export const Circle = styled.div<CircleProps>`
+export const MarkerTarget = styled.div<MarkerTargetProps>`
   position: absolute;
   top: ${(props) => `${props.y}px`};
   left: ${(props) => `${props.x}px`};

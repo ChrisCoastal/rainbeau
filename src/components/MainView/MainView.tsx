@@ -10,7 +10,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 
 // images
-// import purpleImage from '../../images/martin-brechtl-zs3HRrWW66A-unsplash.jpg';
+// import purpleImage from '../../assets/images/martin-brechtl-zs3HRrWW66A-unsplash.jpg';
 
 // components
 import CanvasImage from '../CanvasImage/CanvasImage';
@@ -85,6 +85,7 @@ const MainView: FC<MainViewProps> = ({
       imageURL: image.urls.full,
       imageThumb: image.urls.thumb,
       downloadLink: image.links.download,
+      unsplashLink: image.links.html,
       id: image.id,
       artistName: image.user.name || image.user.username,
       artistLink: image.user.portfolio_url,

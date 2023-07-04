@@ -2,7 +2,7 @@ import { FC, useCallback } from 'react';
 import React, { useRef, useEffect } from 'react';
 
 // images
-import purpleImage from '../../images/martin-brechtl-zs3HRrWW66A-unsplash.jpg';
+import purpleImage from '../../assets/images/martin-brechtl-zs3HRrWW66A-unsplash.jpg';
 
 // components
 import CanvasMarkers from '../CanvasMarkers/CanvasMarkers';
