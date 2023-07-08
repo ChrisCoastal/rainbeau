@@ -1,5 +1,4 @@
 import { useState } from 'react';
-
 import { getPxGroupXY, rgbToColorName } from '../utils/helpers';
 
 const useAddMarkers = (
@@ -20,7 +19,12 @@ const useAddMarkers = (
     markers.push({
       ...randomMarker,
       xy: getPxGroupXY(randomMarker.i),
-      name: rgbToColorName({ r, g, b }),
+      color: {
+        r,
+        g,
+        b,
+        name: rgbToColorName({ r, g, b }),
+      },
     });
   }
   setMarkersToAdd(markers);

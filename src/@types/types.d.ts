@@ -35,23 +35,73 @@ interface AppState {
   isError: boolean;
 }
 
-interface ReducerActions {
-  type:
-    | 'setCanvasXY'
-    | 'setImages'
-    | 'setCurrentImageData'
-    | 'setLoading'
-    | 'setError'
-    | 'addMarker'
-    | 'deleteMarker'
-    | 'setActiveMarker'
-    | 'addColorName'
-    | 'updateColorNames'
-    | 'updatePalette'
-    | 'deletePalette'
-    | 'undoPalette';
-  payload?: any;
-}
+type SetCanvasXYAction = {
+  type: 'setCanvasXY';
+  payload: { x: number; y: number };
+};
+type SetImagesAction = {
+  type: 'setImages';
+  payload: Image[];
+};
+type SetCurrentImageDataAction = {
+  type: 'setCurrentImageData';
+  payload: IndexedPxColor[];
+};
+type SetLoadingAction = {
+  type: 'setLoading';
+  payload: boolean;
+};
+type SetErrorAction = {
+  type: 'setError';
+  payload: boolean;
+};
+type AddMarkerAction = {
+  type: 'addMarker';
+  payload: ColorMarker[];
+};
+type DeleteMarkerAction = {
+  type: 'deleteMarker';
+  payload: ColorMarker;
+};
+type SetActiveMarkerAction = {
+  type: 'setActiveMarker';
+  payload: ColorMarker;
+};
+type AddColorNameAction = {
+  type: 'addColorName';
+  payload: ColorName;
+};
+type UpdateColorNamesAction = {
+  type: 'updateColorNames';
+  payload: ColorName[];
+};
+type UpdatePaletteAction = {
+  type: 'updatePalette';
+  payload: { markerNum: number; updatedMarker: ColorMarker };
+};
+type DeletePaletteAction = {
+  type: 'deletePalette';
+  payload: null;
+};
+type UndoPaletteAction = {
+  type: 'undoPalette';
+  payload: null;
+};
+
+type ReducerActions =
+  | SetCanvasXYAction
+  | SetImagesAction
+  | SetCurrentImageDataAction
+  | SetLoadingAction
+  | SetErrorAction
+  | AddMarkerAction
+  | DeleteMarkerAction
+  | SetActiveMarkerAction
+  | AddColorNameAction
+  | UpdateColorNamesAction
+  | UpdatePaletteAction
+  | DeletePaletteAction
+  | UndoPaletteAction;
 
 // API response
 interface APIImageData {
@@ -126,8 +176,7 @@ interface ColorMarker extends IndexedPxColor {
   // active: boolean;
   // hovered: boolean;
   // markerNum: number;
-  // colorName: ColorName;
-  name: string;
+  color: ColorName;
   customName?: string;
 }
 

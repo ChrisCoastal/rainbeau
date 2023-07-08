@@ -34,7 +34,7 @@ interface PaletteItemProps {
 }
 
 const PaletteItem: FC<PaletteItemProps> = ({ marker, markerNum, dispatch }) => {
-  const initialValue = marker.customName || marker.name;
+  const initialValue = marker.customName || marker.color.name;
   const { r, g, b } = marker;
 
   const [prevInputValue, setPrevInputValue] = useState<string>('');

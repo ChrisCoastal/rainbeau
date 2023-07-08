@@ -72,7 +72,12 @@ const CanvasImage: FC<CanvasImageProps> = ({
         markers.push({
           ...randomPx,
           xy: getPxGroupXY(randomPx.i),
-          name: rgbToColorName({ r, g, b }),
+          color: {
+            r,
+            g,
+            b,
+            name: rgbToColorName({ r, g, b }),
+          },
         });
       }
 

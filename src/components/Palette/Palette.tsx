@@ -48,7 +48,7 @@ const Palette: FC<PaletteProps> = ({
   };
 
   const undoHandler = () => {
-    dispatch({ type: 'undoPalette' });
+    dispatch({ type: 'undoPalette', payload: null });
   };
 
   const disableDeletePalette = paletteMarkers.length === 0;

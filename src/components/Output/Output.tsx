@@ -45,7 +45,7 @@ const Output: FC<OutputProps> = ({ paletteMarkers }) => {
     .map((marker, i) => {
       const { r, g, b } = marker;
       return `--${
-        paletteMarkers[i].customName || paletteMarkers[i].name
+        paletteMarkers[i].customName || paletteMarkers[i].color.name
       }: 'rgb(${r},${g},${b})'`;
     })
     .join(',\n      ');
@@ -54,7 +54,7 @@ const Output: FC<OutputProps> = ({ paletteMarkers }) => {
     .map((marker, i) => {
       const { r, g, b } = marker;
       return `'${
-        paletteMarkers[i].customName || paletteMarkers[i].name
+        paletteMarkers[i].customName || paletteMarkers[i].color.name
       }': 'rgb(${r},${g},${b})'`;
     })
     .join(',\n        ');
@@ -63,7 +63,7 @@ const Output: FC<OutputProps> = ({ paletteMarkers }) => {
     .map((marker, i) => {
       const { r, g, b } = marker;
       return `${
-        paletteMarkers[i].customName || paletteMarkers[i].name
+        paletteMarkers[i].customName || paletteMarkers[i].color.name
       }: 'rgb(${r},${g},${b})'`;
     })
     .join(',\n        ');

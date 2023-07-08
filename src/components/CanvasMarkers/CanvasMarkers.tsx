@@ -80,7 +80,12 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
     const updatedMarker = {
       ...updatedPx,
       xy: updatedXY,
-      name: updatedName,
+      color: {
+        r: updatedPx.r,
+        g: updatedPx.g,
+        b: updatedPx.b,
+        name: updatedName,
+      },
     };
     dispatch({
       type: 'updatePalette',
@@ -100,6 +105,7 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
 
   const markers = paletteMarkers.map((marker, index) => {
     const { xPos, yPos } = marker.xy;
+    const { r, g, b } = marker.color;
 
     return (
       <MarkerIcon
@@ -107,7 +113,7 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
         y={yPos}
         x={xPos}
         num={index}
-        color={'#d45'}
+        color={`rgb(${r}, ${g}, ${b})`}
         active={activeMarkerNum === index}
         setActive={setActiveMarkerNum}
       />

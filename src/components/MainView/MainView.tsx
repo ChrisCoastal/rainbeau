@@ -119,7 +119,7 @@ const MainView: FC<MainViewProps> = ({ state, dispatch }) => {
   ) => {
     try {
       console.log(images.length, currentImageIndex);
-      dispatch({ type: 'setError', payload: null });
+      dispatch({ type: 'setError', payload: false });
       dispatch({ type: 'setLoading', payload: true });
 
       if (images.length > 0 && images.length > currentImageIndex + 1) {
@@ -137,7 +137,7 @@ const MainView: FC<MainViewProps> = ({ state, dispatch }) => {
       deletePaletteHandler();
       dispatch({ type: 'setLoading', payload: false });
     } catch (err) {
-      dispatch({ type: 'setError', payload: err });
+      dispatch({ type: 'setError', payload: true });
       dispatch({ type: 'setLoading', payload: false });
       console.log(err);
     }
@@ -161,7 +161,12 @@ const MainView: FC<MainViewProps> = ({ state, dispatch }) => {
         markers.push({
           ...randomPx,
           xy: getPxGroupXY(randomPx.i),
-          name: rgbToColorName({ r, g, b }),
+          color: {
+            r,
+            g,
+            b,
+            name: rgbToColorName({ r, g, b }),
+          },
         });
       }
       dispatch({ type: 'addMarker', payload: markers });
@@ -172,7 +177,7 @@ const MainView: FC<MainViewProps> = ({ state, dispatch }) => {
   );
 
   const deletePaletteHandler = async () => {
-    dispatch({ type: 'deletePalette' });
+    dispatch({ type: 'deletePalette', payload: null });
   };
 
   const onImageDraw = useCallback(
