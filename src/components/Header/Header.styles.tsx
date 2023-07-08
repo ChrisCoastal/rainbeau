@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import Module from 'module';
-import { BREAKPOINTS } from '../../utils/config';
+import { BREAKPOINTS } from '../../utils/constants';
 
 interface LogoProps {
   logoWidth: number;
@@ -19,6 +19,7 @@ export const Wrapper = styled.div`
   height: 4rem;
   padding: 0 1rem;
   z-index: 1000;
+  pointer-events: none;
 
   @media (min-width: ${BREAKPOINTS.lg}) {
     padding: 0 2rem;
@@ -28,4 +29,5 @@ export const Wrapper = styled.div`
 export const Logo = styled.img<LogoProps>`
   width: ${(props) => props.logoWidth / devicePixelRatio || 1}px;
   height: auto;
+  pointer-events: none;
 `;

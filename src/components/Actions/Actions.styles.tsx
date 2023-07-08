@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { BREAKPOINTS } from '../../utils/config';
+import { BREAKPOINTS } from '../../utils/constants';
 
 export const Wrapper = styled.div`
   height: 1rem;

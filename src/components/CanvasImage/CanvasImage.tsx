@@ -12,13 +12,18 @@ import Favorite from '@mui/icons-material/Favorite';
 
 // config
 import {
-  CANVAS_RESOLUTION,
+  // CANVAS_RESOLUTION,
   MEASUREMENT_PRECISION,
   RGBA_GROUP,
-} from '../../utils/config';
+} from '../../utils/constants';
 
 // helpers
-import { getPxGroupXY, rgbToColorName, rgbToHsl } from '../../utils/helpers';
+import {
+  getCanvasDimension,
+  getPxGroupXY,
+  rgbToColorName,
+  rgbToHsl,
+} from '../../utils/helpers';
 
 // styles
 import { Canvas, ImageBox, MarkersBox } from './CanvasImage.styles';
@@ -59,8 +64,10 @@ const CanvasImage: FC<CanvasImageProps> = ({
   const createMarkers = useCallback(
     (indexedImagePx: IndexedPxColor[], markerQty: number = 3) => {
       const markers: ColorMarker[] = [];
-      const totalPx = indexedImagePx.length; // 640000
+      const totalPx = indexedImagePx.length; // canvasHeight * canvasWidth
       // TODO: sort by hue
+      console.log(totalPx);
+      const canvasDimension = getCanvasDimension(totalPx);
 
       for (let loop = 0; loop < markerQty; loop++) {
         const randomIndex = Math.floor(Math.random() * totalPx);
@@ -68,7 +75,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
         const { r, g, b } = randomPx;
         markers.push({
           ...randomPx,
-          xy: getPxGroupXY(randomPx.i),
+          xy: getPxGroupXY(randomPx.i, canvasDimension),
           color: {
             r,
             g,
@@ -124,10 +131,14 @@ const CanvasImage: FC<CanvasImageProps> = ({
     canvasCtxRef.current = canvasRef.current.getContext('2d')!;
     const ctx = canvasCtxRef.current;
     const devicePixelRatio = window.devicePixelRatio || 1;
-    console.log(canvasRef.current?.getBoundingClientRect(), canvasRef.current);
+    console.log(
+      canvasRef.current?.getBoundingClientRect(),
+      canvasRef.current,
+      ctx
+    );
     // define canvas resolution
-    ctx.canvas.width = CANVAS_RESOLUTION.med / devicePixelRatio;
-    ctx.canvas.height = CANVAS_RESOLUTION.med / devicePixelRatio;
+    ctx.canvas.width = 720 / devicePixelRatio;
+    ctx.canvas.height = 720 / devicePixelRatio;
 
     // dev test marker accuracy (if testing, comment out ctx.drawImage)
     // ctx!.fillStyle = '#FF0000';
@@ -152,6 +163,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
         ctx.canvas.height
       ).data;
 
+      console.log(imageData);
       onImageDraw(!!imageData);
 
       const indexedImagePx = setImageDataState(imageData);
@@ -169,7 +181,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
       {isError && <p>There was an error. Please try again.</p>}
       <ImageBox>
         {isLoading && <LoadingSpinner />}
-        <Canvas ref={canvasRef}></Canvas>
+        <Canvas ref={canvasRef} />
       </ImageBox>
       <MarkersBox>
         <CanvasMarkers

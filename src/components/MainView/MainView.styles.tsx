@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-import { REM_RATIO, BREAKPOINTS, CANVAS_SIZE } from '../../utils/config';
+import { REM_RATIO, BREAKPOINTS, CANVAS_SIZE } from '../../utils/constants';
 
 export const Wrapper = styled.div`
   position: relative;
@@ -18,52 +18,16 @@ export const MainGrid = styled.div`
   grid-template-areas: 'actions' 'image' 'palette';
 
   @media (min-width: ${BREAKPOINTS.md}px) {
-    height: 30rem;
+    grid-template-columns: 45rem 24rem;
+    height: ${CANVAS_SIZE.md}px;
     column-gap: 2rem;
     grid-template-areas: 'image actions' 'image palette';
   }
 
   @media (min-width: ${BREAKPOINTS.lg}px) {
-    /* grid-template-columns: 1fr auto;
-    grid-template-rows: auto 1fr 1fr; */
-    column-gap: 3rem;
-    height: 50rem;
+    grid-template-columns: 45rem 24rem;
+    grid-template-rows: auto 4fr 3fr;
+    height: ${CANVAS_SIZE.lg}px;
     grid-template-areas: 'image actions' 'image palette' 'image output';
-  }
-`;
-
-export const ImageBox = styled.div`
-  /* margin-bottom: 3rem; */
-  position: relative;
-  overflow: hidden;
-  /* overflow: visible; */
-  border-radius: 8px;
-
-  /* text-align: right; */
-  width: ${CANVAS_SIZE.med}px;
-  height: ${CANVAS_SIZE.med}px;
-  grid-area: image;
-
-  @media (min-width: ${BREAKPOINTS.lg}px) {
-    /* margin-bottom: 1rem; */
-    /* grid-row: 1 / span 3; */
-  }
-`;
-
-export const MarkersBox = styled.div`
-  /* margin-bottom: 3rem; */
-  position: relative;
-  /* overflow: hidden; */
-  overflow: visible;
-  border-radius: 8px;
-
-  /* text-align: right; */
-  width: 100%;
-  height: 100%;
-  grid-area: image;
-  z-index: 10;
-  @media (min-width: ${BREAKPOINTS.lg}px) {
-    /* margin-bottom: 1rem; */
-    /* grid-row: 1 / span 3; */
   }
 `;

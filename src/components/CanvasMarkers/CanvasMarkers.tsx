@@ -8,7 +8,11 @@ import type { FC, TouchEvent, MouseEvent } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 // helpers
-import { getPxGroupIndex, rgbToColorName } from '../../utils/helpers';
+import {
+  getPxGroupIndex,
+  rgbToColorName,
+  getCanvasDimension,
+} from '../../utils/helpers';
 
 // components
 import Marker from './Marker';
@@ -74,7 +78,12 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
     activeMarkerNum: number,
     updatedXY: { xPos: number; yPos: number }
   ) => {
-    const updatedIndex = getPxGroupIndex(updatedXY.xPos, updatedXY.yPos);
+    const canvasDimension = getCanvasDimension(currentImageData.length);
+    const updatedIndex = getPxGroupIndex(
+      updatedXY.xPos,
+      updatedXY.yPos,
+      canvasDimension
+    );
     const updatedPx = currentImageData[updatedIndex];
     const updatedName = rgbToColorName(updatedPx);
     const updatedMarker = {

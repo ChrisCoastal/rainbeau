@@ -5,10 +5,6 @@ import { useCallback, useState, useEffect } from 'react';
 import { functions } from '../../firestore.config';
 import { httpsCallable } from 'firebase/functions';
 
-// mui
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-
 // components
 import CanvasImage from '../CanvasImage/CanvasImage';
 
@@ -16,10 +12,10 @@ import CanvasImage from '../CanvasImage/CanvasImage';
 import { getPxGroupXY, rgbToColorName } from '../../utils/helpers';
 
 // config
-import { DUMMY_RESPONSE } from '../../utils/config';
+import { DUMMY_RESPONSE } from '../../utils/constants';
 
 // styles
-import { Wrapper, ImageBox, MainGrid, MarkersBox } from './MainView.styles';
+import { Wrapper, MainGrid } from './MainView.styles';
 import Palette from '../Palette/Palette';
 import Output from '../Output/Output';
 import Actions from '../Actions/Actions';
@@ -150,17 +146,18 @@ const MainView: FC<MainViewProps> = ({ state, dispatch }) => {
     ) => {
       if (!currentImageData) return [];
       const markers: ColorMarker[] = [];
-      const totalPx = currentImageData.length; // 640000
+      const totalPx = currentImageData.length; // canvasHeight * canvasWidth
 
       // create random marker(s)
       for (let loop = 0; loop < markerQty; loop++) {
         const randomIndex = Math.floor(Math.random() * totalPx);
         const randomPx = currentImageData[randomIndex];
         const { r, g, b } = randomPx;
+        const canvasDimension = Math.sqrt(totalPx);
 
         markers.push({
           ...randomPx,
-          xy: getPxGroupXY(randomPx.i),
+          xy: getPxGroupXY(randomPx.i, canvasDimension),
           color: {
             r,
             g,

@@ -22,7 +22,7 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import UndoIcon from '@mui/icons-material/Undo';
 import SaveIcon from '@mui/icons-material/Save';
-import { MAX_NUM_MARKERS } from '../../utils/config';
+import { MAX_NUM_MARKERS } from '../../utils/constants';
 
 interface PaletteProps {
   paletteMarkers: ColorMarker[];

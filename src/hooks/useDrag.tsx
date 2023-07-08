@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 
 // config
-import { CANVAS_RESOLUTION } from '../utils/config';
+// import { CANVAS_RESOLUTION } from '../utils/constants';
 
 export const useDrag = (event: MouseEvent, startPoint: number) => {
   // const [isDragging, setIsDragging] = useState<boolean>(false);

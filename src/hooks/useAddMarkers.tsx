@@ -6,7 +6,7 @@ const useAddMarkers = (
   markerQty: number = 1
 ) => {
   const [markersToAdd, setMarkersToAdd] = useState<ColorMarker[]>([]);
-  const totalPx = indexedImagePx.length; // 640000
+  const totalPx = indexedImagePx.length; // canvasHeight * canvasWidth
   const markers: ColorMarker[] = [];
   // sort by hue
   // const sortedPxGroups = getSortedPx([...indexedImagePx], 'h');
@@ -18,7 +18,7 @@ const useAddMarkers = (
     const { r, g, b } = randomMarker;
     markers.push({
       ...randomMarker,
-      xy: getPxGroupXY(randomMarker.i),
+      xy: getPxGroupXY(randomMarker.i, Math.sqrt(totalPx)),
       color: {
         r,
         g,

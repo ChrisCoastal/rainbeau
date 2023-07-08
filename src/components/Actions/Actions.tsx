@@ -74,15 +74,17 @@ const Actions: FC<ActionsProps> = ({
           buttons={uploadModal.buttons}
           modalHandler={uploadModal.handler}
         />
-        {imageDownloadURL && (
-          <Link href={imageDownloadURL} target="_blank">
-            <Tooltip title="download image">
-              <IconButton disabled={!imageDownloadURL}>
-                <DownloadIcon />
-              </IconButton>
-            </Tooltip>
-          </Link>
-        )}
+        <Link href={imageDownloadURL || ''} target="_blank">
+          <Tooltip
+            title={
+              imageDownloadURL ? 'download image' : 'download not available'
+            }
+          >
+            <IconButton disabled={!imageDownloadURL}>
+              <DownloadIcon />
+            </IconButton>
+          </Tooltip>
+        </Link>
       </div>
     </Wrapper>
   );

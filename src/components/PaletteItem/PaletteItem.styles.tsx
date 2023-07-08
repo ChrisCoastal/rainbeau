@@ -7,6 +7,7 @@ export const Wrapper = styled.div`
   padding: 0.4rem 0.4rem 0.4rem 0.8rem;
   border-radius: 0.4rem;
   border: solid 1px #ddd;
+  background-color: #fff;
 
   &:hover {
     border-color: #7dffbe;
@@ -27,7 +28,7 @@ export const ItemContent = styled.div`
 export const ColorValue = styled.div`
   display: inline-block;
   &:hover {
-    cursor: copy;
+    cursor: pointer;
   }
 `;
 

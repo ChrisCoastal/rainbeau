@@ -1,5 +1,39 @@
-import { COLOR_NAMES, RGBA_GROUP, CANVAS_SIZE } from './config';
+import { COLOR_NAMES, RGBA_GROUP, CANVAS_SIZE } from './constants';
 
+// unit conversions
+export const pxToRem = (px: number) => px / 16;
+export const remToPx = (rem: number) => rem * 16;
+
+// canvas
+
+// assumes 4 channels per pixel, square image
+export const getCanvasDimension = (imageDataLength: number) => {
+  const dim = Math.sqrt(imageDataLength);
+  return dim;
+};
+
+// translate canvas index (from getImageData()) to x y values on the canvas
+export const getPxGroupXY = (index: number, canvasDimension: number) => {
+  const yPos = Math.floor(index / (canvasDimension * RGBA_GROUP));
+  const xPos = (index % (canvasDimension * RGBA_GROUP)) / RGBA_GROUP; // channel values per width * canvaswidth/channelvalues/width ;
+
+  return { xPos, yPos };
+};
+
+export const getPxGroupIndex = (
+  xPos: number,
+  yPos: number,
+  canvasDimension: number
+) => {
+  let rgbIndex = yPos * canvasDimension * RGBA_GROUP;
+  if (xPos !== canvasDimension) rgbIndex += xPos * RGBA_GROUP;
+  const pxIndex = rgbIndex / RGBA_GROUP;
+
+  // return +pxIndex.toFixed(0);
+  return pxIndex;
+};
+
+// color unit conversions
 export function rgbToHex(r: number, g: number, b: number) {
   let hexR = r.toString(16);
   let hexG = g.toString(16);
@@ -51,23 +85,6 @@ export function rgbToHsl(rgbColor: { r: number; g: number; b: number }) {
   // 'hsl(' + h + ',' + s + '%,' + l + '%)';
   return { h, s, l };
 }
-
-// translate canvas index (from getImageData()) to x y values on the canvas
-export const getPxGroupXY = (index: number) => {
-  const yPos = Math.floor(index / (CANVAS_SIZE.med * RGBA_GROUP));
-  const xPos = (index % (CANVAS_SIZE.med * RGBA_GROUP)) / RGBA_GROUP; // channel values per width * canvaswidth/channelvalues/width ;
-
-  return { xPos, yPos };
-};
-
-export const getPxGroupIndex = (xPos: number, yPos: number) => {
-  let rgbIndex = yPos * 3200;
-  if (xPos !== 800) rgbIndex += xPos * 4;
-  const pxIndex = rgbIndex / RGBA_GROUP;
-
-  // return +pxIndex.toFixed(0);
-  return pxIndex;
-};
 
 // export const getImagePx = () => {
 
@@ -143,7 +160,7 @@ export const getMedianColor = (
       r: acc.r + rgb.r / length,
       g: acc.g + rgb.g / length,
       b: acc.b + rgb.b / length,
-      xy: getPxGroupXY(rgb.i),
+      xy: getPxGroupXY(rgb.i, Math.sqrt(length)),
     }),
     { r: 0, g: 0, b: 0, xy: { xPos: 0, yPos: 0 } }
   );

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { BREAKPOINTS } from '../../utils/config';
+import { BREAKPOINTS } from '../../utils/constants';
 
 export const Wrapper = styled.div`
   /* height: 36vh; */
@@ -16,8 +16,8 @@ export const Wrapper = styled.div`
 
 export const CopyIconWrapper = styled.div`
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 10rem;
+  right: 0.2rem;
 `;
 
 export const TextArea = styled.textarea`
@@ -25,8 +25,10 @@ export const TextArea = styled.textarea`
   height: 60%;
   line-height: 125%;
   resize: none;
+  font-size: 0.7rem;
   border-radius: 8px;
   border: solid 1px #ddd;
+  box-shadow: inset 0px -0.5rem 0.6rem -0.7rem #dddddddd;
   /* overflow: scroll; */
 
   &:hover {

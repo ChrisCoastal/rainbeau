@@ -38,7 +38,7 @@ interface Styles {
 }
 
 const Output: FC<OutputProps> = ({ paletteMarkers }) => {
-  const [format, setFormat] = useState<keyof Styles>('styled');
+  const [format, setFormat] = useState<keyof Styles>('tailwind');
   const [copied, setCopied] = useState<boolean>(true);
 
   const cssMarkerColors = paletteMarkers
