@@ -61,7 +61,6 @@ const Actions: FC<ActionsProps> = ({
 
   return (
     <Wrapper>
-      Actions
       <div>
         <Tooltip title="new image">
           <IconButton onClick={changeImageHandler}>

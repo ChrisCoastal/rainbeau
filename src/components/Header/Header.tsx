@@ -1,12 +1,12 @@
 import React from 'react';
 
-import { Wrapper } from './Header.styles';
+import { Wrapper, Logo } from './Header.styles';
 import logo from '../../assets/rainbeau-logo.png';
 
 const Header = () => {
   return (
     <Wrapper>
-      <img src={logo} alt="rainbeau wordmark" />
+      <Logo src={logo} logoWidth={160} alt="rainbeau wordmark" />
     </Wrapper>
   );
 };

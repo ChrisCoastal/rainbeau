@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
 
 export const Wrapper = styled.div`
-  height: 36vh;
-  padding: 1rem 0rem 1rem 1rem;
-  border-radius: 6px;
+  /* height: 36vh; */
+  padding: 0rem 0rem 1rem 1rem;
+  border-radius: 8px;
   border: solid 1px #ddd;
   overflow: hidden;
 `;

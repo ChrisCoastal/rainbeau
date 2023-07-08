@@ -1,7 +1,7 @@
 import React, { useReducer } from 'react';
 
 // reducer
-import { reducer } from './utils/reducer';
+import reducer from './context/reducer';
 
 // hooks
 import useWindowSize from './hooks/useResizeWindow';

@@ -20,6 +20,11 @@ type WindowSize = {
 };
 
 // state and reducer
+type AppContextType = {
+  state: AppState;
+  dispatch: Dispatch<ReducerActions>;
+};
+
 interface AppState {
   canvasXY: { x: number; y: number };
   images: Image[];
@@ -39,6 +44,7 @@ interface ReducerActions {
     | 'setError'
     | 'addMarker'
     | 'deleteMarker'
+    | 'setActiveMarker'
     | 'addColorName'
     | 'updateColorNames'
     | 'updatePalette'
@@ -115,7 +121,12 @@ interface coordinate {
 }
 
 interface ColorMarker extends IndexedPxColor {
+  // id: string;
   xy: coordinate;
+  // active: boolean;
+  // hovered: boolean;
+  // markerNum: number;
+  // colorName: ColorName;
   name: string;
   customName?: string;
 }

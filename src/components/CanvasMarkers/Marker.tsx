@@ -15,6 +15,7 @@ interface MarkerProps {
 const Marker: FC<MarkerProps> = ({ x, y, num, setActive }) => {
   function handleTouchStart(e: React.TouchEvent) {
     console.log(e);
+    e.preventDefault();
     setActive(num);
   }
 
@@ -29,6 +30,7 @@ const Marker: FC<MarkerProps> = ({ x, y, num, setActive }) => {
       // onMouseEnter={(e) => clickHandler(e, num)}
       // onDragStart={() => false}
       onMouseUp={() => setActive(null)}
+      onTouchEnd={() => setActive(null)}
     >
       <span></span>
       <span></span>

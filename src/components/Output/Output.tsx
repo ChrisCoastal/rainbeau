@@ -13,7 +13,6 @@ import CheckIcon from '@mui/icons-material/Check';
 // styles
 import {
   Wrapper,
-  OutputActions,
   CopyIconWrapper,
   TextArea,
   FormatContainer,
@@ -186,14 +185,11 @@ const Output: FC<OutputProps> = ({ paletteMarkers }) => {
 
   return (
     <Wrapper>
-      <OutputActions>
-        <Typography>Output</Typography>
-        <SelectFormatButton
-          options={formatOptions}
-          format={format}
-          setFormat={setFormat}
-        />
-      </OutputActions>
+      <SelectFormatButton
+        options={formatOptions}
+        format={format}
+        setFormat={setFormat}
+      />
       {paletteMarkers.length !== 0 ? stylesTextArea : fallbackTextArea}
     </Wrapper>
   );

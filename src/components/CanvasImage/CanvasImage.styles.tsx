@@ -11,6 +11,8 @@ export const Canvas = styled.canvas`
   height: 100%;
   width: 100%;
   object-fit: fit;
+  /* overflow: hidden; */
+  border-radius: 8px;
 `;
 
 export const ImageFallback = styled.img`

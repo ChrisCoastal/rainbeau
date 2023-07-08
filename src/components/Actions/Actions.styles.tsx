@@ -1,13 +1,19 @@
 import styled from '@emotion/styled';
+import { BREAKPOINTS } from '../../utils/config';
 
 export const Wrapper = styled.div`
+  height: 1rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 3vh;
   padding: 1rem;
-  border-radius: 6px;
+  border-radius: 8px;
   border: solid 1px #ddd;
+  grid-row-start: 1;
+
+  @media (min-width: ${BREAKPOINTS.lg}px) {
+    grid-column-start: 2;
+  }
 `;
 
 export const DropArea = styled.div`
@@ -18,7 +24,7 @@ export const DropArea = styled.div`
   width: 100%;
   height: 8rem;
   border: 1px solid #999;
-  border-radius: 6px;
+  border-radius: 8px;
 
   & p {
     font-size: small;

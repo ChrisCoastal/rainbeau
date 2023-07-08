@@ -22,6 +22,7 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import UndoIcon from '@mui/icons-material/Undo';
 import SaveIcon from '@mui/icons-material/Save';
+import { MAX_NUM_MARKERS } from '../../utils/config';
 
 interface PaletteProps {
   paletteMarkers: ColorMarker[];
@@ -51,7 +52,7 @@ const Palette: FC<PaletteProps> = ({
   };
 
   const disableDeletePalette = paletteMarkers.length === 0;
-  const disableAddMarker = paletteMarkers.length >= 8;
+  const disableAddMarker = paletteMarkers.length >= MAX_NUM_MARKERS;
 
   const deletePaletteModal = {
     openState: open,
@@ -84,9 +85,14 @@ const Palette: FC<PaletteProps> = ({
   return (
     <Wrapper>
       <PaletteActions>
-        <p>Palette</p>
         <div>
-          <Tooltip title="add marker">
+          <Tooltip
+            title={
+              paletteMarkers.length >= MAX_NUM_MARKERS
+                ? 'cannot add marker'
+                : 'add marker'
+            }
+          >
             <span>
               <IconButton
                 onClick={addMarkerHandler}

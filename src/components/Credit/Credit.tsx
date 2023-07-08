@@ -1,6 +1,6 @@
+import React, { FC } from 'react';
 import { Typography, Link } from '@mui/material';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import React, { FC } from 'react';
 
 import { Wrapper } from './Credit.styles';
 interface CreditProps {
@@ -23,10 +23,8 @@ const Credit: FC<CreditProps> = ({ link, name }) => {
         target="_blank"
         color="#333"
       >
-        <Typography fontSize="small" pt={0.8}>
-          via {name} on UnSplash
-        </Typography>
-        <OpenInNewIcon sx={{ marginTop: '0.3rem' }} fontSize="inherit" />
+        <Typography fontSize="small">via {name?.split(' ')[0]}</Typography>
+        <OpenInNewIcon fontSize="inherit" />
       </Link>
     </Wrapper>
   );

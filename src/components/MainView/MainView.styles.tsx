@@ -1,64 +1,46 @@
 import styled from '@emotion/styled';
 
-import { REM_RATIO } from '../../utils/config';
+import { REM_RATIO, BREAKPOINTS, CANVAS_SIZE } from '../../utils/config';
 
-interface WrapperProps {
-  bgColor: { r: number; g: number; b: number }[];
-}
-
-interface FlipBoxProps {
-  pxDimension: number;
-}
-
-/* background-color: ${(props) => props.bgColor}; */
-/* background-image: ${(props) =>
-    `linear-gradient(to right bottom, 
-      rgb(${props.bgColor.r},${props.bgColor.g},${props.bgColor.b}),
-      rgb(${props.bgColor.r - 30},${props.bgColor.g - 30},${props.bgColor.b - 30})
-      )`}; */
-
-// prettier-ignore
 export const Wrapper = styled.div`
   position: relative;
   display: flex;
-  align-items: center;
   justify-content: center;
   gap: 3rem;
+  margin-top: 4rem;
   transition: all 0.6s ease-in;
-  height: 100vh;
 `;
 
-export const FlipBox = styled.div<FlipBoxProps>`
+export const MainGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: 1rem;
+
+  @media (min-width: ${BREAKPOINTS.md}px) {
+    height: 30rem;
+  }
+
+  @media (min-width: ${BREAKPOINTS.lg}px) {
+    /* grid-template-columns: 1fr auto;
+    grid-template-rows: auto 1fr 1fr; */
+    column-gap: 3rem;
+    height: 50rem;
+  }
+`;
+
+export const FlipBox = styled.div`
   position: relative;
   perspective: 150rem;
-  width: ${(props) => props.pxDimension / REM_RATIO}rem;
-  height: ${(props) => props.pxDimension / REM_RATIO}rem;
+  width: ${CANVAS_SIZE.med}px;
+  height: ${CANVAS_SIZE.med}px;
 `;
 
 export const ImageBox = styled.div`
+  margin-bottom: 3rem;
   text-align: right;
+
+  @media (min-width: ${BREAKPOINTS.lg}px) {
+    margin-bottom: 1rem;
+    grid-row: 1 / span 3;
+  }
 `;
-
-export const ActionsBox = styled.section`
-  width: 30rem;
-  height: 50rem;
-  display: flex;
-  row-gap: 1rem;
-  flex-direction: column;
-  justify-content: space-between;
-`;
-
-// export const Front = styled.div`
-//   position: absolute;
-//   top: 0;
-//   left: 0;
-//   max-width: 100%;
-//   max-height: 100%;
-//   // transform: translate(-50%; -50%);
-//   transition: all 0.8s ease;
-//   box-shadow: 0 1rem 1rem 0 #3333333e;
-
-//   &:hover {
-//     transform: rotateY(-180deg);
-//   }
-// `;

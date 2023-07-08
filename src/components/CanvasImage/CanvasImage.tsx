@@ -87,7 +87,6 @@ const CanvasImage: FC<CanvasImageProps> = ({
       const dataPoints = imageData.length;
       // imageData[] format is [r,g,b,a,r,g,b,a...]
       const sampleRate = RGBA_GROUP * MEASUREMENT_PRECISION;
-      console.log('calculating image data...');
 
       for (let i = 0; i < dataPoints; i += sampleRate) {
         const r = imageData[i];

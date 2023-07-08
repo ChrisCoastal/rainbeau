@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 
-// router
-import { BrowserRouter } from 'react-router-dom';
+// context
+import { AppProvider } from './context/AppProvider';
 
 import App from './App';
 
@@ -12,8 +12,8 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
+    <AppProvider>
       <App />
-    </BrowserRouter>
+    </AppProvider>
   </React.StrictMode>
 );

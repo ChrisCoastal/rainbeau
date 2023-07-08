@@ -15,6 +15,7 @@ import Marker from './Marker';
 
 // styles
 import { Wrapper } from './CanvasMarkers.styles';
+import MarkerIcon from '../../UI/Marker/MarkerIcon';
 
 interface CanvasMarkerProps {
   paletteMarkers: ColorMarker[];
@@ -87,27 +88,36 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
     });
   };
 
-  const touchStartHandler = (e: React.TouchEvent) => {
-    if (activeMarkerNum === null) return;
-    console.log('touchStartHandler', e);
-  };
+  // const touchStartHandler = (e: React.TouchEvent) => {
+  //   if (activeMarkerNum === null) return;
+  //   console.log('touchStartHandler', e);
+  // };
 
-  const touchEndHandler = (e: React.TouchEvent) => {
-    setActiveMarkerNum(null);
-    console.log('touchEndHandler', e);
-  };
+  // const touchEndHandler = (e: React.TouchEvent) => {
+  //   setActiveMarkerNum(null);
+  //   console.log('touchEndHandler', e);
+  // };
 
   const markers = paletteMarkers.map((marker, index) => {
     const { xPos, yPos } = marker.xy;
 
     return (
-      <Marker
+      <MarkerIcon
         key={uuidv4()}
         y={yPos}
         x={xPos}
         num={index}
+        color={'#d45'}
+        active={activeMarkerNum === index}
         setActive={setActiveMarkerNum}
       />
+      // <Marker
+      //   key={uuidv4()}
+      //   y={yPos}
+      //   x={xPos}
+      //   num={index}
+      //   setActive={setActiveMarkerNum}
+      // />
     );
   });
 
@@ -117,8 +127,8 @@ const CanvasMarkers: FC<CanvasMarkerProps> = ({
       onMouseMove={moveMarkerHandler}
       onTouchMove={moveMarkerHandler}
       onMouseUp={() => setActiveMarkerNum(null)}
-      onTouchStart={touchStartHandler}
-      onTouchEnd={touchEndHandler}
+      // onTouchStart={touchStartHandler}
+      // onTouchEnd={touchEndHandler}
       onMouseLeave={() => setActiveMarkerNum(null)}
     >
       {markers}

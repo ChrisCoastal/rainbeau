@@ -19,7 +19,7 @@ import { getPxGroupXY, rgbToColorName } from '../../utils/helpers';
 import { CANVAS_SIZE, DUMMY_RESPONSE } from '../../utils/config';
 
 // styles
-import { Wrapper, FlipBox, ImageBox, ActionsBox } from './MainView.styles';
+import { Wrapper, FlipBox, ImageBox, MainGrid } from './MainView.styles';
 import Palette from '../Palette/Palette';
 import Output from '../Output/Output';
 import Actions from '../Actions/Actions';
@@ -104,7 +104,11 @@ const MainView: FC<MainViewProps> = ({ state, dispatch }) => {
     maxWidth: '100%',
     maxHeight: '100%',
     borderRadius: '8px',
-    boxShadow: '0 0.8rem 2rem 0 #3333333e',
+    boxShadow: {
+      xs: '0 0.3rem 1.2rem 0 #3333333e',
+      sm: '0 0.4rem 1.4rem 0 #3333333e',
+      lg: '0 0.8rem 2.2rem 0 #3333333e',
+    },
     transition: 'all 1.2s ease',
   };
   console.log(images.length);
@@ -191,26 +195,27 @@ const MainView: FC<MainViewProps> = ({ state, dispatch }) => {
 
   return (
     <Wrapper>
-      <ImageBox>
-        <FlipBox pxDimension={CANVAS_SIZE.med}>
-          <Card sx={CardSx}>
-            <CardContent sx={{ p: '0' }}>
-              <CanvasImage
-                imageURL={imageURL}
-                paletteMarkers={paletteMarkers}
-                addMarkers={addMarkerHandler}
-                currentImageData={currentImageData}
-                isLoading={isLoading}
-                isError={isError}
-                onImageDraw={onImageDraw}
-                dispatch={dispatch}
-              />
-            </CardContent>
-          </Card>
-        </FlipBox>
-        <Credit name={artistName} link={unsplashLink} />
-      </ImageBox>
-      {/* <ActionsBox>
+      <MainGrid className="grid">
+        <ImageBox>
+          <FlipBox>
+            <Card sx={CardSx}>
+              <CardContent sx={{ p: '0' }}>
+                <CanvasImage
+                  imageURL={imageURL}
+                  paletteMarkers={paletteMarkers}
+                  addMarkers={addMarkerHandler}
+                  currentImageData={currentImageData}
+                  isLoading={isLoading}
+                  isError={isError}
+                  onImageDraw={onImageDraw}
+                  dispatch={dispatch}
+                />
+              </CardContent>
+            </Card>
+          </FlipBox>
+          <Credit name={artistName} link={unsplashLink} />
+        </ImageBox>
+
         <Actions
           changeImageHandler={changeImageHandler}
           imageDownloadURL={downloadLink}
@@ -222,7 +227,7 @@ const MainView: FC<MainViewProps> = ({ state, dispatch }) => {
           dispatch={dispatch}
         />
         <Output paletteMarkers={paletteMarkers} />
-      </ActionsBox> */}
+      </MainGrid>
     </Wrapper>
   );
 };

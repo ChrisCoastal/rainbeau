@@ -1,4 +1,4 @@
-export const reducer = (state: AppState, action: ReducerActions): AppState => {
+const reducer = (state: AppState, action: ReducerActions): AppState => {
   const { type, payload } = action;
   switch (type) {
     case 'setCanvasXY':
@@ -10,13 +10,11 @@ export const reducer = (state: AppState, action: ReducerActions): AppState => {
       return {
         ...state,
         images: payload,
-        // markerHistory: [...state.markerHistory, state.paletteMarkers],
       };
     case 'setCurrentImageData':
       return {
         ...state,
         currentImageData: payload,
-        // markerHistory: [...state.markerHistory, state.paletteMarkers],
       };
     case 'setLoading':
       return {
@@ -32,7 +30,18 @@ export const reducer = (state: AppState, action: ReducerActions): AppState => {
       return {
         ...state,
         paletteMarkers: [...state.paletteMarkers, ...payload],
-        // markerHistory: [...state.markerHistory, state.paletteMarkers],
+      };
+    case 'setActiveMarker':
+      return {
+        ...state,
+        paletteMarkers: state.paletteMarkers.map((marker) =>
+          marker.i === payload.i
+            ? {
+                ...marker,
+                isActive: true,
+              }
+            : marker
+        ),
       };
     case 'deleteMarker':
       return {
@@ -40,7 +49,6 @@ export const reducer = (state: AppState, action: ReducerActions): AppState => {
         paletteMarkers: state.paletteMarkers.filter(
           (marker) => marker.i !== payload.i
         ),
-        // markerHistory: [...state.markerHistory, state.paletteMarkers],
       };
     case 'updatePalette':
       const updatedPaletteMarkers = [...state.paletteMarkers];
@@ -48,13 +56,11 @@ export const reducer = (state: AppState, action: ReducerActions): AppState => {
       return {
         ...state,
         paletteMarkers: updatedPaletteMarkers,
-        // markerHistory: [...state.markerHistory, state.paletteMarkers],
       };
     case 'deletePalette':
       return {
         ...state,
         paletteMarkers: [],
-        // markerHistory: [...state.markerHistory, state.paletteMarkers],
       };
     case 'undoPalette':
       return {
@@ -66,3 +72,5 @@ export const reducer = (state: AppState, action: ReducerActions): AppState => {
       return state;
   }
 };
+
+export default reducer;

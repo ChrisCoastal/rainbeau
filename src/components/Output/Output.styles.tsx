@@ -1,15 +1,10 @@
 import styled from '@emotion/styled';
 
 export const Wrapper = styled.div`
-  height: 36vh;
+  /* height: 36vh; */
   padding: 1rem 1.5rem;
-  border-radius: 6px;
+  border-radius: 8px;
   border: solid 1px #ddd;
-`;
-
-export const OutputActions = styled.div`
-  display: flex;
-  justify-content: space-between;
 `;
 
 export const CopyIconWrapper = styled.div`
@@ -23,7 +18,7 @@ export const TextArea = styled.textarea`
   height: 60%;
   line-height: 125%;
   resize: none;
-  border-radius: 6px;
+  border-radius: 8px;
   border: solid 1px #ddd;
   /* overflow: scroll; */
 

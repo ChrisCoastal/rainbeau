@@ -17,6 +17,7 @@ export const MarkerTarget = styled.div<MarkerTargetProps>`
   background-color: #ffffff30;
   border: 2px solid white;
   mix-blend-mode: exclusion;
+  touch-action: none; /* prevent scrolling on touch devices */
 
   cursor: grab;
 
