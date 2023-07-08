@@ -19,7 +19,7 @@ import {
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
 import UndoIcon from '@mui/icons-material/Undo';
 import SaveIcon from '@mui/icons-material/Save';
 import { MAX_NUM_MARKERS } from '../../utils/config';
@@ -66,7 +66,7 @@ const Palette: FC<PaletteProps> = ({
             onClick={() => modalHandler(true)}
             disabled={disableDeletePalette}
           >
-            <RemoveCircleIcon />
+            <CancelIcon />
           </IconButton>
         </span>
       </Tooltip>

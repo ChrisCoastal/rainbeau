@@ -1,10 +1,17 @@
 import styled from '@emotion/styled';
+import { BREAKPOINTS } from '../../utils/config';
 
 export const Wrapper = styled.div`
   /* height: 36vh; */
   padding: 1rem 1.5rem;
   border-radius: 8px;
   border: solid 1px #ddd;
+  background-color: #fff;
+  grid-area: palette;
+
+  @media (min-width: ${BREAKPOINTS.lg}px) {
+    grid-area: output;
+  }
 `;
 
 export const CopyIconWrapper = styled.div`

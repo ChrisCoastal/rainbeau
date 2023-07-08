@@ -3,9 +3,11 @@ import styled from '@emotion/styled';
 export const Wrapper = styled.div`
   /* height: 36vh; */
   padding: 0rem 0rem 1rem 1rem;
+  grid-area: palette;
   border-radius: 8px;
   border: solid 1px #ddd;
   overflow: hidden;
+  background-color: #fff;
 `;
 
 export const PaletteActions = styled.div`

@@ -137,7 +137,7 @@ const PaletteItem: FC<PaletteItemProps> = ({ marker, markerNum, dispatch }) => {
           ></input>
           <Tooltip title="clear color name">
             <IconButton onClick={inputReset}>
-              <HighlightOffIcon fontSize="small" />
+              <RemoveCircleOutlineIcon fontSize="small" />
             </IconButton>
           </Tooltip>
         </SwatchContainer>
@@ -154,7 +154,7 @@ const PaletteItem: FC<PaletteItemProps> = ({ marker, markerNum, dispatch }) => {
       <ItemControls>
         <Tooltip title="delete color">
           <IconButton onClick={() => deleteMarkerHandler(marker)}>
-            <RemoveCircleOutlineIcon fontSize="small" />
+            <HighlightOffIcon fontSize="small" />
           </IconButton>
         </Tooltip>
         {/* <Tooltip title="reorder">

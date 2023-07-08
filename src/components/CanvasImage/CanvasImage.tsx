@@ -1,9 +1,6 @@
 import { FC, useCallback } from 'react';
 import React, { useRef, useEffect } from 'react';
 
-// images
-import purpleImage from '../../assets/images/martin-brechtl-zs3HRrWW66A-unsplash.jpg';
-
 // components
 import CanvasMarkers from '../CanvasMarkers/CanvasMarkers';
 import LoadingSpinner from '../../UI/LoadingSpinner/LoadingSpinner';
@@ -24,7 +21,7 @@ import {
 import { getPxGroupXY, rgbToColorName, rgbToHsl } from '../../utils/helpers';
 
 // styles
-import { Wrapper, Canvas, ImageFallback } from './CanvasImage.styles';
+import { Canvas, ImageBox, MarkersBox } from './CanvasImage.styles';
 
 interface CanvasImageProps {
   imageURL: string | null;
@@ -100,8 +97,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
         // const a = imageData[i + 3]; // this is the alpha channel; account for if transparency
         const { h, s, l } = rgbToHsl({ r, g, b });
 
-        //prettier-ignore
-        sampledPxData.current.push({r, g, b, h, s, l, i} as IndexedPxColor);
+        sampledPxData.current.push({ r, g, b, h, s, l, i } as IndexedPxColor);
       }
 
       dispatch({
@@ -128,7 +124,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
     canvasCtxRef.current = canvasRef.current.getContext('2d')!;
     const ctx = canvasCtxRef.current;
     const devicePixelRatio = window.devicePixelRatio || 1;
-
+    console.log(canvasRef.current?.getBoundingClientRect(), canvasRef.current);
     // define canvas resolution
     ctx.canvas.width = CANVAS_RESOLUTION.med / devicePixelRatio;
     ctx.canvas.height = CANVAS_RESOLUTION.med / devicePixelRatio;
@@ -149,7 +145,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
       // drawImage(image, startx, starty, widthx, widthy)
       ctx.drawImage(canvasImage, 0, 0, ctx.canvas.width, ctx.canvas.height);
       // setIsLoading(false);
-      const imageData = ctx!.getImageData(
+      const imageData = ctx.getImageData(
         0,
         0,
         ctx.canvas.width,
@@ -169,21 +165,23 @@ const CanvasImage: FC<CanvasImageProps> = ({
   }, [imageURL, createMarkers, setImageDataState, onImageDraw]);
 
   return (
-    <Wrapper>
-      {isLoading && <LoadingSpinner />}
+    <>
       {isError && <p>There was an error. Please try again.</p>}
-      <CanvasMarkers
-        paletteMarkers={paletteMarkers}
-        currentImageData={currentImageData}
-        canvasXY={canvasXY}
-        canvasBound={canvasRef.current?.getBoundingClientRect()}
-        dispatch={dispatch}
-      />
-      <Canvas ref={canvasRef}>
-        <ImageFallback src={purpleImage} alt="Fallback image" />
-      </Canvas>
-      <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} />
-    </Wrapper>
+      <ImageBox>
+        {isLoading && <LoadingSpinner />}
+        <Canvas ref={canvasRef}></Canvas>
+      </ImageBox>
+      <MarkersBox>
+        <CanvasMarkers
+          paletteMarkers={paletteMarkers}
+          currentImageData={currentImageData}
+          canvasXY={canvasXY}
+          canvasBound={canvasRef.current?.getBoundingClientRect()}
+          dispatch={dispatch}
+        />
+      </MarkersBox>
+      {/* <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} /> */}
+    </>
   );
 };
 

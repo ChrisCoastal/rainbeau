@@ -16,14 +16,15 @@ import CanvasImage from '../CanvasImage/CanvasImage';
 import { getPxGroupXY, rgbToColorName } from '../../utils/helpers';
 
 // config
-import { CANVAS_SIZE, DUMMY_RESPONSE } from '../../utils/config';
+import { DUMMY_RESPONSE } from '../../utils/config';
 
 // styles
-import { Wrapper, FlipBox, ImageBox, MainGrid } from './MainView.styles';
+import { Wrapper, ImageBox, MainGrid, MarkersBox } from './MainView.styles';
 import Palette from '../Palette/Palette';
 import Output from '../Output/Output';
 import Actions from '../Actions/Actions';
 import Credit from '../Credit/Credit';
+import CanvasMarkers from '../CanvasMarkers/CanvasMarkers';
 
 interface MainViewProps {
   size: WindowSize;
@@ -98,20 +99,19 @@ const MainView: FC<MainViewProps> = ({ state, dispatch }) => {
   }, [dispatch, setImagesState]);
 
   const CardSx = {
-    position: 'absolute',
-    top: '0',
-    left: '0',
+    // position: 'absolute',
+    // top: '0',
+    // left: '0',
     maxWidth: '100%',
     maxHeight: '100%',
+    overflow: 'visible',
     borderRadius: '8px',
     boxShadow: {
       xs: '0 0.3rem 1.2rem 0 #3333333e',
       sm: '0 0.4rem 1.4rem 0 #3333333e',
       lg: '0 0.8rem 2.2rem 0 #3333333e',
     },
-    transition: 'all 1.2s ease',
   };
-  console.log(images.length);
 
   const changeImageHandler = async (
     _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
@@ -193,7 +193,7 @@ const MainView: FC<MainViewProps> = ({ state, dispatch }) => {
     [dispatch]
   );
 
-  const artistName = images[currentImageIndex]?.artistName || 'unknown artist';
+  const artistName = images[currentImageIndex]?.artistName || 'anonymous';
   const imageURL = images[currentImageIndex]?.imageURL || null;
   const downloadLink = images[currentImageIndex]?.downloadLink || null;
   const unsplashLink = images[currentImageIndex]?.unsplashLink;
@@ -201,26 +201,16 @@ const MainView: FC<MainViewProps> = ({ state, dispatch }) => {
   return (
     <Wrapper>
       <MainGrid className="grid">
-        <ImageBox>
-          <FlipBox>
-            <Card sx={CardSx}>
-              <CardContent sx={{ p: '0' }}>
-                <CanvasImage
-                  imageURL={imageURL}
-                  paletteMarkers={paletteMarkers}
-                  addMarkers={addMarkerHandler}
-                  currentImageData={currentImageData}
-                  isLoading={isLoading}
-                  isError={isError}
-                  onImageDraw={onImageDraw}
-                  dispatch={dispatch}
-                />
-              </CardContent>
-            </Card>
-          </FlipBox>
-          <Credit name={artistName} link={unsplashLink} />
-        </ImageBox>
-
+        <CanvasImage
+          imageURL={imageURL}
+          paletteMarkers={paletteMarkers}
+          addMarkers={addMarkerHandler}
+          currentImageData={currentImageData}
+          isLoading={isLoading}
+          isError={isError}
+          onImageDraw={onImageDraw}
+          dispatch={dispatch}
+        />
         <Actions
           changeImageHandler={changeImageHandler}
           imageDownloadURL={downloadLink}

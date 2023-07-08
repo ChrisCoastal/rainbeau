@@ -6,15 +6,8 @@ interface LinkProps {
 
 export const Wrapper = styled.div`
   position: absolute;
-  transform: translateY(-2.5rem);
+  margin-top: 1rem;
   margin-left: 0.8rem;
-  border-radius: 8px;
-  background-color: #ffffff99;
-
-  @media (min-width: ${BREAKPOINTS.md}px) {
-    margin-top: 1rem;
-    transform: translateY(0rem);
-  }
 `;
 
 export const Link = styled.a<LinkProps>`

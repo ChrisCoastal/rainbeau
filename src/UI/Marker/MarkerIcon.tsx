@@ -1,10 +1,14 @@
 import React, { FC } from 'react';
 
-import { SvgMarker } from './MarkerIcon.styles';
+import {
+  FillPath,
+  MarkerNumber,
+  StrokePath,
+  SvgMarker,
+  Wrapper,
+} from './MarkerIcon.styles';
 
 type MarkerIconProps = {
-  // height: string;
-  // width: string;
   x: number;
   y: number;
   num: number;
@@ -15,8 +19,6 @@ type MarkerIconProps = {
 };
 
 const MarkerIcon: FC<MarkerIconProps> = ({
-  // height,
-  // width,
   x,
   y,
   num,
@@ -31,7 +33,7 @@ const MarkerIcon: FC<MarkerIconProps> = ({
   };
 
   return (
-    <span
+    <Wrapper
       // num={num}
       style={{
         position: 'absolute',
@@ -59,13 +61,14 @@ const MarkerIcon: FC<MarkerIconProps> = ({
       >
         <g>
           <g>
-            <path
-              fill="#ffffff99"
+            <FillPath
+              fill="#fff"
+              active={active}
               d="M3.82,22.74c-0.14-0.29-0.55-1.37-0.55-1.37c-0.6-1.71-0.91-3.46-0.91-5.21C2.35,7.53,9.37,0.51,18,0.51
 			c8.63,0,15.65,7.02,15.65,15.65c0,1.8-0.87,5.17-0.89,5.23l0,0c0,0-0.44,1.06-0.58,1.36L18,47.26L3.82,22.74z"
             />
-            <path
-              fill="#333333cc"
+            <StrokePath
+              fill="#000000dd"
               d="M18,0.76c8.49,0,15.4,6.91,15.4,15.4c0,1.68-0.78,4.79-0.87,5.14c-0.08,0.18-0.45,1.07-0.56,1.31L18,46.76L4.05,22.65
 			c-0.11-0.24-0.44-1.07-0.55-1.36c-0.6-1.69-0.9-3.41-0.9-5.13C2.6,7.67,9.51,0.76,18,0.76 M18,0.26c-8.78,0-15.9,7.12-15.9,15.9
 			c0,1.86,0.34,3.64,0.93,5.3c0,0,0.42,1.09,0.57,1.4L18,47.76l14.4-24.9c0.15-0.31,0.6-1.4,0.6-1.4s0.9-3.44,0.9-5.3
@@ -79,7 +82,8 @@ const MarkerIcon: FC<MarkerIconProps> = ({
           />
         </g>
       </SvgMarker>
-    </span>
+      {/* <MarkerNumber>{num}</MarkerNumber> */}
+    </Wrapper>
   );
 };
 

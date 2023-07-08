@@ -9,11 +9,7 @@ export const Wrapper = styled.div`
   padding: 1rem;
   border-radius: 8px;
   border: solid 1px #ddd;
-  grid-row-start: 1;
-
-  @media (min-width: ${BREAKPOINTS.lg}px) {
-    grid-column-start: 2;
-  }
+  grid-area: actions;
 `;
 
 export const DropArea = styled.div`
