@@ -12,7 +12,7 @@ import CanvasImage from '../CanvasImage/CanvasImage';
 import { getPxGroupXY, rgbToColorName } from '../../utils/helpers';
 
 // config
-import { DUMMY_RESPONSE } from '../../utils/constants';
+import { INITIAL_IMAGE } from '../../utils/constants';
 
 // styles
 import { Wrapper, MainGrid } from './MainView.styles';
@@ -88,26 +88,9 @@ const MainView: FC<MainViewProps> = ({ state, dispatch }) => {
   );
 
   useEffect(() => {
-    // test data from unsplash api
-    const data = DUMMY_RESPONSE;
-
-    setImagesState(data);
-  }, [dispatch, setImagesState]);
-
-  const CardSx = {
-    // position: 'absolute',
-    // top: '0',
-    // left: '0',
-    maxWidth: '100%',
-    maxHeight: '100%',
-    overflow: 'visible',
-    borderRadius: '8px',
-    boxShadow: {
-      xs: '0 0.3rem 1.2rem 0 #3333333e',
-      sm: '0 0.4rem 1.4rem 0 #3333333e',
-      lg: '0 0.8rem 2.2rem 0 #3333333e',
-    },
-  };
+    setImagesState(INITIAL_IMAGE);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const changeImageHandler = async (
     _: React.MouseEvent<HTMLButtonElement, MouseEvent>,

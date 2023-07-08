@@ -9,7 +9,7 @@ export const BREAKPOINTS = {
   xl: 1536,
 } as const;
 
-export const DUMMY_RESPONSE = [
+export const INITIAL_IMAGE = [
   {
     alt_description: 'a multicolored sculpture of a fish on a white background',
     blur_hash: 'LOP?E%XnqEvfN^i_M{b^YjngmST1',
