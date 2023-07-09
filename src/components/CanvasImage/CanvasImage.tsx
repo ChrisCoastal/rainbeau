@@ -1,5 +1,4 @@
-import { FC, useCallback } from 'react';
-import React, { useRef, useEffect } from 'react';
+import { FC, useCallback, useState, useRef, useEffect } from 'react';
 
 // components
 import CanvasMarkers from '../CanvasMarkers/CanvasMarkers';
@@ -25,34 +24,42 @@ import {
   rgbToHsl,
 } from '../../utils/helpers';
 
+// hooks
+import useAppContext from '../../hooks/useContext';
+
 // styles
 import { Canvas, ImageBox, MarkersBox } from './CanvasImage.styles';
 
 interface CanvasImageProps {
   imageURL: string | null;
-  paletteMarkers: ColorMarker[];
-  addMarkers: (
-    _: React.MouseEvent<HTMLButtonElement, MouseEvent> | null,
+  // paletteMarkers: ColorMarker[];
+  addMarkerHandler: (
+    _: React.MouseEvent<HTMLElement, MouseEvent> | null,
+    indexedImagePx?: IndexedPxColor[],
     markerQty?: number
   ) => ColorMarker[];
-  currentImageData: IndexedPxColor[];
-  isLoading: boolean;
-  isError: boolean;
-  onImageDraw: (imageDrawn: boolean) => void;
-  dispatch: React.Dispatch<ReducerActions>;
+  // currentImageData: IndexedPxColor[];
+  // isLoading: boolean;
+  // isError: boolean;
+  // dispatch: React.Dispatch<ReducerActions>;
 }
 
 const CanvasImage: FC<CanvasImageProps> = ({
   imageURL,
-  paletteMarkers,
-  currentImageData,
-  isLoading,
-  isError,
-  onImageDraw,
-  dispatch,
+  addMarkerHandler,
+  // paletteMarkers,
+  // currentImageData,
+  // isLoading,
+  // isError,
+  // dispatch,
 }) => {
+  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
+  const { state, dispatch } = useAppContext();
+  const { images, currentImageData, paletteMarkers, isLoading, isError } =
+    state;
+
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
+  const canvasCtxRef = useRef<CanvasRenderingContext2D | null>(null);
   const canvasXY = {
     x: canvasCtxRef.current?.canvas.width,
     y: canvasCtxRef.current?.canvas.height,
@@ -61,39 +68,10 @@ const CanvasImage: FC<CanvasImageProps> = ({
   // px color/position data for current image
   const sampledPxData = useRef<IndexedPxColor[]>([]);
 
-  const createMarkers = useCallback(
-    (indexedImagePx: IndexedPxColor[], markerQty: number = 3) => {
-      const markers: ColorMarker[] = [];
-      const totalPx = indexedImagePx.length; // canvasHeight * canvasWidth
-      // TODO: sort by hue
-      console.log(totalPx);
-      const canvasDimension = getCanvasDimension(totalPx);
-
-      for (let loop = 0; loop < markerQty; loop++) {
-        const randomIndex = Math.floor(Math.random() * totalPx);
-        const randomPx = indexedImagePx[randomIndex];
-        const { r, g, b } = randomPx;
-        markers.push({
-          ...randomPx,
-          xy: getPxGroupXY(randomPx.i, canvasDimension),
-          color: {
-            r,
-            g,
-            b,
-            name: rgbToColorName({ r, g, b }),
-          },
-        });
-      }
-
-      dispatch({ type: 'addMarker', payload: markers });
-      return markers;
-    },
-    [dispatch]
-  );
-
   const setImageDataState = useCallback(
     (imageData: Uint8ClampedArray) => {
       const dataPoints = imageData.length;
+      const sampled: IndexedPxColor[] = [];
       // imageData[] format is [r,g,b,a,r,g,b,a...]
       const sampleRate = RGBA_GROUP * MEASUREMENT_PRECISION;
 
@@ -104,14 +82,14 @@ const CanvasImage: FC<CanvasImageProps> = ({
         // const a = imageData[i + 3]; // this is the alpha channel; account for if transparency
         const { h, s, l } = rgbToHsl({ r, g, b });
 
-        sampledPxData.current.push({ r, g, b, h, s, l, i } as IndexedPxColor);
+        sampled.push({ r, g, b, h, s, l, i } as IndexedPxColor);
       }
-
+      sampledPxData.current = sampled;
       dispatch({
         type: 'setCurrentImageData',
-        payload: sampledPxData.current,
+        payload: sampled,
       });
-      return sampledPxData.current;
+      return sampled;
     },
     [dispatch]
   );
@@ -125,9 +103,22 @@ const CanvasImage: FC<CanvasImageProps> = ({
   //   dispatch({ type: 'setCanvasXY', payload: canvasXY });
   // }, [canvasCtxRef.current]);
 
+  const onImageDraw = useCallback(
+    (imageDrawn: boolean) => {
+      if (!imageDrawn) {
+        dispatch({ type: 'setError', payload: true });
+        dispatch({
+          type: 'setLoading',
+          payload: false,
+        });
+      }
+    },
+    [dispatch]
+  );
+
   useEffect(() => {
     // setIsLoading(true);
-    if (imageURL === null || canvasRef.current === null) return;
+    if (!imageURL || canvasRef.current === null) return;
     canvasCtxRef.current = canvasRef.current.getContext('2d')!;
     const ctx = canvasCtxRef.current;
     const devicePixelRatio = window.devicePixelRatio || 1;
@@ -167,14 +158,19 @@ const CanvasImage: FC<CanvasImageProps> = ({
       onImageDraw(!!imageData);
 
       const indexedImagePx = setImageDataState(imageData);
-      createMarkers(indexedImagePx);
+      console.log(indexedImagePx);
+      // createMarkers(indexedImagePx);
+      addMarkerHandler(null, indexedImagePx, !paletteMarkers.length ? 1 : 0);
 
       console.log(canvasRef.current?.getBoundingClientRect());
     };
 
     // asign image to canvas context
     canvasImage.src = imageURL;
-  }, [imageURL, createMarkers, setImageDataState, onImageDraw]);
+
+    // FIXME: intinite rerenders from currentImageData dep in addMarkerHandler
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [imageURL, setImageDataState, onImageDraw]);
 
   return (
     <>

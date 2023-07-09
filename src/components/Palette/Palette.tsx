@@ -27,7 +27,8 @@ import { MAX_NUM_MARKERS } from '../../utils/constants';
 interface PaletteProps {
   paletteMarkers: ColorMarker[];
   addMarkerHandler: (
-    _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    _: React.MouseEvent<HTMLElement, MouseEvent> | null,
+    indexedImagePx?: IndexedPxColor[],
     markerQty?: number
   ) => ColorMarker[];
   deletePaletteHandler: () => void;

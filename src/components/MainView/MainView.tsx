@@ -9,7 +9,11 @@ import { httpsCallable } from 'firebase/functions';
 import CanvasImage from '../CanvasImage/CanvasImage';
 
 // helpers
-import { getPxGroupXY, rgbToColorName } from '../../utils/helpers';
+import {
+  getPxGroupXY,
+  rgbToColorName,
+  getCanvasDimension,
+} from '../../utils/helpers';
 
 // config
 import { INITIAL_IMAGE } from '../../utils/constants';
@@ -22,14 +26,17 @@ import Actions from '../Actions/Actions';
 import Credit from '../Credit/Credit';
 import CanvasMarkers from '../CanvasMarkers/CanvasMarkers';
 
+import useAppContext from '../../hooks/useContext';
+
 interface MainViewProps {
-  size: WindowSize;
-  state: AppState;
-  dispatch: React.Dispatch<ReducerActions>;
+  // size: WindowSize;
+  // state: AppState;
+  // dispatch: React.Dispatch<ReducerActions>;
 }
 
-const MainView: FC<MainViewProps> = ({ state, dispatch }) => {
+const MainView: FC<MainViewProps> = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
+  const { state, dispatch } = useAppContext();
   const { images, currentImageData, paletteMarkers, isLoading, isError } =
     state;
 
@@ -89,11 +96,12 @@ const MainView: FC<MainViewProps> = ({ state, dispatch }) => {
 
   useEffect(() => {
     setImagesState(INITIAL_IMAGE);
+    // changeImageHandler(null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const changeImageHandler = async (
-    _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    _: React.MouseEvent<HTMLElement, MouseEvent> | null,
     indexStep: number = 1
   ) => {
     try {
@@ -124,19 +132,23 @@ const MainView: FC<MainViewProps> = ({ state, dispatch }) => {
 
   const addMarkerHandler = useCallback(
     (
-      _: React.MouseEvent<HTMLButtonElement, MouseEvent> | null,
+      _: React.MouseEvent<HTMLElement, MouseEvent> | null,
+      indexedImagePx?: IndexedPxColor[],
       markerQty: number = 1
     ) => {
-      if (!currentImageData) return [];
+      const imagePx = indexedImagePx || currentImageData;
+      if (!imagePx.length) return [];
+
       const markers: ColorMarker[] = [];
-      const totalPx = currentImageData.length; // canvasHeight * canvasWidth
+      const totalPx = imagePx.length; // canvasHeight * canvasWidth
+      console.log(totalPx);
+      const canvasDimension = getCanvasDimension(totalPx);
 
       // create random marker(s)
       for (let loop = 0; loop < markerQty; loop++) {
         const randomIndex = Math.floor(Math.random() * totalPx);
-        const randomPx = currentImageData[randomIndex];
+        const randomPx = imagePx[randomIndex];
         const { r, g, b } = randomPx;
-        const canvasDimension = Math.sqrt(totalPx);
 
         markers.push({
           ...randomPx,
@@ -160,18 +172,18 @@ const MainView: FC<MainViewProps> = ({ state, dispatch }) => {
     dispatch({ type: 'deletePalette', payload: null });
   };
 
-  const onImageDraw = useCallback(
-    (imageDrawn: boolean) => {
-      if (!imageDrawn) {
-        dispatch({ type: 'setError', payload: true });
-        dispatch({
-          type: 'setLoading',
-          payload: false,
-        });
-      }
-    },
-    [dispatch]
-  );
+  // const onImageDraw = useCallback(
+  //   (imageDrawn: boolean) => {
+  //     if (!imageDrawn) {
+  //       dispatch({ type: 'setError', payload: true });
+  //       dispatch({
+  //         type: 'setLoading',
+  //         payload: false,
+  //       });
+  //     }
+  //   },
+  //   [dispatch]
+  // );
 
   const artistName = images[currentImageIndex]?.artistName || 'anonymous';
   const imageURL = images[currentImageIndex]?.imageURL || null;
@@ -183,13 +195,13 @@ const MainView: FC<MainViewProps> = ({ state, dispatch }) => {
       <MainGrid className="grid">
         <CanvasImage
           imageURL={imageURL}
-          paletteMarkers={paletteMarkers}
-          addMarkers={addMarkerHandler}
-          currentImageData={currentImageData}
-          isLoading={isLoading}
-          isError={isError}
-          onImageDraw={onImageDraw}
-          dispatch={dispatch}
+          // paletteMarkers={paletteMarkers}
+          addMarkerHandler={addMarkerHandler}
+          // currentImageData={currentImageData}
+          // isLoading={isLoading}
+          // isError={isError}
+          // onImageDraw={onImageDraw}
+          // dispatch={dispatch}
         />
         <Actions
           changeImageHandler={changeImageHandler}

@@ -76,7 +76,7 @@ export const FIRESTORE_BASE_URL = 'https://api.unsplash.com/photos/';
 
 // UI
 
-export const MAX_NUM_MARKERS = 8;
+export const MAX_NUM_MARKERS = 6;
 
 // image canvas / color
 export const REM_RATIO = 16;
