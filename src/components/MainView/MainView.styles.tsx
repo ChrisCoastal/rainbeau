@@ -6,28 +6,28 @@ export const Wrapper = styled.div`
   position: relative;
   display: flex;
   justify-content: center;
-  gap: 3rem;
-  margin-top: 4rem;
+  margin: 4rem 1rem 0 1rem;
   transition: all 0.6s ease-in;
 `;
 
 export const MainGrid = styled.div`
   display: grid;
-  /* grid-template-columns: 1fr; */
+  width: 100%;
   row-gap: 1rem;
   grid-template-areas: 'actions' 'image' 'palette';
 
   @media (min-width: ${BREAKPOINTS.md}px) {
-    grid-template-columns: 45rem 24rem;
-    height: ${CANVAS_SIZE.md}px;
+    /* width: fit-content; */
+    grid-template-columns: minmax(400px, auto) 20rem;
+    grid-template-rows: auto 4fr 3fr;
     column-gap: 2rem;
     grid-template-areas: 'image actions' 'image palette';
   }
 
   @media (min-width: ${BREAKPOINTS.lg}px) {
-    grid-template-columns: 45rem 24rem;
-    grid-template-rows: auto 4fr 3fr;
     height: ${CANVAS_SIZE.lg}px;
+    grid-template-columns: ${CANVAS_SIZE.lg}px 24rem;
+    grid-template-rows: auto 4fr 3fr;
     grid-template-areas: 'image actions' 'image palette' 'image output';
   }
 `;

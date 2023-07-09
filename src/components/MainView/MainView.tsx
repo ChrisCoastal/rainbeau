@@ -137,7 +137,7 @@ const MainView: FC<MainViewProps> = () => {
   return (
     <Wrapper>
       <MainGrid className="grid">
-        <CanvasImage />
+        <CanvasImage currentImageIndex={currentImageIndex} />
         <Actions
           changeImageHandler={changeImageHandler}
           imageDownloadURL={downloadLink}

@@ -86,10 +86,8 @@ const useMarkers = () => {
     e.stopPropagation();
 
     const marker = paletteMarkers[activeMarkerNum];
-    //   console.log('marker', marker);
     let moveX = 0;
     let moveY = 0;
-    console.log(e);
     if (e.type === 'mousemove') {
       moveX = (e as MouseEvent).movementX;
       moveY = (e as MouseEvent).movementY;
@@ -111,6 +109,7 @@ const useMarkers = () => {
       xPos: (marker.xy.xPos += moveX),
       yPos: (marker.xy.yPos += moveY),
     };
+    console.log('move', updatedXY);
     updateMarker(currentImageData, activeMarkerNum, updatedXY);
   };
 

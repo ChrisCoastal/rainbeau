@@ -1,6 +1,4 @@
-// unsplash api
-export const IMAGE_BASE_URL = 'https://api.unsplash.com/photos/';
-
+// UI
 export const BREAKPOINTS = {
   xs: 0,
   sm: 600,
@@ -8,6 +6,33 @@ export const BREAKPOINTS = {
   lg: 1200,
   xl: 1536,
 } as const;
+
+export const MAX_NUM_MARKERS = 6;
+
+// image canvas / color
+export const REM_RATIO = 16;
+
+export const RGBA_GROUP = 4; // fixed jpg rgb px grouping (do not change)
+
+export const MEASUREMENT_PRECISION = 1; // can be adjusted? FIXME: check for num > 1
+
+// export const CANVAS_RESOLUTION = {
+//   low: 400,
+//   med: 800,
+//   high: 1000,
+//   max: 1600,
+// } as const;
+
+export const CANVAS_SIZE = {
+  xs: 320,
+  sm: 320,
+  md: 540,
+  lg: 800,
+  xl: 1000,
+} as const;
+
+// unsplash api
+export const IMAGE_BASE_URL = 'https://api.unsplash.com/photos/';
 
 export const INITIAL_IMAGE = [
   {
@@ -73,26 +98,6 @@ export const INITIAL_IMAGE = [
 
 // firestore
 export const FIRESTORE_BASE_URL = 'https://api.unsplash.com/photos/';
-
-// UI
-
-export const MAX_NUM_MARKERS = 6;
-
-// image canvas / color
-export const REM_RATIO = 16;
-
-export const RGBA_GROUP = 4; // fixed jpg rgb px grouping (do not change)
-
-export const MEASUREMENT_PRECISION = 1; // can be adjusted? FIXME: check for num > 1
-
-// export const CANVAS_RESOLUTION = {
-//   low: 400,
-//   med: 800,
-//   high: 1000,
-//   max: 1600,
-// } as const;
-
-export const CANVAS_SIZE = { sm: 320, md: 720, lg: 720, xl: 1000 } as const;
 
 export const MEDIAN = { lower: 1 / 2, upper: 1 / 2 + 1 };
 

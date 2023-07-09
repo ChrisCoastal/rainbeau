@@ -1,30 +1,4 @@
-declare module '*.mp4';
-
-declare module '*.jpeg';
-
-declare module '*.png';
-
-declare module '*.jpg';
-
-declare module '*.webm';
-
-declare module '*.svg';
-
-declare module '*.gif';
-
-// canvas and windowSize
-
-type WindowSize = {
-  clientWidth: number;
-  clientHeight: number;
-};
-
 // state and reducer
-type AppContextType = {
-  state: AppState;
-  dispatch: Dispatch<ReducerActions>;
-};
-
 interface AppState {
   canvasXY: { x: number; y: number };
   images: Image[];
@@ -34,6 +8,11 @@ interface AppState {
   isLoading: boolean;
   isError: boolean;
 }
+
+type AppContextType = {
+  state: AppState;
+  dispatch: Dispatch<ReducerActions>;
+};
 
 type SetCanvasXYAction = {
   type: 'setCanvasXY';
@@ -146,6 +125,13 @@ interface Image {
   artistLink: string | null;
 }
 
+// canvas and windowSize
+
+type WindowSize = {
+  clientWidth: number;
+  clientHeight: number;
+};
+
 // px and markers
 type MarkerPosition = Array<[number, number]>;
 
@@ -186,3 +172,17 @@ interface ColorName {
   g: number;
   b: number;
 }
+
+declare module '*.mp4';
+
+declare module '*.jpeg';
+
+declare module '*.png';
+
+declare module '*.jpg';
+
+declare module '*.webm';
+
+declare module '*.svg';
+
+declare module '*.gif';
