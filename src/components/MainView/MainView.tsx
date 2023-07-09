@@ -121,7 +121,7 @@ const MainView: FC<MainViewProps> = () => {
         setImagesState(images);
         setCurrentImageIndex(0);
       }
-      deletePaletteHandler();
+      dispatch({ type: 'deletePalette', payload: null });
       dispatch({ type: 'setLoading', payload: false });
     } catch (err) {
       dispatch({ type: 'setError', payload: true });
@@ -130,90 +130,20 @@ const MainView: FC<MainViewProps> = () => {
     }
   };
 
-  const addMarkerHandler = useCallback(
-    (
-      _: React.MouseEvent<HTMLElement, MouseEvent> | null,
-      indexedImagePx?: IndexedPxColor[],
-      markerQty: number = 1
-    ) => {
-      const imagePx = indexedImagePx || currentImageData;
-      if (!imagePx.length) return [];
-
-      const markers: ColorMarker[] = [];
-      const totalPx = imagePx.length; // canvasHeight * canvasWidth
-      console.log(totalPx);
-      const canvasDimension = getCanvasDimension(totalPx);
-
-      // create random marker(s)
-      for (let loop = 0; loop < markerQty; loop++) {
-        const randomIndex = Math.floor(Math.random() * totalPx);
-        const randomPx = imagePx[randomIndex];
-        const { r, g, b } = randomPx;
-
-        markers.push({
-          ...randomPx,
-          xy: getPxGroupXY(randomPx.i, canvasDimension),
-          color: {
-            r,
-            g,
-            b,
-            name: rgbToColorName({ r, g, b }),
-          },
-        });
-      }
-      dispatch({ type: 'addMarker', payload: markers });
-
-      return markers;
-    },
-    [dispatch, currentImageData]
-  );
-
-  const deletePaletteHandler = async () => {
-    dispatch({ type: 'deletePalette', payload: null });
-  };
-
-  // const onImageDraw = useCallback(
-  //   (imageDrawn: boolean) => {
-  //     if (!imageDrawn) {
-  //       dispatch({ type: 'setError', payload: true });
-  //       dispatch({
-  //         type: 'setLoading',
-  //         payload: false,
-  //       });
-  //     }
-  //   },
-  //   [dispatch]
-  // );
-
   const artistName = images[currentImageIndex]?.artistName || 'anonymous';
-  const imageURL = images[currentImageIndex]?.imageURL || null;
   const downloadLink = images[currentImageIndex]?.downloadLink || null;
   const unsplashLink = images[currentImageIndex]?.unsplashLink;
 
   return (
     <Wrapper>
       <MainGrid className="grid">
-        <CanvasImage
-          imageURL={imageURL}
-          // paletteMarkers={paletteMarkers}
-          addMarkerHandler={addMarkerHandler}
-          // currentImageData={currentImageData}
-          // isLoading={isLoading}
-          // isError={isError}
-          // onImageDraw={onImageDraw}
-          // dispatch={dispatch}
-        />
+        <CanvasImage />
         <Actions
           changeImageHandler={changeImageHandler}
           imageDownloadURL={downloadLink}
         />
-        <Palette
-          paletteMarkers={paletteMarkers}
-          addMarkerHandler={addMarkerHandler}
-          deletePaletteHandler={deletePaletteHandler}
-          dispatch={dispatch}
-        />
-        <Output paletteMarkers={paletteMarkers} />
+        <Palette />
+        <Output />
       </MainGrid>
     </Wrapper>
   );

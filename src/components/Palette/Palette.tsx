@@ -15,6 +15,10 @@ import {
   PaletteItemsContainer,
 } from './Palette.styles';
 
+// hooks
+import useMarkers from '../../hooks/useMarkers';
+import useAppContext from '../../hooks/useContext';
+
 // mui
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
@@ -25,27 +29,36 @@ import SaveIcon from '@mui/icons-material/Save';
 import { MAX_NUM_MARKERS } from '../../utils/constants';
 
 interface PaletteProps {
-  paletteMarkers: ColorMarker[];
-  addMarkerHandler: (
-    _: React.MouseEvent<HTMLElement, MouseEvent> | null,
-    indexedImagePx?: IndexedPxColor[],
-    markerQty?: number
-  ) => ColorMarker[];
-  deletePaletteHandler: () => void;
-  dispatch: React.Dispatch<ReducerActions>;
+  // paletteMarkers: ColorMarker[];
+  // addMarkerHandler: (
+  //   _: React.MouseEvent<HTMLElement, MouseEvent> | null,
+  //   indexedImagePx?: IndexedPxColor[],
+  //   markerQty?: number
+  // ) => ColorMarker[];
+  // deletePaletteHandler: () => void;
+  // dispatch: React.Dispatch<ReducerActions>;
 }
 
-const Palette: FC<PaletteProps> = ({
-  paletteMarkers,
-  addMarkerHandler,
-  deletePaletteHandler,
-  dispatch,
-}) => {
+const Palette: FC<PaletteProps> = (
+  {
+    // paletteMarkers,
+    // addMarkerHandler,
+    // deletePaletteHandler,
+    // dispatch,
+  }
+) => {
   const [open, setOpen] = useState<boolean>(false);
+  const { state, dispatch } = useAppContext();
+  const { paletteMarkers } = state;
+  const { addMarker } = useMarkers();
+
+  const deletePalette = () => {
+    dispatch({ type: 'deletePalette', payload: null });
+  };
 
   const modalHandler = (isVisible: boolean, action?: string) => {
     setOpen(isVisible);
-    if (action === 'delete') deletePaletteHandler();
+    if (action === 'delete') deletePalette();
   };
 
   const undoHandler = () => {
@@ -96,7 +109,7 @@ const Palette: FC<PaletteProps> = ({
           >
             <span>
               <IconButton
-                onClick={addMarkerHandler}
+                onClick={() => addMarker(state.currentImageData, 1)}
                 disabled={disableAddMarker}
               >
                 <AddCircleIcon />

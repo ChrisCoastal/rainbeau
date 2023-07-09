@@ -4,7 +4,7 @@ import { BREAKPOINTS, CANVAS_SIZE } from '../../utils/constants';
 
 export const ImageBox = styled.div`
   /* margin-bottom: 3rem; */
-  /* position: relative; */
+  position: relative;
   overflow: hidden;
   /* overflow: visible; */
   border-radius: 8px;

@@ -1,6 +1,12 @@
 import type { FC } from 'react';
 import { useState, useEffect } from 'react';
 
+// components
+import SelectFormatButton from './SelectFormatButton';
+
+// hooks
+import useAppContext from '../../hooks/useContext';
+
 // mui
 import Zoom from '@mui/material/Zoom';
 import Fade from '@mui/material/Fade';
@@ -17,11 +23,6 @@ import {
   TextArea,
   FormatContainer,
 } from './Output.styles';
-import SelectFormatButton from './SelectFormatButton';
-
-interface OutputProps {
-  paletteMarkers: ColorMarker[];
-}
 
 interface Format {
   detail: string;
@@ -37,7 +38,9 @@ interface Styles {
   css: Format;
 }
 
-const Output: FC<OutputProps> = ({ paletteMarkers }) => {
+const Output: FC = () => {
+  const { state } = useAppContext();
+  const { paletteMarkers } = state;
   const [format, setFormat] = useState<keyof Styles>('tailwind');
   const [copied, setCopied] = useState<boolean>(true);
 

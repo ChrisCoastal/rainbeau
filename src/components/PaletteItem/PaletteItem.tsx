@@ -3,6 +3,7 @@ import { useState, useMemo, useRef } from 'react';
 
 // hooks
 import useInput from '../../hooks/useInput';
+import useMarkers from '../../hooks/useMarkers';
 
 // components
 import Swatch from '../Swatch/Swatch';
@@ -36,6 +37,7 @@ interface PaletteItemProps {
 const PaletteItem: FC<PaletteItemProps> = ({ marker, markerNum, dispatch }) => {
   const initialValue = marker.customName || marker.color.name;
   const { r, g, b } = marker;
+  const { deleteMarker } = useMarkers();
 
   const [prevInputValue, setPrevInputValue] = useState<string>('');
   const [inputValue, setInputValue] = useState<string>(initialValue);
@@ -85,10 +87,6 @@ const PaletteItem: FC<PaletteItemProps> = ({ marker, markerNum, dispatch }) => {
       inputRef.current && inputRef.current.blur();
       setFocus(false);
     }
-  };
-
-  const deleteMarkerHandler = (marker: ColorMarker) => {
-    dispatch({ type: 'deleteMarker', payload: marker });
   };
 
   const colorToClipboard = () => {
@@ -153,7 +151,7 @@ const PaletteItem: FC<PaletteItemProps> = ({ marker, markerNum, dispatch }) => {
       </ItemContent>
       <ItemControls>
         <Tooltip title="delete color">
-          <IconButton onClick={() => deleteMarkerHandler(marker)}>
+          <IconButton onClick={() => deleteMarker(marker)}>
             <HighlightOffIcon fontSize="small" />
           </IconButton>
         </Tooltip>

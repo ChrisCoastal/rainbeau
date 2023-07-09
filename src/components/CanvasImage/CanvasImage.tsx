@@ -26,37 +26,42 @@ import {
 
 // hooks
 import useAppContext from '../../hooks/useContext';
+import useMarkers from '../../hooks/useMarkers';
 
 // styles
 import { Canvas, ImageBox, MarkersBox } from './CanvasImage.styles';
 
 interface CanvasImageProps {
-  imageURL: string | null;
+  // imageURL: string | null;
   // paletteMarkers: ColorMarker[];
-  addMarkerHandler: (
-    _: React.MouseEvent<HTMLElement, MouseEvent> | null,
-    indexedImagePx?: IndexedPxColor[],
-    markerQty?: number
-  ) => ColorMarker[];
+  // addMarkerHandler: (
+  //   _: React.MouseEvent<HTMLElement, MouseEvent> | null,
+  //   indexedImagePx?: IndexedPxColor[],
+  //   markerQty?: number
+  // ) => ColorMarker[];
   // currentImageData: IndexedPxColor[];
   // isLoading: boolean;
   // isError: boolean;
   // dispatch: React.Dispatch<ReducerActions>;
 }
 
-const CanvasImage: FC<CanvasImageProps> = ({
-  imageURL,
-  addMarkerHandler,
-  // paletteMarkers,
-  // currentImageData,
-  // isLoading,
-  // isError,
-  // dispatch,
-}) => {
+const CanvasImage: FC<CanvasImageProps> = (
+  {
+    // imageURL,
+    // addMarkerHandler,
+    // paletteMarkers,
+    // currentImageData,
+    // isLoading,
+    // isError,
+    // dispatch,
+  }
+) => {
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
   const { state, dispatch } = useAppContext();
+  const { addMarker } = useMarkers();
   const { images, currentImageData, paletteMarkers, isLoading, isError } =
     state;
+  const imageURL = images[currentImageIndex]?.imageURL || null;
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = useRef<CanvasRenderingContext2D | null>(null);
@@ -160,7 +165,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
       const indexedImagePx = setImageDataState(imageData);
       console.log(indexedImagePx);
       // createMarkers(indexedImagePx);
-      addMarkerHandler(null, indexedImagePx, !paletteMarkers.length ? 1 : 0);
+      addMarker(indexedImagePx, !paletteMarkers.length ? 1 : 0);
 
       console.log(canvasRef.current?.getBoundingClientRect());
     };
@@ -181,11 +186,11 @@ const CanvasImage: FC<CanvasImageProps> = ({
       </ImageBox>
       <MarkersBox>
         <CanvasMarkers
-          paletteMarkers={paletteMarkers}
-          currentImageData={currentImageData}
+          // paletteMarkers={paletteMarkers}
+          // currentImageData={currentImageData}
           canvasXY={canvasXY}
           canvasBound={canvasRef.current?.getBoundingClientRect()}
-          dispatch={dispatch}
+          // dispatch={dispatch}
         />
       </MarkersBox>
       {/* <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} /> */}
