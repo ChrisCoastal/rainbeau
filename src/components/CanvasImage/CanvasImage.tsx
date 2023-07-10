@@ -93,13 +93,11 @@ const CanvasImage: FC<CanvasImageProps> = ({ currentImageIndex }) => {
     [dispatch]
   );
 
-  useEffect(() => {
-    if (!imageURL || canvasRef.current === null || imageBoxRef.current === null)
-      return;
-    dispatch({ type: 'setLoading', payload: true });
+  const createCanvas = useCallback(() => {
+    if (canvasRef.current === null || imageBoxRef.current === null) return;
     canvasCtxRef.current = canvasRef.current.getContext('2d')!;
     const ctx = canvasCtxRef.current;
-    const devicePixelRatio = window.devicePixelRatio || 1;
+    // const devicePixelRatio = window.devicePixelRatio || 1;
     console.log(
       canvasRef.current?.getBoundingClientRect(),
       canvasRef.current,
@@ -107,51 +105,48 @@ const CanvasImage: FC<CanvasImageProps> = ({ currentImageIndex }) => {
       imageBoxRef.current?.getBoundingClientRect()
     );
     // assign the dimension of the grid area to the canvas
-    ctx.canvas.width =
-      imageBoxRef.current.getBoundingClientRect().width / devicePixelRatio;
-    ctx.canvas.height =
-      imageBoxRef.current.getBoundingClientRect().height / devicePixelRatio;
+    ctx.canvas.width = imageBoxRef.current.getBoundingClientRect().width;
+    ctx.canvas.height = imageBoxRef.current.getBoundingClientRect().height;
     const canvasXY = {
       x: ctx.canvas.width,
       y: ctx.canvas.height,
     };
     console.log(canvasXY);
-    dispatch({ type: 'setCanvasXY', payload: canvasXY });
-    // dev test marker accuracy (if testing, comment out ctx.drawImage)
-    // ctx!.fillStyle = '#FF0000';
-    // ctx!.fillRect(0, 0, 400, 800);
-    // ctx!.fillStyle = '#00FF00';
-    // ctx!.fillRect(400, 0, 800, 800);
+    return { ctx, canvasXY };
+  }, []);
 
-    const canvasImage = new Image();
-    canvasImage.setAttribute('crossOrigin', 'anonymous');
+  const drawCanvasImage = useCallback(
+    (ctx: CanvasRenderingContext2D, canvasXY: { x: number; y: number }) => {
+      if (!imageURL) return;
+      const canvasImage = new Image();
+      canvasImage.setAttribute('crossOrigin', 'anonymous');
 
-    // after image is loaded
-    canvasImage.onload = () => {
-      sampledPxData.current = []; // reset from previous image
+      // asign image to canvas context
+      canvasImage.src = imageURL;
 
-      // drawImage(image, startx, starty, widthx, widthy)
-      ctx.drawImage(canvasImage, 0, 0, ctx.canvas.width, ctx.canvas.height);
-      // setIsLoading(false);
-      const imageData = ctx.getImageData(
-        0,
-        0,
-        ctx.canvas.width,
-        ctx.canvas.height
-      ).data;
+      // after image is loaded
+      canvasImage.onload = () => {
+        sampledPxData.current = []; // reset from previous image
 
-      console.log(imageData);
-      onImageDraw(!!imageData);
+        // drawImage(image, startx, starty, widthx, widthy)
+        ctx.drawImage(canvasImage, 0, 0, canvasXY.x, canvasXY.y);
+        const imageData = ctx.getImageData(0, 0, canvasXY.x, canvasXY.y).data;
+        onImageDraw(!!imageData);
 
-      const indexedImagePx = setImageDataState(imageData);
-      console.log(indexedImagePx);
-      // createMarkers(indexedImagePx);
-      addMarker(indexedImagePx, !paletteMarkers.length ? 1 : 0);
-      console.log(canvasRef.current?.getBoundingClientRect());
-    };
+        const indexedImagePx = setImageDataState(imageData);
+        addMarker(indexedImagePx, !paletteMarkers.length ? 1 : 0);
+      };
+    },
+    [imageURL, addMarker, onImageDraw, paletteMarkers.length, setImageDataState]
+  );
 
-    // asign image to canvas context
-    canvasImage.src = imageURL;
+  useEffect(() => {
+    dispatch({ type: 'setLoading', payload: true });
+
+    const canvas = createCanvas();
+    if (!canvas?.ctx) return;
+
+    drawCanvasImage(canvas.ctx, canvas.canvasXY);
 
     // FIXME: intinite rerenders from currentImageData dep in addMarkerHandler
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -163,6 +158,7 @@ const CanvasImage: FC<CanvasImageProps> = ({ currentImageIndex }) => {
       <ImageBox ref={imageBoxRef} className="imageBox" canvasXY={canvasXY}>
         {isLoading && <LoadingSpinner />}
         <Canvas ref={canvasRef} />
+        {/* <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} /> */}
       </ImageBox>
       <MarkersBox className="markerBox" canvasXY={canvasXY}>
         <CanvasMarkers
@@ -173,7 +169,6 @@ const CanvasImage: FC<CanvasImageProps> = ({ currentImageIndex }) => {
           // dispatch={dispatch}
         />
       </MarkersBox>
-      {/* <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} /> */}
     </>
   );
 };

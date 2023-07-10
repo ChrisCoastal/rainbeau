@@ -68,6 +68,11 @@ const reducer = (state: AppState, action: ReducerActions): AppState => {
         // paletteMarkers: state.markerHistory[-1],
         // markerHistory: state.markerHistory.slice(0, -2),
       };
+    case 'setActiveMenuTab':
+      return {
+        ...state,
+        activeMenuTab: payload,
+      };
     default:
       return state;
   }

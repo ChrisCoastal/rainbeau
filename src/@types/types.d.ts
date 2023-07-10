@@ -5,6 +5,7 @@ interface AppState {
   currentImageData: IndexedPxColor[];
   paletteMarkers: ColorMarker[];
   markerHistory: ColorMarker[][];
+  activeMenuTab: 'palette' | 'output';
   isLoading: boolean;
   isError: boolean;
 }
@@ -66,6 +67,10 @@ type UndoPaletteAction = {
   type: 'undoPalette';
   payload: null;
 };
+type SetActiveMenuTabAction = {
+  type: 'setActiveMenuTab';
+  payload: 'palette' | 'output';
+};
 
 type ReducerActions =
   | SetCanvasXYAction
@@ -80,7 +85,8 @@ type ReducerActions =
   | UpdateColorNamesAction
   | UpdatePaletteAction
   | DeletePaletteAction
-  | UndoPaletteAction;
+  | UndoPaletteAction
+  | SetActiveMenuTabAction;
 
 // API response
 interface APIImageData {

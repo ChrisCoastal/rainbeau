@@ -1,16 +1,50 @@
 import styled from '@emotion/styled';
 import { BREAKPOINTS } from '../../utils/constants';
 
-export const Wrapper = styled.div`
+interface WrapperProps {
+  activeMenuTab: string;
+}
+
+export const Wrapper = styled.div<WrapperProps>`
   /* height: 36vh; */
+  position: relative;
+  margin-top: 2rem;
   padding: 1rem 1.5rem;
-  border-radius: 8px;
+  border-radius: 8px 0 8px 8px;
   border: solid 1px #ddd;
   background-color: #fff;
   grid-area: palette;
+  z-index: ${(props) => (props.activeMenuTab === 'output' ? 10 : 1)};
+
+  @media (min-width: ${BREAKPOINTS.md}px) {
+    margin-top: 0;
+  }
 
   @media (min-width: ${BREAKPOINTS.lg}px) {
     grid-area: output;
+    border-radius: 8px;
+  }
+`;
+
+export const OutputTab = styled.div`
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: -33px;
+  right: -1px;
+  width: 5rem;
+  height: 2rem;
+  background-color: #fff;
+  border-radius: 8px 8px 0 0;
+  border: solid 1px #ddd;
+  border-bottom: none;
+
+  @media (min-width: ${BREAKPOINTS.lg}px) {
+    height: 0;
+    width: 0;
+    opacity: 0;
+    visibility: hidden;
   }
 `;
 

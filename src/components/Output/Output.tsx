@@ -22,6 +22,7 @@ import {
   CopyIconWrapper,
   TextArea,
   FormatContainer,
+  OutputTab,
 } from './Output.styles';
 
 interface Format {
@@ -39,8 +40,8 @@ interface Styles {
 }
 
 const Output: FC = () => {
-  const { state } = useAppContext();
-  const { paletteMarkers } = state;
+  const { state, dispatch } = useAppContext();
+  const { paletteMarkers, activeMenuTab } = state;
   const [format, setFormat] = useState<keyof Styles>('tailwind');
   const [copied, setCopied] = useState<boolean>(true);
 
@@ -124,6 +125,10 @@ const Output: FC = () => {
     mui: muiFormatted,
   };
 
+  const setActiveMenuTab = () => {
+    dispatch({ type: 'setActiveMenuTab', payload: 'output' });
+  };
+
   const copyToClipboard = () => {
     setCopied(true);
     navigator.clipboard.writeText(style[format].text);
@@ -187,7 +192,8 @@ const Output: FC = () => {
   const formatOptions = ['css', 'scss', 'tailwind', 'mui', 'styled', 'emotion'];
 
   return (
-    <Wrapper>
+    <Wrapper activeMenuTab={activeMenuTab}>
+      <OutputTab onClick={setActiveMenuTab}>export</OutputTab>
       <SelectFormatButton
         options={formatOptions}
         format={format}

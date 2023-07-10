@@ -35,6 +35,7 @@ export const Canvas = styled.canvas`
   right: 0;
   bottom: 0;
   left: 0;
+  border-radius: inherit;
   /* height: 100%; */
   /* width: 100%; */
   /* object-fit: cover; */

@@ -11,6 +11,7 @@ const INITIAL_STATE: AppState = {
   currentImageData: [],
   paletteMarkers: [],
   markerHistory: [],
+  activeMenuTab: 'palette',
   isLoading: false,
   isError: false,
 } as AppState;

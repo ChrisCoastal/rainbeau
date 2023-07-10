@@ -13,6 +13,7 @@ import {
   Wrapper,
   PaletteActions,
   PaletteItemsContainer,
+  PaletteTab,
 } from './Palette.styles';
 
 // hooks
@@ -39,21 +40,18 @@ interface PaletteProps {
   // dispatch: React.Dispatch<ReducerActions>;
 }
 
-const Palette: FC<PaletteProps> = (
-  {
-    // paletteMarkers,
-    // addMarkerHandler,
-    // deletePaletteHandler,
-    // dispatch,
-  }
-) => {
+const Palette: FC<PaletteProps> = () => {
   const [open, setOpen] = useState<boolean>(false);
   const { state, dispatch } = useAppContext();
-  const { paletteMarkers } = state;
+  const { paletteMarkers, activeMenuTab } = state;
   const { addMarker } = useMarkers();
 
   const deletePalette = () => {
     dispatch({ type: 'deletePalette', payload: null });
+  };
+
+  const setActiveMenuTab = () => {
+    dispatch({ type: 'setActiveMenuTab', payload: 'palette' });
   };
 
   const modalHandler = (isVisible: boolean, action?: string) => {
@@ -97,7 +95,8 @@ const Palette: FC<PaletteProps> = (
   ));
 
   return (
-    <Wrapper>
+    <Wrapper activeMenuTab={activeMenuTab}>
+      <PaletteTab onClick={setActiveMenuTab}>palette</PaletteTab>
       <PaletteActions>
         <div>
           <Tooltip
