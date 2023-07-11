@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import SelectFormatButton from './SelectFormatButton';
 
 // hooks
-import useAppContext from '../../hooks/useContext';
+import useAppContext from '../../hooks/useAppContext';
 
 // mui
 import Zoom from '@mui/material/Zoom';
@@ -43,7 +43,7 @@ const Output: FC = () => {
   const { state, dispatch } = useAppContext();
   const { paletteMarkers, activeMenuTab } = state;
   const [format, setFormat] = useState<keyof Styles>('tailwind');
-  const [copied, setCopied] = useState<boolean>(true);
+  const [copied, setCopied] = useState<boolean>(false);
 
   const cssMarkerColors = paletteMarkers
     .map((marker, i) => {

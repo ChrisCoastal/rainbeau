@@ -1,47 +1,44 @@
-import { FC, useCallback, useState, useRef, useEffect } from 'react';
+import { FC, useCallback, useRef, useEffect } from 'react';
 
 // components
 import CanvasMarkers from '../CanvasMarkers/CanvasMarkers';
 import LoadingSpinner from '../../UI/LoadingSpinner/LoadingSpinner';
 
-// mui
-import Checkbox from '@mui/material/Checkbox';
-import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
-import Favorite from '@mui/icons-material/Favorite';
-
 // config
 import {
-  // CANVAS_RESOLUTION,
+  INITIAL_IMAGE,
   MEASUREMENT_PRECISION,
   RGBA_GROUP,
 } from '../../utils/constants';
 
 // helpers
-import {
-  getCanvasDimension,
-  getPxGroupXY,
-  rgbToColorName,
-  rgbToHsl,
-} from '../../utils/helpers';
+import { rgbToHsl, translateApiResponse } from '../../utils/helpers';
 
 // hooks
-import useAppContext from '../../hooks/useContext';
+import useAppContext from '../../hooks/useAppContext';
 import useMarkers from '../../hooks/useMarkers';
+import useCanvasImage from '../../hooks/useCanvasImage';
 
 // styles
 import { Canvas, ImageBox, MarkersBox } from './CanvasImage.styles';
 import useResizeWindow from '../../hooks/useResizeWindow';
+
 interface CanvasImageProps {
+  windowSize: WindowSize;
   currentImageIndex: number;
 }
 
-const CanvasImage: FC<CanvasImageProps> = ({ currentImageIndex }) => {
+const CanvasImage: FC<CanvasImageProps> = ({
+  currentImageIndex,
+  windowSize,
+}) => {
   const { state, dispatch } = useAppContext();
   const { addMarker } = useMarkers();
-  const { clientWidth } = useResizeWindow();
+  // const { innerWidth } = useResizeWindow();
   const {
     images,
     canvasXY,
+    // currentImageIndex,
     currentImageData,
     paletteMarkers,
     isLoading,
@@ -150,8 +147,26 @@ const CanvasImage: FC<CanvasImageProps> = ({ currentImageIndex }) => {
 
     // FIXME: intinite rerenders from currentImageData dep in addMarkerHandler
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [imageURL, setImageDataState, onImageDraw, clientWidth]);
-  console.log(canvasXY);
+  }, [imageURL, setImageDataState, onImageDraw]);
+
+  useEffect(() => {
+    const initImage = translateApiResponse(INITIAL_IMAGE);
+    dispatch({ type: 'setImages', payload: [initImage] });
+    // changeImageHandler(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (windowSize.innerWidth * 0.9 !== canvasXY.y) {
+      dispatch({ type: 'setLoading', payload: true });
+
+      const canvas = createCanvas();
+      if (!canvas?.ctx) return;
+
+      drawCanvasImage(canvas.ctx, canvas.canvasXY);
+    }
+  }, [windowSize, canvasXY]);
+
   return (
     <>
       {isError && <p>There was an error. Please try again.</p>}

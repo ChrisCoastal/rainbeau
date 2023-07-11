@@ -9,24 +9,16 @@ interface BoxProps {
 export const ImageBox = styled.div<BoxProps>`
   position: relative;
   overflow: hidden;
-  /* overflow: visible; */
+  width: 100%;
+  grid-area: image;
+  aspect-ratio: 1 / 1;
   border-radius: 8px;
+  /* overflow: visible; */
 
   /* text-align: right; */
   /* width: ${(props) => props.canvasXY.x}px; */
   /* height: ${(props) => props.canvasXY.y}px; */
-  width: 100%;
-  aspect-ratio: 1 / 1;
   /* height: 100%; */
-  grid-area: image;
-
-  ::after {
-    @media (max-width: ${BREAKPOINTS.md}px) {
-      content: '';
-      display: block;
-      margin-top: 100%;
-    }
-  }
 `;
 
 export const Canvas = styled.canvas`

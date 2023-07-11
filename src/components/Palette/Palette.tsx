@@ -18,7 +18,7 @@ import {
 
 // hooks
 import useMarkers from '../../hooks/useMarkers';
-import useAppContext from '../../hooks/useContext';
+import useAppContext from '../../hooks/useAppContext';
 
 // mui
 import Tooltip from '@mui/material/Tooltip';
@@ -115,13 +115,13 @@ const Palette: FC<PaletteProps> = () => {
               </IconButton>
             </span>
           </Tooltip>
-          <Modal
+          {/* <Modal
             openState={deletePaletteModal.openState}
             openModalButton={deletePaletteModal.openModalButton}
             text={deletePaletteModal.text}
             buttons={deletePaletteModal.buttons}
             modalHandler={deletePaletteModal.handler}
-          />
+          /> */}
           <Tooltip title="undo">
             <span>
               <IconButton onClick={undoHandler} disabled={true}>

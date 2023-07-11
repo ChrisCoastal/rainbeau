@@ -1,3 +1,16 @@
+// state
+export const INITIAL_STATE: AppState = {
+  canvasXY: { x: 0, y: 0 },
+  images: [],
+  currentImageIndex: 0,
+  currentImageData: [],
+  paletteMarkers: [],
+  markerHistory: [],
+  activeMenuTab: 'palette',
+  isLoading: false,
+  isError: false,
+} as AppState;
+
 // UI
 export const BREAKPOINTS = {
   xs: 0,
@@ -28,11 +41,15 @@ export const CANVAS_SIZE = {
   sm: 320,
   md: 540,
   lg: 800,
+  // md: 450,
+  // lg: 600,
   xl: 1000,
 } as const;
 
 // unsplash api
 export const IMAGE_BASE_URL = 'https://api.unsplash.com/photos/';
+
+export const IMAGE_COUNT = 8;
 
 export const INITIAL_IMAGE = [
   {

@@ -1,29 +1,31 @@
 import { useEffect, useState } from 'react';
 
-const useResizeWindow = (): WindowSize => {
+const useResizeWindow = (callback?: Function): WindowSize => {
   const [windowSize, setWindowSize] = useState<{
-    clientHeight: number;
-    clientWidth: number;
+    innerHeight: number;
+    innerWidth: number;
   }>({
-    clientHeight: 0,
-    clientWidth: 0,
+    innerHeight: 0,
+    innerWidth: 0,
   });
 
   useEffect(() => {
     const handleSize = () => {
-      const { clientHeight, clientWidth } = document.documentElement;
+      const { innerHeight, innerWidth } = window;
+      console.log('resize', innerHeight, innerWidth);
       setWindowSize({
-        clientHeight,
-        clientWidth,
+        innerHeight,
+        innerWidth,
       });
+      callback && callback();
     };
 
-    document.addEventListener('resize', handleSize);
+    window.addEventListener('resize', handleSize);
 
     // set initial size
     handleSize();
 
-    return () => document.removeEventListener('resize', handleSize);
+    return () => window.removeEventListener('resize', handleSize);
   }, []);
 
   return windowSize;

@@ -9,7 +9,7 @@ export const Wrapper = styled.div<WrapperProps>`
   /* height: 36vh; */
   position: relative;
   margin-top: 2rem;
-  padding: 1rem 1.5rem;
+  padding: 1rem 1rem;
   border-radius: 8px 0 8px 8px;
   border: solid 1px #ddd;
   background-color: #fff;
@@ -20,7 +20,7 @@ export const Wrapper = styled.div<WrapperProps>`
     margin-top: 0;
   }
 
-  @media (min-width: ${BREAKPOINTS.lg}px) {
+  @media (min-width: ${BREAKPOINTS.lg}px) and (min-height: 680px) {
     grid-area: output;
     border-radius: 8px;
   }
@@ -40,7 +40,7 @@ export const OutputTab = styled.div`
   border: solid 1px #ddd;
   border-bottom: none;
 
-  @media (min-width: ${BREAKPOINTS.lg}px) {
+  @media (min-width: ${BREAKPOINTS.lg}px) and (min-height: 680px) {
     height: 0;
     width: 0;
     opacity: 0;
@@ -50,8 +50,8 @@ export const OutputTab = styled.div`
 
 export const CopyIconWrapper = styled.div`
   position: absolute;
-  top: 10rem;
-  right: 0.2rem;
+  top: 0.6rem;
+  right: 0.6rem;
 `;
 
 export const TextArea = styled.textarea`

@@ -2,6 +2,7 @@
 interface AppState {
   canvasXY: { x: number; y: number };
   images: Image[];
+  currentImageIndex: number;
   currentImageData: IndexedPxColor[];
   paletteMarkers: ColorMarker[];
   markerHistory: ColorMarker[][];
@@ -22,6 +23,10 @@ type SetCanvasXYAction = {
 type SetImagesAction = {
   type: 'setImages';
   payload: Image[];
+};
+type SetCurrentImageIndexAction = {
+  type: 'setCurrentImageIndex';
+  payload?: number;
 };
 type SetCurrentImageDataAction = {
   type: 'setCurrentImageData';
@@ -61,11 +66,11 @@ type UpdatePaletteAction = {
 };
 type DeletePaletteAction = {
   type: 'deletePalette';
-  payload: null;
+  payload?: undefined;
 };
 type UndoPaletteAction = {
   type: 'undoPalette';
-  payload: null;
+  payload?: undefined;
 };
 type SetActiveMenuTabAction = {
   type: 'setActiveMenuTab';
@@ -75,6 +80,7 @@ type SetActiveMenuTabAction = {
 type ReducerActions =
   | SetCanvasXYAction
   | SetImagesAction
+  | SetCurrentImageIndexAction
   | SetCurrentImageDataAction
   | SetLoadingAction
   | SetErrorAction
@@ -134,8 +140,8 @@ interface Image {
 // canvas and windowSize
 
 type WindowSize = {
-  clientWidth: number;
-  clientHeight: number;
+  innerWidth: number;
+  innerHeight: number;
 };
 
 // px and markers

@@ -1,7 +1,9 @@
 import type { FC } from 'react';
+import { useState } from 'react';
 
 // hooks
-import { useState } from 'react';
+import useAppContext from '../../hooks/useAppContext';
+import useCanvasImage from '../../hooks/useCanvasImage';
 
 // components
 import Modal from '../../UI/Modal/Modal';
@@ -29,14 +31,16 @@ const Actions: FC<ActionsProps> = ({
   changeImageHandler,
   imageDownloadURL,
 }) => {
-  const [open, setOpen] = useState<boolean>(false);
+  const { state } = useAppContext();
+  const { changeImage } = useCanvasImage();
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   const modalHandler = (isVisible: boolean) => {
-    setOpen(isVisible);
+    setModalOpen(isVisible);
   };
 
   const uploadModal = {
-    openState: open,
+    openState: modalOpen,
     content: (
       <DropArea>
         <UploadIcon />
@@ -67,13 +71,13 @@ const Actions: FC<ActionsProps> = ({
             <AddPhotoAlternateIcon />
           </IconButton>
         </Tooltip>
-        <Modal
+        {/* <Modal
           openState={uploadModal.openState}
           openModalButton={uploadModal.openModalButton}
           content={uploadModal.content}
           buttons={uploadModal.buttons}
           modalHandler={uploadModal.handler}
-        />
+        /> */}
         <Link href={imageDownloadURL || ''} target="_blank">
           <Tooltip
             title={

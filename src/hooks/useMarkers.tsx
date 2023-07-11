@@ -8,7 +8,7 @@ import {
   getPxGroupIndex,
 } from '../utils/helpers';
 
-import useAppContext from './useContext';
+import useAppContext from './useAppContext';
 
 const useMarkers = () => {
   const { state, dispatch } = useAppContext();

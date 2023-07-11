@@ -8,37 +8,26 @@ import { httpsCallable } from 'firebase/functions';
 // components
 import CanvasImage from '../CanvasImage/CanvasImage';
 
-// helpers
-import {
-  getPxGroupXY,
-  rgbToColorName,
-  getCanvasDimension,
-} from '../../utils/helpers';
-
 // config
-import { INITIAL_IMAGE } from '../../utils/constants';
+import {
+  IMAGE_BASE_URL,
+  IMAGE_COUNT,
+  INITIAL_IMAGE,
+} from '../../utils/constants';
 
 // styles
 import { Wrapper, MainGrid } from './MainView.styles';
 import Palette from '../Palette/Palette';
 import Output from '../Output/Output';
 import Actions from '../Actions/Actions';
-import Credit from '../Credit/Credit';
-import CanvasMarkers from '../CanvasMarkers/CanvasMarkers';
 
-import useAppContext from '../../hooks/useContext';
+import useAppContext from '../../hooks/useAppContext';
+import useResizeWindow from '../../hooks/useResizeWindow';
 
-interface MainViewProps {
-  // size: WindowSize;
-  // state: AppState;
-  // dispatch: React.Dispatch<ReducerActions>;
-}
-
-const MainView: FC<MainViewProps> = () => {
+const MainView: FC = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
   const { state, dispatch } = useAppContext();
-  const { images, currentImageData, paletteMarkers, isLoading, isError } =
-    state;
+  const { images } = state;
 
   const fetchAPIKey = async () => {
     try {
@@ -55,7 +44,7 @@ const MainView: FC<MainViewProps> = () => {
   const fetchImages = async (key: string) => {
     try {
       const response = await fetch(
-        `https://api.unsplash.com/photos/random?count=4&orientation=squarish&client_id=${key}`,
+        `https://api.unsplash.com/photos/random?count=${IMAGE_COUNT}&orientation=squarish&client_id=${key}`,
         {
           method: 'GET',
           headers: {
@@ -65,6 +54,7 @@ const MainView: FC<MainViewProps> = () => {
         }
       );
       const data: APIResponse = await response.json();
+      console.log(data);
       return data;
     } catch (err) {
       dispatch({ type: 'setError', payload: true });
@@ -79,7 +69,7 @@ const MainView: FC<MainViewProps> = () => {
         blurImage: image.blur_hash,
         color: image.color,
         imageDimensions: { x: image.width, y: image.height },
-        imageURL: image.urls.full,
+        imageURL: image.urls.regular,
         imageThumb: image.urls.thumb,
         downloadLink: image.links.download,
         unsplashLink: image.links.html,
@@ -105,11 +95,14 @@ const MainView: FC<MainViewProps> = () => {
     indexStep: number = 1
   ) => {
     try {
-      console.log(images.length, currentImageIndex);
+      console.log(images.length, currentImageIndex, state.currentImageIndex);
       dispatch({ type: 'setError', payload: false });
       dispatch({ type: 'setLoading', payload: true });
 
       if (images.length > 0 && images.length > currentImageIndex + 1) {
+        dispatch({
+          type: 'setCurrentImageIndex',
+        });
         setCurrentImageIndex((prev) => prev + indexStep);
       } else if (currentImageIndex + 1 >= images.length) {
         const apiKey = (await fetchAPIKey()) as string;
@@ -130,14 +123,15 @@ const MainView: FC<MainViewProps> = () => {
     }
   };
 
+  const size = useResizeWindow();
   const artistName = images[currentImageIndex]?.artistName || 'anonymous';
   const downloadLink = images[currentImageIndex]?.downloadLink || null;
   const unsplashLink = images[currentImageIndex]?.unsplashLink;
 
   return (
     <Wrapper>
-      <MainGrid className="grid">
-        <CanvasImage currentImageIndex={currentImageIndex} />
+      <MainGrid className="main-grid" windowSize={size}>
+        <CanvasImage currentImageIndex={currentImageIndex} windowSize={size} />
         <Actions
           changeImageHandler={changeImageHandler}
           imageDownloadURL={downloadLink}

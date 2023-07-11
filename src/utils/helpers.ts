@@ -1,5 +1,23 @@
 import { COLOR_NAMES, RGBA_GROUP, CANVAS_SIZE } from './constants';
 
+// api
+export const translateApiResponse = (dataFromAPI: APIResponse) => {
+  const imageData = dataFromAPI.map((image) => ({
+    altText: image.alt_description || image.description,
+    blurImage: image.blur_hash,
+    color: image.color,
+    imageDimensions: { x: image.width, y: image.height },
+    imageURL: image.urls.full,
+    imageThumb: image.urls.thumb,
+    downloadLink: image.links.download,
+    unsplashLink: image.links.html,
+    id: image.id,
+    artistName: image.user.name || image.user.username,
+    artistLink: image.user.portfolio_url,
+  }));
+  return imageData;
+};
+
 // unit conversions
 export const pxToRem = (px: number) => px / 16;
 export const remToPx = (rem: number) => rem * 16;

@@ -11,6 +11,15 @@ const reducer = (state: AppState, action: ReducerActions): AppState => {
         ...state,
         images: payload,
       };
+    case 'setCurrentImageIndex':
+      const { images, currentImageIndex } = state;
+      return {
+        ...state,
+        currentImageIndex:
+          images.length > 0 && images.length > currentImageIndex + 1
+            ? currentImageIndex + 1
+            : 0,
+      };
     case 'setCurrentImageData':
       return {
         ...state,
