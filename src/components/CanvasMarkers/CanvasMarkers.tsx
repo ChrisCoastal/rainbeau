@@ -2,17 +2,10 @@
 import { useState, useRef } from 'react';
 
 // types
-import type { FC, TouchEvent, MouseEvent } from 'react';
+import type { FC } from 'react';
 
 // uuid
 import { v4 as uuidv4 } from 'uuid';
-
-// helpers
-import {
-  getPxGroupIndex,
-  rgbToColorName,
-  getCanvasDimension,
-} from '../../utils/helpers';
 
 // hooks
 import useAppContext from '../../hooks/useAppContext';
@@ -22,21 +15,7 @@ import useMarkers from '../../hooks/useMarkers';
 import { Wrapper } from './CanvasMarkers.styles';
 import MarkerIcon from '../../UI/Marker/MarkerIcon';
 
-interface CanvasMarkerProps {
-  // paletteMarkers: ColorMarker[];
-  // currentImageData: IndexedPxColor[];
-  canvasBound: DOMRect | undefined;
-  canvasXY: { x: number | undefined; y: number | undefined };
-  // dispatch: React.Dispatch<ReducerActions>;
-}
-
-const CanvasMarkers: FC<CanvasMarkerProps> = ({
-  // paletteMarkers,
-  // currentImageData,
-  canvasXY,
-  canvasBound,
-  // dispatch,
-}) => {
+const CanvasMarkers: FC = () => {
   const [activeMarkerNum, setActiveMarkerNum] = useState<number | null>(null);
   const { state } = useAppContext();
   const { paletteMarkers } = state;

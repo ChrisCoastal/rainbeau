@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import { BREAKPOINTS } from '../../utils/constants';
 
 export const Wrapper = styled.div`
   height: 1rem;
@@ -10,6 +9,7 @@ export const Wrapper = styled.div`
   border-radius: 8px;
   border: solid 1px #ddd;
   grid-area: actions;
+  background-color: #fff;
 `;
 
 export const DropArea = styled.div`

@@ -176,13 +176,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
         {/* <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} /> */}
       </ImageBox>
       <MarkersBox className="markerBox" canvasXY={canvasXY}>
-        <CanvasMarkers
-          // paletteMarkers={paletteMarkers}
-          // currentImageData={currentImageData}
-          canvasXY={canvasXY}
-          canvasBound={canvasRef.current?.getBoundingClientRect()}
-          // dispatch={dispatch}
-        />
+        <CanvasMarkers />
       </MarkersBox>
     </>
   );

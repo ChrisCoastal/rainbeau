@@ -86,7 +86,6 @@ const MainView: FC = () => {
 
   useEffect(() => {
     setImagesState(INITIAL_IMAGE);
-    // changeImageHandler(null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

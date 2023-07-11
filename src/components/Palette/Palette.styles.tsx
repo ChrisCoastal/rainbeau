@@ -53,16 +53,12 @@ export const PaletteActions = styled.div`
 `;
 
 export const PaletteItemsContainer = styled.div`
-  /* padding: 0.8rem 0 0 0.8rem; */
   height: 100%;
   max-height: 88%;
   scrollbar-width: thin;
   overflow-x: hidden;
   overflow-y: scroll;
   border-radius: 8px;
-  /* border: solid 1px #eee;
-  background-color: #eee; */
-  /* box-shadow: inset 0px -0.5rem 0.6rem -0.7rem #dddddddd; */
 
   &not:first-of-type {
     padding-top: 0.8rem;

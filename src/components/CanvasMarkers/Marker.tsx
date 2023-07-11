@@ -7,9 +7,7 @@ interface MarkerProps {
   y: number;
   x: number;
   num: number;
-  // canvasBound: DOMRect | undefined;
   setActive: Dispatch<SetStateAction<number | null>>;
-  // clickHandler: (e: React.MouseEvent, num: number) => void;
 }
 
 const Marker: FC<MarkerProps> = ({ x, y, num, setActive }) => {
@@ -27,8 +25,6 @@ const Marker: FC<MarkerProps> = ({ x, y, num, setActive }) => {
       tabIndex={1}
       onMouseDown={() => setActive(num)}
       onTouchStart={handleTouchStart}
-      // onMouseEnter={(e) => clickHandler(e, num)}
-      // onDragStart={() => false}
       onMouseUp={() => setActive(null)}
       onTouchEnd={() => setActive(null)}
     >
