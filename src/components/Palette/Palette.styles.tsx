@@ -53,8 +53,9 @@ export const PaletteActions = styled.div`
 `;
 
 export const PaletteItemsContainer = styled.div`
-  height: 100%;
-  max-height: 88%;
+  /* height: 100%; */
+  min-height: 0;
+  height: 88%;
   scrollbar-width: thin;
   overflow-x: hidden;
   overflow-y: scroll;

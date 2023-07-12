@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { FC, Suspense } from 'react';
 import { useCallback, useState, useEffect } from 'react';
 
 // firestore
@@ -123,6 +123,7 @@ const MainView: FC = () => {
   };
 
   const size = useResizeWindow();
+  const imageBlurURL = images[currentImageIndex]?.blurImage || null;
   const artistName = images[currentImageIndex]?.artistName || 'anonymous';
   const downloadLink = images[currentImageIndex]?.downloadLink || null;
   const unsplashLink = images[currentImageIndex]?.unsplashLink;
@@ -130,7 +131,9 @@ const MainView: FC = () => {
   return (
     <Wrapper>
       <MainGrid className="main-grid" windowSize={size}>
+        {/* <Suspense fallback={<img src={}></img>}> */}
         <CanvasImage currentImageIndex={currentImageIndex} windowSize={size} />
+        {/* </Suspense> */}
         <Actions
           changeImageHandler={changeImageHandler}
           imageDownloadURL={downloadLink}

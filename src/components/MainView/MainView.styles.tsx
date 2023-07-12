@@ -19,15 +19,17 @@ export const Wrapper = styled.div`
 `;
 
 export const MainGrid = styled.div<MainGridProps>`
+  width: 100%;
   display: grid;
   min-height: 0;
   row-gap: 1rem;
   grid-template-columns: 1fr;
-  grid-template-rows: auto minmax(0, 4fr) minmax(0, 2fr);
+  grid-template-rows: auto minmax(0, auto) minmax(0, 2fr);
   grid-template-areas: 'actions' 'image' 'palette';
 
   @media (min-width: ${BREAKPOINTS.md}px) {
-    grid-template-columns: minmax(400px, auto) minmax(20rem, 30rem);
+    width: auto;
+    grid-template-columns: minmax(400px, auto) minmax(18rem, 22rem);
     grid-template-rows: auto minmax(0, 1fr);
     column-gap: 2rem;
     row-gap: 3rem;

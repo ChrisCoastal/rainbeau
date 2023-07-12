@@ -28,7 +28,7 @@ const MarkerIcon: FC<MarkerIconProps> = ({
   animate = false,
 }) => {
   const handleTouchStart = (e: React.TouchEvent) => {
-    e.preventDefault();
+    // e.preventDefault();
     setActive(num);
   };
 
@@ -38,23 +38,26 @@ const MarkerIcon: FC<MarkerIconProps> = ({
       style={{
         position: 'absolute',
         display: 'flex',
-        // top: x,
-        // left: y,
+        top: y,
+        left: x,
+        transformOrigin: 'center center',
       }}
-      tabIndex={1}
+      active={active}
+      num={num}
+      tabIndex={0}
       onMouseDown={() => setActive(num)}
       onTouchStart={handleTouchStart}
       // onMouseEnter={(e) => clickHandler(e, num)}
       // onDragStart={() => false}
       onMouseUp={() => setActive(null)}
-      onTouchEnd={() => setActive(null)}
+      onTouchEnd={() => null}
     >
       <SvgMarker
         xmlns="http://www.w3.org/2000/svg"
         width="36px"
         height="48px"
-        x={x}
-        y={y}
+        // x={x}
+        // y={y}
         num={num}
         viewBox="0 0 36 48"
         enable-background="new 0 0 36 48"

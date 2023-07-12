@@ -47,7 +47,7 @@ const useMarkers = () => {
     dispatch({ type: 'addMarker', payload: markers });
   };
 
-  const updateMarker = (
+  const updateMarkerState = (
     indexedImagePx: IndexedPxColor[],
     activeMarkerNum: number,
     updatedXY: { xPos: number; yPos: number }
@@ -110,14 +110,14 @@ const useMarkers = () => {
       yPos: (marker.xy.yPos += moveY),
     };
     console.log('move', updatedXY);
-    updateMarker(currentImageData, activeMarkerNum, updatedXY);
+    updateMarkerState(currentImageData, activeMarkerNum, updatedXY);
   };
 
   const deleteMarker = (marker: ColorMarker) => {
     dispatch({ type: 'deleteMarker', payload: marker });
   };
 
-  return { addMarker, updateMarker, moveMarker, deleteMarker };
+  return { addMarker, updateMarkerState, moveMarker, deleteMarker };
 };
 
 export default useMarkers;

@@ -163,14 +163,14 @@ interface IndexedPxColor extends rgbType, hslType {
   i: number;
 }
 
-interface coordinate {
+interface Coordinate {
   xPos: number;
   yPos: number;
 }
 
 interface ColorMarker extends IndexedPxColor {
   // id: string;
-  xy: coordinate;
+  xy: Coordinate;
   // active: boolean;
   // hovered: boolean;
   // markerNum: number;

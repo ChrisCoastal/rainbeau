@@ -21,7 +21,7 @@ import useCanvasImage from '../../hooks/useCanvasImage';
 
 // styles
 import { Canvas, ImageBox, MarkersBox } from './CanvasImage.styles';
-import useResizeWindow from '../../hooks/useResizeWindow';
+import { create } from 'domain';
 
 interface CanvasImageProps {
   windowSize: WindowSize;
@@ -32,9 +32,8 @@ const CanvasImage: FC<CanvasImageProps> = ({
   currentImageIndex,
   windowSize,
 }) => {
-  const { state, dispatch } = useAppContext();
   const { addMarker } = useMarkers();
-  // const { innerWidth } = useResizeWindow();
+  const { state, dispatch } = useAppContext();
   const {
     images,
     canvasXY,
@@ -44,8 +43,10 @@ const CanvasImage: FC<CanvasImageProps> = ({
     isLoading,
     isError,
   } = state;
+
   const imageURL = images[currentImageIndex]?.imageURL || null;
 
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
   const imageBoxRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = useRef<CanvasRenderingContext2D | null>(null);
@@ -156,16 +157,59 @@ const CanvasImage: FC<CanvasImageProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const translateMarkers = useCallback(
+    (
+      prevCanvasXY: { x: number; y: number },
+      canvasXY: { x: number; y: number }
+    ) => {
+      const xRatio = canvasXY.x / prevCanvasXY.x;
+      const yRatio = canvasXY.y / prevCanvasXY.y;
+      console.log(paletteMarkers);
+      const translatedMarkers = paletteMarkers.map((marker) => {
+        const translateX = marker.xy.xPos * xRatio;
+        const translateY = marker.xy.yPos * yRatio;
+        return {
+          ...marker,
+          xy: {
+            xPos: translateX,
+            yPos: translateY,
+          },
+        };
+      });
+      console.log(translatedMarkers);
+      dispatch({
+        type: 'deletePalette',
+      });
+      dispatch({
+        type: 'addMarker',
+        payload: translatedMarkers,
+      });
+    },
+    [dispatch, paletteMarkers]
+  );
+
   useEffect(() => {
-    if (windowSize.innerWidth * 0.9 !== canvasXY.y) {
-      dispatch({ type: 'setLoading', payload: true });
+    if (canvasCtxRef.current) {
+      const ctx = canvasCtxRef.current;
+      if (timerRef.current) clearTimeout(timerRef.current);
+      const timer = setTimeout(() => {
+        timerRef.current = timer;
+        dispatch({ type: 'setLoading', payload: true });
+        const prevCanvasXY = {
+          x: ctx.canvas.width,
+          y: ctx.canvas.height,
+        };
 
-      const canvas = createCanvas();
-      if (!canvas?.ctx) return;
+        const canvas = createCanvas();
+        if (!canvas?.ctx) return;
 
-      drawCanvasImage(canvas.ctx, canvas.canvasXY);
+        drawCanvasImage(canvas.ctx, canvas.canvasXY);
+        translateMarkers(prevCanvasXY, canvas.canvasXY);
+      }, 300);
     }
-  }, [windowSize, canvasXY]);
+    // createCanvas, drawCanvasImage,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [windowSize.innerHeight, windowSize.innerWidth, dispatch]);
 
   return (
     <>
