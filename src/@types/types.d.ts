@@ -145,7 +145,7 @@ type WindowSize = {
 };
 
 // px and markers
-type MarkerPosition = Array<[number, number]>;
+// type MarkerPosition = Array<[number, number]>;
 
 interface rgbType {
   r: number;
@@ -169,13 +169,13 @@ interface Coordinate {
 }
 
 interface ColorMarker extends IndexedPxColor {
-  // id: string;
+  id: string;
+  markerNum: number;
   xy: Coordinate;
-  // active: boolean;
-  // hovered: boolean;
-  // markerNum: number;
   name: string;
   customName?: string;
+  // active: boolean;
+  // hovered: boolean;
 }
 
 // interface ColorName {

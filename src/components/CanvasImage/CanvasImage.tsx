@@ -20,8 +20,14 @@ import useMarkers from '../../hooks/useMarkers';
 import useCanvasImage from '../../hooks/useCanvasImage';
 
 // styles
-import { Canvas, ImageBox, MarkersBox } from './CanvasImage.styles';
+import {
+  Canvas,
+  ImageBox,
+  MarkersBox,
+  BlurFallback,
+} from './CanvasImage.styles';
 import { create } from 'domain';
+import { Blurhash } from 'react-blurhash';
 
 interface CanvasImageProps {
   windowSize: WindowSize;
@@ -45,6 +51,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
   } = state;
 
   const imageURL = images[currentImageIndex]?.imageURL || null;
+  const imageBlurHash = images[currentImageIndex]?.blurImage || null;
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const imageBoxRef = useRef<HTMLDivElement | null>(null);
@@ -153,16 +160,16 @@ const CanvasImage: FC<CanvasImageProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const translateMarkers = useCallback(
+  const updateResizeMarkers = useCallback(
     (
       prevCanvasXY: { x: number; y: number },
       canvasXY: { x: number; y: number }
     ) => {
       const xRatio = canvasXY.x / prevCanvasXY.x;
       const yRatio = canvasXY.y / prevCanvasXY.y;
-      const translatedMarkers = paletteMarkers.map((marker) => {
-        const translateX = marker.xy.xPos * xRatio;
-        const translateY = marker.xy.yPos * yRatio;
+      const translatedMarkers: ColorMarker[] = paletteMarkers.map((marker) => {
+        const translateX = Math.floor(marker.xy.xPos * xRatio);
+        const translateY = Math.floor(marker.xy.yPos * yRatio);
         return {
           ...marker,
           xy: {
@@ -190,7 +197,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
       // debounce resize effects
       if (timerRef.current) clearTimeout(timerRef.current);
       const timer = setTimeout(() => {
-        dispatch({ type: 'setLoading', payload: true });
+        // dispatch({ type: 'setLoading', payload: true });
         const prevCanvasXY = {
           x: ctx.canvas.width,
           y: ctx.canvas.height,
@@ -200,9 +207,10 @@ const CanvasImage: FC<CanvasImageProps> = ({
         if (!canvas?.ctx) return;
 
         drawCanvasImage(canvas.ctx, canvas.canvasXY);
-        translateMarkers(prevCanvasXY, canvas.canvasXY);
+        updateResizeMarkers(prevCanvasXY, canvas.canvasXY);
         timerRef.current = null;
       }, 150);
+
       timerRef.current = timer;
     }
     return () => {
@@ -217,6 +225,21 @@ const CanvasImage: FC<CanvasImageProps> = ({
       <ImageBox ref={imageBoxRef} className="imageBox" canvasXY={canvasXY}>
         {isLoading && <LoadingSpinner />}
         <Canvas ref={canvasRef} />
+        <BlurFallback>
+          {imageBlurHash && (
+            <Blurhash
+              hash={imageBlurHash}
+              width="100%"
+              height="100%"
+              style={{
+                gridArea: 'image',
+                aspectRatio: '1/1',
+                borderRadius: '8px',
+                overflow: 'hidden',
+              }}
+            />
+          )}
+        </BlurFallback>
         {/* <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} /> */}
       </ImageBox>
       <MarkersBox className="markerBox" canvasXY={canvasXY}>

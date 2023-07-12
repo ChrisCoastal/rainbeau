@@ -1,9 +1,14 @@
+import type { ReactNode } from 'react';
 import styled from '@emotion/styled';
 
 import { BREAKPOINTS, CANVAS_SIZE } from '../../utils/constants';
 
 interface BoxProps {
   canvasXY: { x: number; y: number };
+}
+
+interface BlurFallbackProps {
+  children: ReactNode;
 }
 
 export const ImageBox = styled.div<BoxProps>`
@@ -17,6 +22,18 @@ export const ImageBox = styled.div<BoxProps>`
 `;
 
 export const Canvas = styled.canvas`
+  position: relative;
+  height: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: inherit;
+  z-index: 10;
+`;
+
+export const BlurFallback = styled.div<BlurFallbackProps>`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
   height: 100%;
   aspect-ratio: 1 / 1;
   border-radius: inherit;
@@ -29,5 +46,5 @@ export const MarkersBox = styled.div<BoxProps>`
   width: 100%;
   height: 100%;
   grid-area: image;
-  z-index: 10;
+  z-index: 50;
 `;

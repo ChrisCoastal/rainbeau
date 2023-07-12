@@ -1,6 +1,8 @@
 import type { TouchEvent, MouseEvent } from 'react';
 import { useRef } from 'react';
 
+import { nanoid } from 'nanoid';
+
 import {
   getPxGroupXY,
   rgbToColorName,
@@ -27,11 +29,13 @@ const useMarkers = () => {
     // sort by hue
     // const sortedPxGroups = getSortedPx([...indexedImagePx], 'h');
 
-    for (let loop = 0; loop < markerQty; loop++) {
+    for (let loopIndex = 0; loopIndex < markerQty; loopIndex++) {
       const randomPxIndex = Math.floor(Math.random() * totalPx);
       const randomMarker = indexedImagePx[randomPxIndex];
       const { r, g, b } = randomMarker;
       markers.push({
+        id: nanoid(),
+        markerNum: loopIndex,
         ...randomMarker,
         xy: getPxGroupXY(randomMarker.i, canvasDimension),
         name: rgbToColorName({ r, g, b }),
