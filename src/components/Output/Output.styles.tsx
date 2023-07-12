@@ -1,11 +1,11 @@
 import styled from '@emotion/styled';
 import { BREAKPOINTS } from '../../utils/constants';
 
-interface WrapperProps {
+interface OutputProps {
   activeMenuTab: string;
 }
 
-export const Wrapper = styled.div<WrapperProps>`
+export const Wrapper = styled.div<OutputProps>`
   /* height: 36vh; */
   position: relative;
   margin-top: 2rem;
@@ -26,12 +26,12 @@ export const Wrapper = styled.div<WrapperProps>`
   }
 `;
 
-export const OutputTab = styled.div`
+export const OutputTab = styled.button<OutputProps>`
   position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
-  top: -33px;
+  top: -32px;
   right: -1px;
   width: 5rem;
   height: 2rem;
@@ -39,6 +39,12 @@ export const OutputTab = styled.div`
   border-radius: 8px 8px 0 0;
   border: solid 1px #ddd;
   border-bottom: none;
+  cursor: pointer;
+
+  /* &:hover {
+    border-color: ${(props) =>
+    props.activeMenuTab === 'output' ? '#ddd' : '#7dffbe'};
+  } */
 
   @media (min-width: ${BREAKPOINTS.lg}px) and (min-height: 680px) {
     height: 0;

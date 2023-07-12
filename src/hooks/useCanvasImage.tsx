@@ -22,7 +22,6 @@ const useCanvasImage = () => {
       if (!apiKey) throw new Error('No response from database');
       return apiKey;
     } catch (err) {
-      console.log(err);
       dispatch({ type: 'setError', payload: true });
     }
   }
@@ -43,13 +42,11 @@ const useCanvasImage = () => {
       return data;
     } catch (err) {
       dispatch({ type: 'setError', payload: true });
-      console.log(err);
     }
   }
 
   useEffect(() => {
     const initImage = translateApiResponse(INITIAL_IMAGE);
-    console.log(initImage);
     dispatch({ type: 'setImages', payload: [initImage] });
     // changeImageHandler(null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -66,7 +63,6 @@ const useCanvasImage = () => {
     indexStep: number = 1
   ) {
     try {
-      console.log(images.length, currentImageIndex);
       dispatch({ type: 'setError', payload: false });
       dispatch({ type: 'setLoading', payload: true });
 
@@ -88,7 +84,6 @@ const useCanvasImage = () => {
     } catch (err) {
       dispatch({ type: 'setError', payload: true });
       dispatch({ type: 'setLoading', payload: false });
-      console.log(err);
     }
   }
 

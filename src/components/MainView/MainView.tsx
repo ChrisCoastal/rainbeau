@@ -23,6 +23,7 @@ import Actions from '../Actions/Actions';
 
 import useAppContext from '../../hooks/useAppContext';
 import useResizeWindow from '../../hooks/useResizeWindow';
+import { Blurhash } from 'react-blurhash';
 
 const MainView: FC = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
@@ -36,7 +37,6 @@ const MainView: FC = () => {
       if (!apiKey) throw new Error('No response from database');
       return apiKey;
     } catch (err) {
-      console.log(err);
       dispatch({ type: 'setError', payload: true });
     }
   };
@@ -54,11 +54,9 @@ const MainView: FC = () => {
         }
       );
       const data: APIResponse = await response.json();
-      console.log(data);
       return data;
     } catch (err) {
       dispatch({ type: 'setError', payload: true });
-      console.log(err);
     }
   };
 
@@ -77,7 +75,6 @@ const MainView: FC = () => {
         artistName: image.user.name || image.user.username,
         artistLink: image.user.portfolio_url,
       }));
-      console.log(dataFromAPI, imageData);
 
       dispatch({ type: 'setImages', payload: imageData });
     },
@@ -94,7 +91,6 @@ const MainView: FC = () => {
     indexStep: number = 1
   ) => {
     try {
-      console.log(images.length, currentImageIndex, state.currentImageIndex);
       dispatch({ type: 'setError', payload: false });
       dispatch({ type: 'setLoading', payload: true });
 
@@ -113,27 +109,57 @@ const MainView: FC = () => {
         setImagesState(images);
         setCurrentImageIndex(0);
       }
+      //FIXME: combine state dispatches
       dispatch({ type: 'deletePalette', payload: null });
       dispatch({ type: 'setLoading', payload: false });
     } catch (err) {
       dispatch({ type: 'setError', payload: true });
       dispatch({ type: 'setLoading', payload: false });
-      console.log(err);
     }
   };
 
   const size = useResizeWindow();
-  const imageBlurURL = images[currentImageIndex]?.blurImage || null;
+  const imageBlurHash = images[currentImageIndex]?.blurImage || null;
   const artistName = images[currentImageIndex]?.artistName || 'anonymous';
   const downloadLink = images[currentImageIndex]?.downloadLink || null;
   const unsplashLink = images[currentImageIndex]?.unsplashLink;
 
+  const imageBlurFallback = imageBlurHash && (
+    <Blurhash
+      hash={imageBlurHash}
+      width="100%"
+      height="100%"
+      style={{
+        gridArea: 'image',
+        aspectRatio: '1/1',
+        borderRadius: '8px',
+        overflow: 'hidden',
+      }}
+    />
+  );
+
   return (
     <Wrapper>
       <MainGrid className="main-grid" windowSize={size}>
-        {/* <Suspense fallback={<img src={}></img>}> */}
-        <CanvasImage currentImageIndex={currentImageIndex} windowSize={size} />
-        {/* </Suspense> */}
+        {/* {imageBlurHash && (
+          <Blurhash
+            hash={imageBlurHash}
+            width="100%"
+            height="100%"
+            style={{
+              gridArea: 'image',
+              aspectRatio: '1/1',
+              borderRadius: '8px',
+              overflow: 'hidden',
+            }}
+          />
+        )} */}
+        <Suspense fallback={imageBlurFallback}>
+          <CanvasImage
+            currentImageIndex={currentImageIndex}
+            windowSize={size}
+          />
+        </Suspense>
         <Actions
           changeImageHandler={changeImageHandler}
           imageDownloadURL={downloadLink}

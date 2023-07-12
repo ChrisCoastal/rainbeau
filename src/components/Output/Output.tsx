@@ -49,7 +49,7 @@ const Output: FC = () => {
     .map((marker, i) => {
       const { r, g, b } = marker;
       return `--${
-        paletteMarkers[i].customName || paletteMarkers[i].color.name
+        paletteMarkers[i].customName || paletteMarkers[i].name
       }: 'rgb(${r},${g},${b})'`;
     })
     .join(',\n      ');
@@ -58,7 +58,7 @@ const Output: FC = () => {
     .map((marker, i) => {
       const { r, g, b } = marker;
       return `'${
-        paletteMarkers[i].customName || paletteMarkers[i].color.name
+        paletteMarkers[i].customName || paletteMarkers[i].name
       }': 'rgb(${r},${g},${b})'`;
     })
     .join(',\n        ');
@@ -67,7 +67,7 @@ const Output: FC = () => {
     .map((marker, i) => {
       const { r, g, b } = marker;
       return `${
-        paletteMarkers[i].customName || paletteMarkers[i].color.name
+        paletteMarkers[i].customName || paletteMarkers[i].name
       }: 'rgb(${r},${g},${b})'`;
     })
     .join(',\n        ');
@@ -193,7 +193,9 @@ const Output: FC = () => {
 
   return (
     <Wrapper activeMenuTab={activeMenuTab}>
-      <OutputTab onClick={setActiveMenuTab}>export</OutputTab>
+      <OutputTab onClick={setActiveMenuTab} activeMenuTab={activeMenuTab}>
+        export
+      </OutputTab>
       <SelectFormatButton
         options={formatOptions}
         format={format}

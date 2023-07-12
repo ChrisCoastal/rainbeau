@@ -84,9 +84,11 @@ const Actions: FC<ActionsProps> = ({
               imageDownloadURL ? 'download image' : 'download not available'
             }
           >
-            <IconButton disabled={!imageDownloadURL}>
-              <DownloadIcon />
-            </IconButton>
+            <span>
+              <IconButton disabled={!imageDownloadURL}>
+                <DownloadIcon />
+              </IconButton>
+            </span>
           </Tooltip>
         </Link>
       </div>

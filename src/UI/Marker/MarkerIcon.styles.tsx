@@ -5,6 +5,7 @@ interface WrapperProps {
   style?: CSSProperties;
   children?: ReactNode;
   active: boolean;
+  colorLightness: number;
   num: number;
   tabIndex: number;
   onMouseDown: () => void;
@@ -32,6 +33,7 @@ export const Wrapper = styled.div<WrapperProps>`
   position: absolute;
   display: flex;
   z-index: 100;
+
   cursor: ${(props) => (!props.active ? 'grab' : 'grabbing')};
 
   &:active {
@@ -39,26 +41,28 @@ export const Wrapper = styled.div<WrapperProps>`
   }
 
   &::after {
-    content: '${(props) => props.num + 1}';
+    content: ${(props) => props.num + 1};
     position: absolute;
     text-align: center;
-    left: 0.7rem;
-    top: -2.8rem;
+    transform: translate(-50%, -50%);
+    height: 1rem;
+    width: 1rem;
+    top: -1.5rem;
     color: black;
+    /* color: ${(props) => (props.colorLightness > 50 ? '#000' : '#fff')}; */
     font-size: 0.8rem;
-    /* height: 0.9rem;
+    height: 0.9rem;
     width: 0.9rem;
     border-radius: 50%;
-    background-color: #fff;
-    border: 1px solid #333; */
-    mix-blend-mode: exclusion;
-    opacity: ${(props) => (props.active ? 0.5 : 0.8)};
-    z-index: 100;
+    /* background-color: #fff; */
+    /* border: 1px solid #777; */
+    opacity: ${(props) => (props.active ? 0.5 : 0.6)};
+    z-index: 1000;
   }
 `;
 
 export const SvgMarker = styled.svg<SvgProps>`
-  /* position: relative; */
+  position: absolute;
   /* top: ${(props) => `${props.y}px`}; */
   /* left: ${(props) => `${props.x}px`}; */
   height: 36px;

@@ -218,7 +218,6 @@ export function rgbToColorName(rgb: rgbType | IndexedPxColor | ColorMarker) {
     },
     { name: 'default-color-name', r: -1, g: -1, b: -1, diff: Infinity }
   ) as { name: string; r: number; g: number; b: number; diff: number };
-  console.log(name);
 
   return name.name;
 }
@@ -263,7 +262,6 @@ export function hslToColorName(rgbPaletteColor: ColorMarker) {
     },
     { name: 'default-color-name', r: -1, g: -1, b: -1, diff: Infinity }
   ) as { name: string; r: number; g: number; b: number; diff: number };
-  // console.log(hslColor, name);
 
   return name.name;
 }
@@ -275,7 +273,7 @@ const changeToWarmth = (color: string) => {
 };
 
 export const hslToColorDescription = (paletteColor: IndexedPxColor) => {
-  const { h, s, l } = paletteColor;
+  const { h, s, l } = rgbToHsl(paletteColor);
   let color = hueToColor(h);
   let satur = saturationToColor(s);
   let light = lightToColor(l);

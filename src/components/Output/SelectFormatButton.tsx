@@ -39,15 +39,11 @@ const SelectFormatButton: FC<SelectFormatButtonProps> = ({
     _event: React.MouseEvent<HTMLLIElement, MouseEvent>,
     index: number
   ) => {
-    console.log(index);
-
     setSelectedIndex(index);
     setOpen(false);
   };
 
   const handleChange = (event: SelectChangeEvent) => {
-    console.log(event.target.value);
-
     setFormat(event.target.value);
   };
 

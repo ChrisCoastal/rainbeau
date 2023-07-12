@@ -19,14 +19,13 @@ const useMarkers = () => {
     indexedImagePx: IndexedPxColor[],
     markerQty: number = 1
   ) => {
-    if (!indexedImagePx.length) return;
+    if (!indexedImagePx.length || !markerQty) return;
 
     const markers: ColorMarker[] = [];
     const totalPx = indexedImagePx.length; // canvasHeight * canvasWidth
     const canvasDimension = getCanvasDimension(totalPx);
     // sort by hue
     // const sortedPxGroups = getSortedPx([...indexedImagePx], 'h');
-    // console.log('SORTED', sortedPxGroups, 'UNSORTED', indexedImagePx);
 
     for (let loop = 0; loop < markerQty; loop++) {
       const randomPxIndex = Math.floor(Math.random() * totalPx);
@@ -35,15 +34,10 @@ const useMarkers = () => {
       markers.push({
         ...randomMarker,
         xy: getPxGroupXY(randomMarker.i, canvasDimension),
-        color: {
-          r,
-          g,
-          b,
-          name: rgbToColorName({ r, g, b }),
-        },
+        name: rgbToColorName({ r, g, b }),
       });
     }
-
+    console.log(markers);
     dispatch({ type: 'addMarker', payload: markers });
   };
 
@@ -63,12 +57,10 @@ const useMarkers = () => {
     const updatedMarker = {
       ...updatedPx,
       xy: updatedXY,
-      color: {
-        r: updatedPx.r,
-        g: updatedPx.g,
-        b: updatedPx.b,
-        name: updatedName,
-      },
+      r: updatedPx.r,
+      g: updatedPx.g,
+      b: updatedPx.b,
+      name: updatedName,
     };
     dispatch({
       type: 'updatePalette',
@@ -82,8 +74,8 @@ const useMarkers = () => {
   ) => {
     if (activeMarkerNum === null) return;
 
-    e.preventDefault();
-    e.stopPropagation();
+    // e.preventDefault();
+    // e.stopPropagation();
 
     const marker = paletteMarkers[activeMarkerNum];
     let moveX = 0;
@@ -93,14 +85,13 @@ const useMarkers = () => {
       moveY = (e as MouseEvent).movementY;
     }
     if (e.type === 'touchmove') {
-      console.log('touchmove');
       const touch = (e as TouchEvent).touches[0];
-      if (!prevTouchRef.current)
-        prevTouchRef.current = { x: touch.clientX, y: touch.clientY };
+      // if (!prevTouchRef.current)
+      //   prevTouchRef.current = { x: touch.clientX, y: touch.clientY };
       const prev = prevTouchRef.current;
 
-      moveX = touch.clientX - prev.x;
-      moveY = touch.clientY - prev.y;
+      moveX = touch.clientX - (prev ? prev.x : 0);
+      moveY = touch.clientY - (prev ? prev.y : 0);
       prevTouchRef.current = { x: touch.clientX, y: touch.clientY };
     }
 
@@ -109,7 +100,6 @@ const useMarkers = () => {
       xPos: (marker.xy.xPos += moveX),
       yPos: (marker.xy.yPos += moveY),
     };
-    console.log('move', updatedXY);
     updateMarkerState(currentImageData, activeMarkerNum, updatedXY);
   };
 

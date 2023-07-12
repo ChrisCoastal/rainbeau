@@ -2,11 +2,11 @@ import styled from '@emotion/styled';
 
 import { BREAKPOINTS } from '../../utils/constants';
 
-interface WrapperProps {
+interface PaletteProps {
   activeMenuTab: string;
 }
 
-export const Wrapper = styled.div<WrapperProps>`
+export const Wrapper = styled.div<PaletteProps>`
   min-height: 0; /* fixes overflow issue */
   margin-top: 2rem;
   position: relative;
@@ -15,19 +15,19 @@ export const Wrapper = styled.div<WrapperProps>`
   border-radius: 8px;
   border: solid 1px #ddd;
   background-color: #fff;
-  z-index: ${(props) => (props.activeMenuTab === 'palette' ? 10 : 1)};
+  z-index: ${(props) => (props.activeMenuTab !== 'palette' ? 10 : 1)};
 
   @media (min-width: ${BREAKPOINTS.md}px) {
     margin-top: 0;
   }
 `;
 
-export const PaletteTab = styled.div`
+export const PaletteTab = styled.button`
   position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
-  top: -33px;
+  top: -32px;
   right: 5rem;
   width: 5rem;
   height: 2rem;
@@ -36,6 +36,7 @@ export const PaletteTab = styled.div`
   border: solid 1px #ddd;
   border-bottom: none;
   z-index: 100;
+  cursor: pointer;
 
   @media (min-width: ${BREAKPOINTS.lg}px) and (min-height: 680px) {
     height: 0;

@@ -66,9 +66,9 @@ const CanvasImage: FC<CanvasImageProps> = ({
         const g = imageData[i + 1];
         const b = imageData[i + 2];
         // const a = imageData[i + 3]; // this is the alpha channel; account for if transparency
-        const { h, s, l } = rgbToHsl({ r, g, b });
+        // const { h, s, l } = rgbToHsl({ r, g, b });
 
-        sampled.push({ r, g, b, h, s, l, i } as IndexedPxColor);
+        sampled.push({ r, g, b, i });
       }
       sampledPxData.current = sampled;
       dispatch({
@@ -93,15 +93,12 @@ const CanvasImage: FC<CanvasImageProps> = ({
 
   const createCanvas = useCallback(() => {
     if (canvasRef.current === null || imageBoxRef.current === null) return;
-    canvasCtxRef.current = canvasRef.current.getContext('2d')!;
+    canvasCtxRef.current = canvasRef.current.getContext('2d', {
+      willReadFrequently: true,
+    })!;
     const ctx = canvasCtxRef.current;
     // const devicePixelRatio = window.devicePixelRatio || 1;
-    console.log(
-      canvasRef.current?.getBoundingClientRect(),
-      canvasRef.current,
-      ctx,
-      imageBoxRef.current?.getBoundingClientRect()
-    );
+
     // assign the dimension of the grid area to the canvas
     ctx.canvas.width = imageBoxRef.current.getBoundingClientRect().width;
     ctx.canvas.height = imageBoxRef.current.getBoundingClientRect().height;
@@ -109,7 +106,6 @@ const CanvasImage: FC<CanvasImageProps> = ({
       x: ctx.canvas.width,
       y: ctx.canvas.height,
     };
-    console.log(canvasXY);
     return { ctx, canvasXY };
   }, []);
 
@@ -164,7 +160,6 @@ const CanvasImage: FC<CanvasImageProps> = ({
     ) => {
       const xRatio = canvasXY.x / prevCanvasXY.x;
       const yRatio = canvasXY.y / prevCanvasXY.y;
-      console.log(paletteMarkers);
       const translatedMarkers = paletteMarkers.map((marker) => {
         const translateX = marker.xy.xPos * xRatio;
         const translateY = marker.xy.yPos * yRatio;
@@ -176,7 +171,6 @@ const CanvasImage: FC<CanvasImageProps> = ({
           },
         };
       });
-      console.log(translatedMarkers);
       dispatch({
         type: 'deletePalette',
       });
@@ -188,12 +182,14 @@ const CanvasImage: FC<CanvasImageProps> = ({
     [dispatch, paletteMarkers]
   );
 
+  // resize canvas and translate markers on window resize event
   useEffect(() => {
     if (canvasCtxRef.current) {
       const ctx = canvasCtxRef.current;
+
+      // debounce resize effects
       if (timerRef.current) clearTimeout(timerRef.current);
       const timer = setTimeout(() => {
-        timerRef.current = timer;
         dispatch({ type: 'setLoading', payload: true });
         const prevCanvasXY = {
           x: ctx.canvas.width,
@@ -205,9 +201,13 @@ const CanvasImage: FC<CanvasImageProps> = ({
 
         drawCanvasImage(canvas.ctx, canvas.canvasXY);
         translateMarkers(prevCanvasXY, canvas.canvasXY);
-      }, 300);
+        timerRef.current = null;
+      }, 150);
+      timerRef.current = timer;
     }
-    // createCanvas, drawCanvasImage,
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [windowSize.innerHeight, windowSize.innerWidth, dispatch]);
 

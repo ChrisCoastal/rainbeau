@@ -159,7 +159,7 @@ interface hslType {
   l: number;
 }
 
-interface IndexedPxColor extends rgbType, hslType {
+interface IndexedPxColor extends rgbType {
   i: number;
 }
 
@@ -174,16 +174,16 @@ interface ColorMarker extends IndexedPxColor {
   // active: boolean;
   // hovered: boolean;
   // markerNum: number;
-  color: ColorName;
+  name: string;
   customName?: string;
 }
 
-interface ColorName {
-  name: string;
-  r: number;
-  g: number;
-  b: number;
-}
+// interface ColorName {
+//   name: string;
+//   r: number;
+//   g: number;
+//   b: number;
+// }
 
 declare module '*.mp4';
 

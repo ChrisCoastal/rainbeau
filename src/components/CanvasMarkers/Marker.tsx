@@ -12,7 +12,6 @@ interface MarkerProps {
 
 const Marker: FC<MarkerProps> = ({ x, y, num, setActive }) => {
   function handleTouchStart(e: React.TouchEvent) {
-    console.log(e);
     e.preventDefault();
     setActive(num);
   }

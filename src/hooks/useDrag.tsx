@@ -8,8 +8,6 @@ export const useDrag = (event: MouseEvent, startPoint: number) => {
   // const [prevMarkerPos, setPrevMarkerPos] = useState<MarkerPos>({ x, y });
   // const [markerPos, setMarkerPos] = useState<MarkerPos>({ x, y });
 
-  // console.log('startXY', canvasBound, x, y);
-
   // const markerPosHandler = (e: MouseEvent) => {
   //   if (!isDragging) return;
   //   e.preventDefault();
@@ -23,7 +21,6 @@ export const useDrag = (event: MouseEvent, startPoint: number) => {
   //   isDragging && setPrevMarkerPos({ x, y });
   //   isDragging &&
   //     setMarkerPos((prev) => ({ x: prev.x + mouseX, y: prev.y + mouseY }));
-  //   console.log(mouseX, mouseY);
 
   //   return;
   // };

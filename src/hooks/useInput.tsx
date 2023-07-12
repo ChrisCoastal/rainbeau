@@ -12,8 +12,6 @@ const useInput = (
   // const [inputFocus, setInputFocus] = useState<boolean>(false);
 
   function inputValueHandler(event: ChangeEvent<HTMLInputElement>) {
-    console.log(event.target.value);
-
     const userInput = (event.target as HTMLInputElement).value;
     // dispatch({
     //   type: 'updateColorNames',

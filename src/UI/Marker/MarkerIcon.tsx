@@ -13,6 +13,7 @@ type MarkerIconProps = {
   y: number;
   num: number;
   color: string;
+  colorLightness: number;
   active: boolean;
   setActive: React.Dispatch<React.SetStateAction<number | null>>;
   animate?: boolean;
@@ -22,7 +23,8 @@ const MarkerIcon: FC<MarkerIconProps> = ({
   x,
   y,
   num,
-  color = '#292524',
+  color,
+  colorLightness,
   setActive,
   active = false,
   animate = false,
@@ -43,6 +45,7 @@ const MarkerIcon: FC<MarkerIconProps> = ({
         transformOrigin: 'center center',
       }}
       active={active}
+      colorLightness={colorLightness}
       num={num}
       tabIndex={0}
       onMouseDown={() => setActive(num)}
@@ -78,11 +81,24 @@ const MarkerIcon: FC<MarkerIconProps> = ({
 			C33.9,7.38,26.78,0.26,18,0.26L18,0.26z"
             />
           </g>
+
           <path
             fill={color}
             d="M27.14,15.11c0,5.05-4.1,9.14-9.15,9.14c-5.04,0-9.13-4.09-9.13-9.14c0-5.05,4.09-9.15,9.13-9.15
 		C23.04,5.97,27.14,10.06,27.14,15.11"
           />
+          {/* <text
+            x="50%"
+            y="34%"
+            // style={{ mixBlendMode: 'exclusion' }}
+            dominant-baseline="middle"
+            text-anchor="middle"
+            font-family="Verdana"
+            font-size="0.9rem"
+            color="black"
+
+            // fill="black"
+          ></text> */}
         </g>
       </SvgMarker>
       {/* <MarkerNumber>{num}</MarkerNumber> */}

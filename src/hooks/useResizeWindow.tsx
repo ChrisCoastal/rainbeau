@@ -12,7 +12,6 @@ const useResizeWindow = (callback?: Function): WindowSize => {
   useEffect(() => {
     const handleSize = () => {
       const { innerHeight, innerWidth } = window;
-      console.log('resize', innerHeight, innerWidth);
       setWindowSize({
         innerHeight,
         innerWidth,

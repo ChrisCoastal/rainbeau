@@ -11,6 +11,9 @@ import { v4 as uuidv4 } from 'uuid';
 import useAppContext from '../../hooks/useAppContext';
 import useMarkers from '../../hooks/useMarkers';
 
+// helpers
+import { rgbToHsl } from '../../utils/helpers';
+
 // styles
 import { Wrapper } from './CanvasMarkers.styles';
 import MarkerIcon from '../../UI/Marker/MarkerIcon';
@@ -22,7 +25,8 @@ const CanvasMarkers: FC = () => {
   const { moveMarker } = useMarkers();
   const markers = paletteMarkers.map((marker, index) => {
     const { xPos, yPos } = marker.xy;
-    const { r, g, b } = marker.color;
+    const { r, g, b } = marker;
+    const { l } = rgbToHsl({ r, g, b });
 
     return (
       <MarkerIcon
@@ -30,6 +34,7 @@ const CanvasMarkers: FC = () => {
         y={yPos}
         x={xPos}
         num={index}
+        colorLightness={l}
         color={`rgb(${r}, ${g}, ${b})`}
         active={activeMarkerNum === index}
         setActive={setActiveMarkerNum}
