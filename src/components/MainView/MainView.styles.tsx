@@ -24,7 +24,6 @@ export const Wrapper = styled.div`
 `;
 
 export const MainGrid = styled.div<MainGridProps>`
-  width: 100%;
   display: grid;
   row-gap: 1rem;
   column-gap: 2rem;
@@ -64,14 +63,14 @@ export const MainGrid = styled.div<MainGridProps>`
   @media ${MEDIA_QUERY.md} {
     height: 44rem;
     grid-template-columns: 44rem minmax(20rem, 30rem);
-    grid-template-rows: 3.625rem 23.375rem 16rem;
+    grid-template-rows: 3.625rem 22.375rem 16rem;
     grid-template-areas: 'image actions' 'image palette' 'image output';
     background-color: orange;
   }
   @media ${MEDIA_QUERY.lg} {
     height: 54rem;
     grid-template-columns: 54rem minmax(20rem, 30rem);
-    grid-template-rows: 3.625rem 30.375rem 20rem;
+    grid-template-rows: 3.625rem 28.375rem 20rem;
     grid-template-areas: 'image actions' 'image palette' 'image output';
     background-color: brown;
   }

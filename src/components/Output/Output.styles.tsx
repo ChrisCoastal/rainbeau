@@ -1,5 +1,9 @@
 import styled from '@emotion/styled';
-import { BREAKPOINTS_X, BREAKPOINTS_Y } from '../../utils/constants';
+import {
+  BREAKPOINTS_X,
+  BREAKPOINTS_Y,
+  MEDIA_QUERY,
+} from '../../utils/constants';
 
 interface OutputProps {
   activeMenuTab: string;
@@ -18,11 +22,23 @@ export const Wrapper = styled.div<OutputProps>`
   z-index: ${(props) => (props.activeMenuTab === 'output' ? 10 : 1)};
   /* z-index: 0; */
 
-  @media (min-width: ${BREAKPOINTS_X.md}px) {
+  /* @media (min-width: ${BREAKPOINTS_X.md}px) {
     margin-top: 0;
   }
 
   @media (min-width: ${BREAKPOINTS_X.lg}px) and (min-height: ${BREAKPOINTS_Y.md}px) {
+    grid-area: output;
+    border-radius: 8px;
+  } */
+
+  @media ${MEDIA_QUERY.xs}, ${MEDIA_QUERY.sm} {
+    margin-top: 2rem;
+    grid-area: palette;
+    border-radius: 8px 0 8px 8px;
+  }
+
+  @media ${MEDIA_QUERY.md} {
+    margin-top: 0;
     grid-area: output;
     border-radius: 8px;
   }
@@ -37,6 +53,7 @@ export const OutputTab = styled.button<OutputProps>`
   right: -1px;
   width: 5rem;
   height: 2rem;
+
   background-color: #fff;
   border-radius: 8px 8px 0 0;
   border: solid 1px #ddd;
@@ -48,7 +65,14 @@ export const OutputTab = styled.button<OutputProps>`
       props.activeMenuTab === 'output' ? '#ddd' : '#7dffbe'};
   }
 
-  @media (min-width: ${BREAKPOINTS_X.lg}px) and (min-height: ${BREAKPOINTS_Y.lg}px) {
+  /* @media ${MEDIA_QUERY.xs}, ${MEDIA_QUERY.sm} {
+    width: 5rem;
+    height: 2rem;
+    opacity: 1;
+    visibility: visible;
+  } */
+
+  @media ${MEDIA_QUERY.md} {
     height: 0;
     width: 0;
     opacity: 0;

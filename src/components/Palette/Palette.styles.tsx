@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-import { BREAKPOINTS_X, BREAKPOINTS_Y } from '../../utils/constants';
+import { BREAKPOINTS_X, MEDIA_QUERY } from '../../utils/constants';
 
 interface PaletteProps {
   activeMenuTab: string;
@@ -20,6 +20,10 @@ export const Wrapper = styled.div<PaletteProps>`
   @media (min-width: ${BREAKPOINTS_X.md}px) {
     margin-top: 0;
     padding: 0.5rem 0.3rem 1rem 1rem;
+  }
+
+  @media ${MEDIA_QUERY.xs}, ${MEDIA_QUERY.sm} {
+    margin-top: 2rem;
   }
 `;
 
@@ -45,8 +49,14 @@ export const PaletteTab = styled.button<PaletteProps>`
       props.activeMenuTab === 'palette' ? '#ddd' : '#7dffbe'};
   }
 
-  /* prettier-ignore */
-  @media (min-width: ${BREAKPOINTS_X.lg}px) and (min-height: ${BREAKPOINTS_Y.md}px) {
+  /* @media ${MEDIA_QUERY.xs}, ${MEDIA_QUERY.sm} {
+    width: 5rem;
+    height: 2rem;
+    opacity: 1;
+    visibility: visible;
+  } */
+
+  @media ${MEDIA_QUERY.md} {
     height: 0;
     width: 0;
     opacity: 0;
