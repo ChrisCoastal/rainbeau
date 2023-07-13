@@ -24,6 +24,7 @@ export const Wrapper = styled.div`
 `;
 
 export const MainGrid = styled.div<MainGridProps>`
+  width: 100%;
   display: grid;
   row-gap: 1rem;
   column-gap: 2rem;
@@ -47,6 +48,7 @@ export const MainGrid = styled.div<MainGridProps>`
     background-color: green;
   }
   @media ${MEDIA_QUERY.xs} {
+    width: auto;
     height: 25rem;
     grid-template-columns: 25rem minmax(20rem, 30rem);
     grid-template-rows: 3.625rem 20.375rem;
@@ -54,6 +56,7 @@ export const MainGrid = styled.div<MainGridProps>`
     background-color: green;
   }
   @media ${MEDIA_QUERY.sm} {
+    width: auto;
     height: 38rem;
     grid-template-columns: 38rem minmax(20rem, 30rem);
     grid-template-rows: 3.625rem 33.375rem;
@@ -61,6 +64,7 @@ export const MainGrid = styled.div<MainGridProps>`
     background-color: green;
   }
   @media ${MEDIA_QUERY.md} {
+    width: auto;
     height: 44rem;
     grid-template-columns: 44rem minmax(20rem, 30rem);
     grid-template-rows: 3.625rem 22.375rem 16rem;
@@ -68,9 +72,10 @@ export const MainGrid = styled.div<MainGridProps>`
     background-color: orange;
   }
   @media ${MEDIA_QUERY.lg} {
+    width: auto;
     height: 54rem;
     grid-template-columns: 54rem minmax(20rem, 30rem);
-    grid-template-rows: 3.625rem 28.375rem 20rem;
+    grid-template-rows: 3.625rem 29.375rem 20rem;
     grid-template-areas: 'image actions' 'image palette' 'image output';
     background-color: brown;
   }

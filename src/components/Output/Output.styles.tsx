@@ -31,7 +31,10 @@ export const Wrapper = styled.div<OutputProps>`
     border-radius: 8px;
   } */
 
-  @media ${MEDIA_QUERY.xs}, ${MEDIA_QUERY.sm} {
+  @media ${MEDIA_QUERY.xs},
+    ${MEDIA_QUERY.sm},
+    ${MEDIA_QUERY.mobile},
+    ${MEDIA_QUERY.tablet} {
     margin-top: 2rem;
     grid-area: palette;
     border-radius: 8px 0 8px 8px;
