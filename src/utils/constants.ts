@@ -12,12 +12,31 @@ export const INITIAL_STATE: AppState = {
 } as AppState;
 
 // UI
-export const BREAKPOINTS = {
+export const BREAKPOINTS_X = {
   xs: 0,
   sm: 600,
   md: 900,
   lg: 1200,
   xl: 1536,
+} as const;
+
+export const BREAKPOINTS_Y = {
+  xs: 480,
+  sm: 640,
+  md: 720,
+  lg: 900,
+  xl: 1200,
+} as const;
+
+export const MEDIA_QUERY = {
+  mobile: `(min-width: ${BREAKPOINTS_X.sm}px) and (min-height: ${BREAKPOINTS_Y.sm}px) and (orientation: portrait)`,
+  tablet: `(min-width: ${BREAKPOINTS_X.md}px) and (min-height: ${BREAKPOINTS_Y.md}px) and (orientation: portrait)`,
+  xs: `(min-width: ${BREAKPOINTS_X.sm}px) and (max-height: ${BREAKPOINTS_Y.xs}px) and (orientation: landscape)`,
+  sm: `(min-width: ${BREAKPOINTS_X.sm}px) and (max-height: ${BREAKPOINTS_Y.sm}px) and (orientation: landscape)`,
+  md: `(min-width: ${BREAKPOINTS_X.lg}px) and (min-height: ${BREAKPOINTS_Y.md}px) and (orientation: landscape)`,
+  lg: `(min-width: ${BREAKPOINTS_X.lg}px) and (min-height: ${BREAKPOINTS_Y.lg}px)`,
+  xl: `(min-width: ${BREAKPOINTS_X.xl}px) and (min-height: ${BREAKPOINTS_Y.lg}px)`,
+  xxl: `(min-width: ${BREAKPOINTS_X.xl}px) and (min-height: ${BREAKPOINTS_Y.xl}px)`,
 } as const;
 
 export const MAX_NUM_MARKERS = 6;

@@ -32,7 +32,7 @@ const Actions: FC<ActionsProps> = ({
   imageDownloadURL,
 }) => {
   const { state } = useAppContext();
-  const { changeImage } = useCanvasImage();
+  // const { changeImage } = useCanvasImage();
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   const modalHandler = (isVisible: boolean) => {

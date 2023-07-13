@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-import { BREAKPOINTS } from '../../utils/constants';
+import { BREAKPOINTS_X, BREAKPOINTS_Y } from '../../utils/constants';
 
 interface PaletteProps {
   activeMenuTab: string;
@@ -9,16 +9,17 @@ interface PaletteProps {
 export const Wrapper = styled.div<PaletteProps>`
   position: relative;
   grid-area: palette;
-  /* min-height: 0; fixes overflow issue */
+  min-height: 0; // fixes overflow issue
   margin-top: 2rem;
-  padding: 0.5rem 0.3rem 1rem 1rem;
+  padding: 0.5rem 0.3rem 1.4rem 1rem;
   border-radius: 8px;
   border: solid 1px #ddd;
   background-color: #fff;
   z-index: ${(props) => (props.activeMenuTab === 'palette' ? 10 : 1)};
 
-  @media (min-width: ${BREAKPOINTS.md}px) {
+  @media (min-width: ${BREAKPOINTS_X.md}px) {
     margin-top: 0;
+    padding: 0.5rem 0.3rem 1rem 1rem;
   }
 `;
 
@@ -36,6 +37,7 @@ export const PaletteTab = styled.button<PaletteProps>`
   border: solid 1px #ddd;
   border-bottom: none;
   z-index: 100;
+
   cursor: pointer;
 
   &:hover {
@@ -43,7 +45,8 @@ export const PaletteTab = styled.button<PaletteProps>`
       props.activeMenuTab === 'palette' ? '#ddd' : '#7dffbe'};
   }
 
-  @media (min-width: ${BREAKPOINTS.lg}px) and (min-height: 680px) {
+  /* prettier-ignore */
+  @media (min-width: ${BREAKPOINTS_X.lg}px) and (min-height: ${BREAKPOINTS_Y.md}px) {
     height: 0;
     width: 0;
     opacity: 0;
@@ -60,7 +63,8 @@ export const PaletteActions = styled.div`
 
 export const PaletteItemsContainer = styled.div`
   /* height: 100%; */
-  min-height: 0;
+  /* display: flex;
+  flex-direction: column; */
   height: 88%;
   scrollbar-width: thin;
   overflow-x: hidden;

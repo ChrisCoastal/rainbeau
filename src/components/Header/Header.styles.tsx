@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import Module from 'module';
-import { BREAKPOINTS } from '../../utils/constants';
+import { BREAKPOINTS_X } from '../../utils/constants';
 
 interface LogoProps {
   logoWidth: number;
@@ -21,7 +21,7 @@ export const Wrapper = styled.div`
   z-index: 1000;
   pointer-events: none;
 
-  @media (min-width: ${BREAKPOINTS.lg}) {
+  @media (min-width: ${BREAKPOINTS_X.lg}) {
     padding: 0 2rem;
   }
 `;

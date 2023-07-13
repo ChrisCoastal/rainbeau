@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import styled from '@emotion/styled';
 
-import { BREAKPOINTS, CANVAS_SIZE } from '../../utils/constants';
+import { BREAKPOINTS_X, CANVAS_SIZE } from '../../utils/constants';
 
 interface BoxProps {
   canvasXY: { x: number; y: number };
@@ -13,6 +13,7 @@ interface BlurFallbackProps {
 
 export const ImageBox = styled.div<BoxProps>`
   position: relative;
+  align-self: center;
   overflow: hidden;
   width: 100%;
   grid-area: image;

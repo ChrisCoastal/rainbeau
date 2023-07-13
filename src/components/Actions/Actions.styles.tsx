@@ -1,11 +1,11 @@
 import styled from '@emotion/styled';
 
 export const Wrapper = styled.div`
-  height: 1rem;
+  /* height: 1rem; */
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem;
+  padding: 0.5rem 1rem;
   border-radius: 8px;
   border: solid 1px #ddd;
   grid-area: actions;

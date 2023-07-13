@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { BREAKPOINTS } from '../../utils/constants';
+import { BREAKPOINTS_X, BREAKPOINTS_Y } from '../../utils/constants';
 
 interface OutputProps {
   activeMenuTab: string;
@@ -9,6 +9,7 @@ export const Wrapper = styled.div<OutputProps>`
   /* height: 36vh; */
   position: relative;
   grid-area: palette;
+  justify-self: stretch;
   margin-top: 2rem;
   padding: 1rem 1rem;
   border-radius: 8px 0 8px 8px;
@@ -17,11 +18,11 @@ export const Wrapper = styled.div<OutputProps>`
   z-index: ${(props) => (props.activeMenuTab === 'output' ? 10 : 1)};
   /* z-index: 0; */
 
-  @media (min-width: ${BREAKPOINTS.md}px) {
+  @media (min-width: ${BREAKPOINTS_X.md}px) {
     margin-top: 0;
   }
 
-  @media (min-width: ${BREAKPOINTS.lg}px) and (min-height: 680px) {
+  @media (min-width: ${BREAKPOINTS_X.lg}px) and (min-height: ${BREAKPOINTS_Y.md}px) {
     grid-area: output;
     border-radius: 8px;
   }
@@ -47,7 +48,7 @@ export const OutputTab = styled.button<OutputProps>`
       props.activeMenuTab === 'output' ? '#ddd' : '#7dffbe'};
   }
 
-  @media (min-width: ${BREAKPOINTS.lg}px) and (min-height: 680px) {
+  @media (min-width: ${BREAKPOINTS_X.lg}px) and (min-height: ${BREAKPOINTS_Y.lg}px) {
     height: 0;
     width: 0;
     opacity: 0;

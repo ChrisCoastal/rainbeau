@@ -105,7 +105,7 @@ const Palette: FC<PaletteProps> = () => {
           <Tooltip
             title={
               paletteMarkers.length >= MAX_NUM_MARKERS
-                ? 'cannot add marker'
+                ? 'max markers reached'
                 : 'add marker'
             }
           >

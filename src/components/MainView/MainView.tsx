@@ -28,7 +28,7 @@ import { Blurhash } from 'react-blurhash';
 const MainView: FC = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
   const { state, dispatch } = useAppContext();
-  const { images } = state;
+  const { images, canvasXY } = state;
 
   const fetchAPIKey = async () => {
     try {

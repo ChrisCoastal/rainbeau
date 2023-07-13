@@ -173,9 +173,9 @@ const Output: FC = () => {
           </Tooltip>
         )}
       </CopyIconWrapper>
-      <Typography fontSize="small" color={'#555'}>
+      {/* <Typography fontSize="small" color={'#555'}>
         {style[format].detail}
-      </Typography>
+      </Typography> */}
     </FormatContainer>
   );
 
