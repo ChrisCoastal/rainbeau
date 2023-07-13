@@ -51,6 +51,7 @@ const Palette: FC<PaletteProps> = () => {
   };
 
   const setActiveMenuTab = () => {
+    console.log('activeTabPALETTE', state.activeMenuTab);
     dispatch({ type: 'setActiveMenuTab', payload: 'palette' });
   };
 
@@ -96,7 +97,9 @@ const Palette: FC<PaletteProps> = () => {
 
   return (
     <Wrapper activeMenuTab={activeMenuTab}>
-      <PaletteTab onClick={setActiveMenuTab}>palette</PaletteTab>
+      <PaletteTab onClick={setActiveMenuTab} activeMenuTab={activeMenuTab}>
+        palette
+      </PaletteTab>
       <PaletteActions>
         <div>
           <Tooltip
@@ -115,13 +118,13 @@ const Palette: FC<PaletteProps> = () => {
               </IconButton>
             </span>
           </Tooltip>
-          {/* <Modal
+          <Modal
             openState={deletePaletteModal.openState}
             openModalButton={deletePaletteModal.openModalButton}
             text={deletePaletteModal.text}
             buttons={deletePaletteModal.buttons}
             modalHandler={deletePaletteModal.handler}
-          /> */}
+          />
           <Tooltip title="undo">
             <span>
               <IconButton onClick={undoHandler} disabled={true}>

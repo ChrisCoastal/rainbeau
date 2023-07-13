@@ -126,6 +126,7 @@ const Output: FC = () => {
   };
 
   const setActiveMenuTab = () => {
+    console.log('activeTabOUTPUT', state.activeMenuTab);
     dispatch({ type: 'setActiveMenuTab', payload: 'output' });
   };
 

@@ -8,13 +8,14 @@ interface OutputProps {
 export const Wrapper = styled.div<OutputProps>`
   /* height: 36vh; */
   position: relative;
+  grid-area: palette;
   margin-top: 2rem;
   padding: 1rem 1rem;
   border-radius: 8px 0 8px 8px;
   border: solid 1px #ddd;
   background-color: #fff;
-  grid-area: palette;
   z-index: ${(props) => (props.activeMenuTab === 'output' ? 10 : 1)};
+  /* z-index: 0; */
 
   @media (min-width: ${BREAKPOINTS.md}px) {
     margin-top: 0;
@@ -41,10 +42,10 @@ export const OutputTab = styled.button<OutputProps>`
   border-bottom: none;
   cursor: pointer;
 
-  /* &:hover {
+  &:hover {
     border-color: ${(props) =>
-    props.activeMenuTab === 'output' ? '#ddd' : '#7dffbe'};
-  } */
+      props.activeMenuTab === 'output' ? '#ddd' : '#7dffbe'};
+  }
 
   @media (min-width: ${BREAKPOINTS.lg}px) and (min-height: 680px) {
     height: 0;
