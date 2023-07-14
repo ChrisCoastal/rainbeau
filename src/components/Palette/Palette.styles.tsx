@@ -9,7 +9,6 @@ interface PaletteProps {
 export const Wrapper = styled.div<PaletteProps>`
   position: relative;
   grid-area: palette;
-  min-height: 0; // fixes overflow issue
   margin-top: 2rem;
   padding: 0.5rem 0.3rem 1.4rem 1rem;
   border-radius: 8px;
@@ -17,13 +16,12 @@ export const Wrapper = styled.div<PaletteProps>`
   background-color: #fff;
   z-index: ${(props) => (props.activeMenuTab === 'palette' ? 10 : 1)};
 
-  @media (min-width: ${BREAKPOINTS_X.md}px) {
-    margin-top: 0;
-    padding: 0.5rem 0.3rem 1rem 1rem;
+  @media ${MEDIA_QUERY.sm} {
+    margin-top: 2rem;
   }
 
-  @media ${MEDIA_QUERY.xs}, ${MEDIA_QUERY.sm} {
-    margin-top: 2rem;
+  @media ${MEDIA_QUERY.lg} {
+    margin-top: 0;
   }
 `;
 
@@ -49,14 +47,7 @@ export const PaletteTab = styled.button<PaletteProps>`
       props.activeMenuTab === 'palette' ? '#ddd' : '#7dffbe'};
   }
 
-  /* @media ${MEDIA_QUERY.xs}, ${MEDIA_QUERY.sm} {
-    width: 5rem;
-    height: 2rem;
-    opacity: 1;
-    visibility: visible;
-  } */
-
-  @media ${MEDIA_QUERY.md} {
+  @media ${MEDIA_QUERY.lg} {
     height: 0;
     width: 0;
     opacity: 0;

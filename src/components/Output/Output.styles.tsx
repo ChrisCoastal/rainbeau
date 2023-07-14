@@ -31,8 +31,8 @@ export const Wrapper = styled.div<OutputProps>`
     border-radius: 8px;
   } */
 
-  @media ${MEDIA_QUERY.xs},
-    ${MEDIA_QUERY.sm},
+  @media ${MEDIA_QUERY.sm},
+    ${MEDIA_QUERY.md},
     ${MEDIA_QUERY.mobile},
     ${MEDIA_QUERY.tablet} {
     margin-top: 2rem;
@@ -40,7 +40,7 @@ export const Wrapper = styled.div<OutputProps>`
     border-radius: 8px 0 8px 8px;
   }
 
-  @media ${MEDIA_QUERY.md} {
+  @media ${MEDIA_QUERY.lg} {
     margin-top: 0;
     grid-area: output;
     border-radius: 8px;
@@ -68,14 +68,7 @@ export const OutputTab = styled.button<OutputProps>`
       props.activeMenuTab === 'output' ? '#ddd' : '#7dffbe'};
   }
 
-  /* @media ${MEDIA_QUERY.xs}, ${MEDIA_QUERY.sm} {
-    width: 5rem;
-    height: 2rem;
-    opacity: 1;
-    visibility: visible;
-  } */
-
-  @media ${MEDIA_QUERY.md} {
+  @media ${MEDIA_QUERY.lg} {
     height: 0;
     width: 0;
     opacity: 0;
