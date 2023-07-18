@@ -1,5 +1,5 @@
 import React, { CSSProperties, FC, useState } from 'react';
-import { useSpring, animated, SpringValues } from '@react-spring/web';
+import { useSpring, animated, SpringValue } from '@react-spring/web';
 
 import useMarkers from '../../hooks/useMarkers';
 
@@ -15,7 +15,12 @@ type MarkerIconProps = {
   // x: number;
   // y: number;
   num: number;
-  color: string;
+  // color: string;
+  color: {
+    r: SpringValue<number>;
+    g: SpringValue<number>;
+    b: SpringValue<number>;
+  };
   active: boolean;
   // setActive: React.Dispatch<React.SetStateAction<number | null>>;
   animate?: boolean;
@@ -70,8 +75,9 @@ const MarkerIcon: FC<MarkerIconProps> = ({
           />
         </g>
 
-        <path
-          fill={color}
+        <animated.path
+          style={{ fill: `rgb(${color.r}, ${color.g}, ${color.b})` }}
+          // fill={color}
           d="M27.14,15.11c0,5.05-4.1,9.14-9.15,9.14c-5.04,0-9.13-4.09-9.13-9.14c0-5.05,4.09-9.15,9.13-9.15
 		C23.04,5.97,27.14,10.06,27.14,15.11"
         />
