@@ -1,8 +1,6 @@
 import type { ReactNode } from 'react';
 import styled from '@emotion/styled';
 
-import { BREAKPOINTS_X, CANVAS_SIZE } from '../../utils/constants';
-
 interface BoxProps {
   canvasXY: { x: number; y: number };
 }

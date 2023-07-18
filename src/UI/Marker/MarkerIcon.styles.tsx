@@ -1,11 +1,10 @@
 import styled from '@emotion/styled';
-import { CSSProperties, ReactNode, TouchEvent } from 'react';
+import { ReactNode, TouchEvent } from 'react';
 
 interface WrapperProps {
-  style?: CSSProperties;
   children?: ReactNode;
   active: boolean;
-  colorLightness: number;
+  // colorLightness: number;
   num: number;
   tabIndex: number;
   onMouseDown: () => void;
@@ -30,8 +29,8 @@ interface MarkerNumberProps {
 }
 
 export const Wrapper = styled.div<WrapperProps>`
-  position: absolute;
-  display: flex;
+  /* position: absolute; */
+  /* display: flex; */
   z-index: 100;
 
   cursor: ${(props) => (!props.active ? 'grab' : 'grabbing')};
@@ -49,7 +48,6 @@ export const Wrapper = styled.div<WrapperProps>`
     width: 1rem;
     top: -1.5rem;
     color: black;
-    /* color: ${(props) => (props.colorLightness > 50 ? '#000' : '#fff')}; */
     font-size: 0.8rem;
     height: 0.9rem;
     width: 0.9rem;

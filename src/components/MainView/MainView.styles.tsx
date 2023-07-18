@@ -1,10 +1,6 @@
 import styled from '@emotion/styled';
 
-import {
-  BREAKPOINTS_X,
-  BREAKPOINTS_Y,
-  MEDIA_QUERY,
-} from '../../utils/constants';
+import { BREAKPOINTS_X, MEDIA_QUERY } from '../../utils/constants';
 
 interface MainGridProps {
   windowSize: WindowSize;
@@ -52,16 +48,16 @@ export const MainGrid = styled.div<MainGridProps>`
   }
   @media ${MEDIA_QUERY.md} {
     width: auto;
-    height: 38rem;
-    grid-template-columns: 38rem minmax(20rem, 28rem);
-    grid-template-rows: 3.625rem 33.375rem;
+    height: 36rem;
+    grid-template-columns: 36rem minmax(20rem, 28rem);
+    grid-template-rows: 3.625rem 31.375rem;
     grid-template-areas: 'image actions' 'image palette';
   }
   @media ${MEDIA_QUERY.lg} {
     width: auto;
-    height: 42rem;
-    grid-template-columns: 42rem minmax(20rem, 28rem);
-    grid-template-rows: 3.625rem 20.375rem 16rem;
+    height: 40rem;
+    grid-template-columns: 40rem minmax(20rem, 28rem);
+    grid-template-rows: 3.625rem 19.375rem 15rem;
     grid-template-areas: 'image actions' 'image palette' 'image output';
   }
   @media ${MEDIA_QUERY.xl} {
@@ -71,10 +67,4 @@ export const MainGrid = styled.div<MainGridProps>`
     grid-template-rows: 3.625rem 27.375rem 19rem;
     grid-template-areas: 'image actions' 'image palette' 'image output';
   }
-  /* @media ${MEDIA_QUERY.xl} {
-    height: 25rem;
-    grid-template-columns: 1fr;
-    grid-template-rows: auto minmax(0, auto) 20rem;
-    grid-template-areas: 'image actions' 'image palette' 'image output';
-  } */
 `;

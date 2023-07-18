@@ -53,15 +53,12 @@ export const MEASUREMENT_PRECISION = 1; // can be adjusted? FIXME: check for num
 //   max: 1600,
 // } as const;
 
-export const CANVAS_SIZE = {
-  xs: 320,
-  sm: 320,
-  md: 540,
-  lg: 800,
-  // md: 450,
-  // lg: 600,
-  xl: 1000,
-} as const;
+// export const CANVAS_SIZE = {
+//   sm: 320,
+//   md: 540,
+//   lg: 800,
+//   xl: 1000,
+// } as const;
 
 // unsplash api
 export const IMAGE_BASE_URL = 'https://api.unsplash.com/photos/';

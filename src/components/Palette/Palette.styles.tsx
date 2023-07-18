@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-import { BREAKPOINTS_X, MEDIA_QUERY } from '../../utils/constants';
+import { MEDIA_QUERY } from '../../utils/constants';
 
 interface PaletteProps {
   activeMenuTab: string;
@@ -63,9 +63,6 @@ export const PaletteActions = styled.div`
 `;
 
 export const PaletteItemsContainer = styled.div`
-  /* height: 100%; */
-  /* display: flex;
-  flex-direction: column; */
   height: 88%;
   scrollbar-width: thin;
   overflow-x: hidden;

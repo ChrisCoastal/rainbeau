@@ -1,4 +1,4 @@
-import { COLOR_NAMES, RGBA_GROUP, CANVAS_SIZE } from './constants';
+import { COLOR_NAMES, RGBA_GROUP } from './constants';
 
 // api
 export const translateApiResponse = (dataFromAPI: APIResponse) => {
@@ -28,6 +28,12 @@ export const remToPx = (rem: number) => rem * 16;
 export const getCanvasDimension = (imageDataLength: number) => {
   const dim = Math.sqrt(imageDataLength);
   return dim;
+};
+
+export const checkBounds = (pos: number, canvasBound: number) => {
+  if (pos <= 0) return 0;
+  if (pos >= canvasBound) return canvasBound;
+  return pos;
 };
 
 // translate canvas index (from getImageData()) to x y values on the canvas

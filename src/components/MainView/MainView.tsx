@@ -141,19 +141,6 @@ const MainView: FC = () => {
   return (
     <Wrapper>
       <MainGrid className="main-grid" windowSize={size}>
-        {/* {imageBlurHash && (
-          <Blurhash
-            hash={imageBlurHash}
-            width="100%"
-            height="100%"
-            style={{
-              gridArea: 'image',
-              aspectRatio: '1/1',
-              borderRadius: '8px',
-              overflow: 'hidden',
-            }}
-          />
-        )} */}
         <Suspense fallback={imageBlurFallback}>
           <CanvasImage
             currentImageIndex={currentImageIndex}

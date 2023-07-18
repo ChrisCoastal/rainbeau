@@ -1,16 +1,11 @@
 import styled from '@emotion/styled';
-import {
-  BREAKPOINTS_X,
-  BREAKPOINTS_Y,
-  MEDIA_QUERY,
-} from '../../utils/constants';
+import { MEDIA_QUERY } from '../../utils/constants';
 
 interface OutputProps {
   activeMenuTab: string;
 }
 
 export const Wrapper = styled.div<OutputProps>`
-  /* height: 36vh; */
   position: relative;
   grid-area: palette;
   justify-self: stretch;
@@ -20,16 +15,6 @@ export const Wrapper = styled.div<OutputProps>`
   border: solid 1px #ddd;
   background-color: #fff;
   z-index: ${(props) => (props.activeMenuTab === 'output' ? 10 : 1)};
-  /* z-index: 0; */
-
-  /* @media (min-width: ${BREAKPOINTS_X.md}px) {
-    margin-top: 0;
-  }
-
-  @media (min-width: ${BREAKPOINTS_X.lg}px) and (min-height: ${BREAKPOINTS_Y.md}px) {
-    grid-area: output;
-    border-radius: 8px;
-  } */
 
   @media ${MEDIA_QUERY.sm},
     ${MEDIA_QUERY.md},
@@ -91,7 +76,6 @@ export const TextArea = styled.textarea`
   border-radius: 8px;
   border: solid 1px #ddd;
   box-shadow: inset 0px -0.5rem 0.6rem -0.7rem #dddddddd;
-  /* overflow: scroll; */
 
   &:hover {
     border-color: #7dffbe;
@@ -101,6 +85,5 @@ export const TextArea = styled.textarea`
 export const FormatContainer = styled.div`
   position: relative;
   height: 100%;
-  /* margin-top: 1rem; */
   text-align: right;
 `;
