@@ -17,7 +17,7 @@ import { useThrottle } from './useThrottle';
 const useMarkers = () => {
   const { state, dispatch } = useAppContext();
   const { currentImageData, paletteMarkers, canvasXY } = state;
-  const prevMoveRef = useRef<{ x: number; y: number } | null>(null);
+  const prevMoveRef = useRef<Coordinate | null>(null);
   // const throttle = useThrottle();
 
   const addMarker = (
@@ -103,9 +103,9 @@ const useMarkers = () => {
       //   prevMoveRef.current = { x: touch.clientX, y: touch.clientY };
       const prev = prevMoveRef.current;
 
-      moveX = touch.clientX - (prev ? prev.x : 0);
-      moveY = touch.clientY - (prev ? prev.y : 0);
-      prevMoveRef.current = { x: touch.clientX, y: touch.clientY };
+      moveX = touch.clientX - (prev ? prev.xPos : 0);
+      moveY = touch.clientY - (prev ? prev.yPos : 0);
+      prevMoveRef.current = { xPos: touch.clientX, yPos: touch.clientY };
     }
 
     // FIXME: only works with +=

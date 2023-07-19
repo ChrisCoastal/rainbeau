@@ -27,6 +27,7 @@ import MarkerIcon from '../../UI/Marker/MarkerIcon';
 const CanvasMarkers: FC = () => {
   const [activeMarkerNum, setActiveMarkerNum] = useState<number | null>(null);
   const throttleRef = useRef<NodeJS.Timeout | null>(null);
+  const prevMoveRef = useRef<Coordinate | null>(null);
   const markerPosRef = useRef<Coordinate | null>(null);
   const markersWrapperRef = useRef<HTMLDivElement | null>(null);
   const { state, dispatch } = useAppContext();
@@ -93,21 +94,54 @@ const CanvasMarkers: FC = () => {
 
   function handleMoveMarker(event: MouseEvent | TouchEvent) {
     // console.log(activeMarkerNum === null);
+
     if (activeMarkerNum === null) return;
-    console.log(activeMarkerNum, paletteMarkers);
+    // console.log(activeMarkerNum, paletteMarkers);
+
     const activeIndex = activeMarkerNum;
+    const canvasDimension = getCanvasDimension(currentImageData.length);
+    let moveX = 0;
+    let moveY = 0;
     // const { updatedIndex, updatedXY } = moveMarker(
     //   event,
     //   activeMarkerNum,
     //   markersWrapperRef
     // )!;
-    if (event.type === 'touchmove') return;
+    // if (event.type === 'touchmove') {
+    //   const touch = (event as TouchEvent).touches[0];
+    //   // if (!prevMoveRef.current)
+    //   //   prevMoveRef.current = { x: touch.clientX, y: touch.clientY };
+    //   const prev = prevMoveRef.current;
+
+    //   moveX = touch.clientX - (prev ? prev.xPos : 0);
+    //   moveY = touch.clientY - (prev ? prev.yPos : 0);
+    //   prevMoveRef.current = { xPos: touch.clientX, yPos: touch.clientY };
+    // }
+
+    // const canvasDimension = getCanvasDimension(currentImageData.length);
+
+    // const updatedXY: Coordinate = {
+    //   xPos: (marker.xy.xPos += moveX),
+    //   yPos: (marker.xy.yPos += moveY),
+    // };
+    // const updatedXY: Coordinate = {
+    //   xPos: checkBounds(marker.xy.xPos + moveX, canvasDimension),
+    //   yPos: checkBounds(marker.xy.yPos + moveY, canvasDimension),
+    // };
+    // const updatedIndex = getPxGroupIndex(
+    //   updatedXY.xPos,
+    //   updatedXY.yPos,
+    //   canvasDimension
+    // );
     if (event.type === 'mousemove') {
       const e = event as MouseEvent;
+      // moveX = e.movementX;
+      // moveY = e.movementY;
       // const { xPos, yPos } = markerPosRef.current
       //   ? markerPosRef.current
       //   : paletteMarkers[activeMarkerNum].xy;
-      const canvasDimension = getCanvasDimension(currentImageData.length);
+      // const canvasDimension = getCanvasDimension(currentImageData.length);
+
       const updatedPos = {
         yPos: checkBounds(
           (markerPosRef.current?.yPos || paletteMarkers[activeIndex].xy.yPos) +
@@ -202,7 +236,8 @@ const CanvasMarkers: FC = () => {
           touchAction: 'none',
           height: '1rem',
           width: '1rem',
-          backgroundColor: `rgb(${r}, ${g}, ${b})`,
+          backgroundColor: 'red',
+          // backgroundColor: `rgb(${r}, ${g}, ${b})`,
         }}
         onMouseUp={(e) => handleMouseUp(e, index)}
         onMouseDown={(e) => handleMouseDown(e, index)}

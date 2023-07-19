@@ -36,7 +36,7 @@ const SelectFormatButton: FC<SelectFormatButtonProps> = ({
   };
 
   const formSx = {
-    // marginBottom: 1,
+    alignSelf: 'end',
     p: 0,
     minWidth: '5.6rem',
     border: 'none',
@@ -44,6 +44,10 @@ const SelectFormatButton: FC<SelectFormatButtonProps> = ({
     '&:hover': {
       borderColor: '#7dffbe',
     },
+  };
+
+  const menuSx = {
+    fontSize: '0.8rem',
   };
 
   const menuSelectHandler = (
@@ -77,9 +81,11 @@ const SelectFormatButton: FC<SelectFormatButtonProps> = ({
       >
         {options.map((option, index) => (
           <MenuItem
+            sx={menuSx}
             key={option}
             value={option}
             selected={index === selectedIndex}
+            dense={true}
             onClick={(event) => menuSelectHandler(event, index)}
           >
             {option}
