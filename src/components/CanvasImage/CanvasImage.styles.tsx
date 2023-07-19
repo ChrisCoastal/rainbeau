@@ -14,6 +14,7 @@ export const ImageBox = styled.div<BoxProps>`
   align-self: center;
   overflow: hidden;
   width: 100%;
+  height: 100%;
   grid-area: image;
   aspect-ratio: 1 / 1;
   border-radius: 8px;
@@ -22,6 +23,7 @@ export const ImageBox = styled.div<BoxProps>`
 
 export const Canvas = styled.canvas`
   position: relative;
+  width: 100%;
   height: 100%;
   aspect-ratio: 1 / 1;
   border-radius: inherit;

@@ -51,7 +51,10 @@ const CanvasMarkers: FC = () => {
     })
   );
 
-  function handleMouseDown(event: MouseEvent, markerIndex: number) {
+  function handleMouseDown(
+    event: MouseEvent | TouchEvent,
+    markerIndex: number
+  ) {
     event.preventDefault();
     console.log(event);
     setActiveMarkerNum(markerIndex);
@@ -70,11 +73,14 @@ const CanvasMarkers: FC = () => {
     );
   }
 
-  function handleMouseUp(event: MouseEvent, markerIndex: number | null) {
+  function handleMouseUp(
+    event: MouseEvent | TouchEvent,
+    markerIndex: number | null
+  ) {
     event.preventDefault();
-    if (markerIndex === null) return;
+    // if (markerIndex === null) return;
 
-    console.log(event);
+    // console.log(event);
     // animateMarker.start((index) =>
     //   activeMarkerNum === index
     //     ? {
@@ -93,134 +99,82 @@ const CanvasMarkers: FC = () => {
   }
 
   function handleMoveMarker(event: MouseEvent | TouchEvent) {
-    // console.log(activeMarkerNum === null);
-
+    event.preventDefault();
     if (activeMarkerNum === null) return;
-    // console.log(activeMarkerNum, paletteMarkers);
 
     const activeIndex = activeMarkerNum;
     const canvasDimension = getCanvasDimension(currentImageData.length);
     let moveX = 0;
     let moveY = 0;
-    // const { updatedIndex, updatedXY } = moveMarker(
-    //   event,
-    //   activeMarkerNum,
-    //   markersWrapperRef
-    // )!;
-    // if (event.type === 'touchmove') {
-    //   const touch = (event as TouchEvent).touches[0];
-    //   // if (!prevMoveRef.current)
-    //   //   prevMoveRef.current = { x: touch.clientX, y: touch.clientY };
-    //   const prev = prevMoveRef.current;
 
-    //   moveX = touch.clientX - (prev ? prev.xPos : 0);
-    //   moveY = touch.clientY - (prev ? prev.yPos : 0);
-    //   prevMoveRef.current = { xPos: touch.clientX, yPos: touch.clientY };
-    // }
+    if (event.type === 'touchmove') {
+      console.log('touch');
+      const touch = (event as TouchEvent).touches[0];
+      const prev = prevMoveRef.current;
 
-    // const canvasDimension = getCanvasDimension(currentImageData.length);
+      moveX = touch.clientX - (prev ? prev.xPos : 0);
+      moveY = touch.clientY - (prev ? prev.yPos : 0);
+      prevMoveRef.current = { xPos: touch.clientX, yPos: touch.clientY };
+    }
 
-    // const updatedXY: Coordinate = {
-    //   xPos: (marker.xy.xPos += moveX),
-    //   yPos: (marker.xy.yPos += moveY),
-    // };
-    // const updatedXY: Coordinate = {
-    //   xPos: checkBounds(marker.xy.xPos + moveX, canvasDimension),
-    //   yPos: checkBounds(marker.xy.yPos + moveY, canvasDimension),
-    // };
-    // const updatedIndex = getPxGroupIndex(
-    //   updatedXY.xPos,
-    //   updatedXY.yPos,
-    //   canvasDimension
-    // );
     if (event.type === 'mousemove') {
       const e = event as MouseEvent;
-      if (e.buttons !== 1) return;
-      // moveX = e.movementX;
-      // moveY = e.movementY;
-      // const { xPos, yPos } = markerPosRef.current
-      //   ? markerPosRef.current
-      //   : paletteMarkers[activeMarkerNum].xy;
-      // const canvasDimension = getCanvasDimension(currentImageData.length);
-
-      const updatedPos = {
-        yPos: checkBounds(
-          (markerPosRef.current?.yPos || paletteMarkers[activeIndex].xy.yPos) +
-            e.movementY,
-          canvasDimension
-        ),
-        xPos: checkBounds(
-          (markerPosRef.current?.xPos || paletteMarkers[activeIndex].xy.xPos) +
-            e.movementX,
-          canvasDimension
-        ),
-      };
-      const updatedIndex = getPxGroupIndex(
-        updatedPos.xPos,
-        updatedPos.yPos,
-        canvasDimension
-      );
-      markerPosRef.current = updatedPos;
-      animateMarker.start((index) =>
-        activeMarkerNum === index
-          ? {
-              opacity: 0.6,
-              y: updatedPos.yPos,
-              x: updatedPos.xPos,
-              immediate: true,
-              r: currentImageData[updatedIndex].r,
-              g: currentImageData[updatedIndex].g,
-              b: currentImageData[updatedIndex].b,
-            }
-          : null
-      );
-
-      if (throttleRef.current) return;
-      const throttle = setTimeout(() => {
-        console.log(
-          'throttle',
-          // currentImageData,
-          // canvasDimension,
-          activeIndex
-          // updatedPos
-        );
-        updateMarkerState(
-          currentImageData,
-          canvasDimension,
-          activeIndex,
-          updatedPos
-        );
-
-        throttleRef.current = null;
-      }, 50);
-
-      throttleRef.current = throttle;
+      moveX = e.movementX;
+      moveY = e.movementY;
     }
+
+    const updatedPos = {
+      yPos: checkBounds(
+        (markerPosRef.current?.yPos || paletteMarkers[activeIndex].xy.yPos) +
+          moveY,
+        canvasDimension
+      ),
+      xPos: checkBounds(
+        (markerPosRef.current?.xPos || paletteMarkers[activeIndex].xy.xPos) +
+          moveX,
+        canvasDimension
+      ),
+    };
+
+    const updatedIndex = getPxGroupIndex(
+      updatedPos.xPos,
+      updatedPos.yPos,
+      canvasDimension
+    );
+    markerPosRef.current = updatedPos;
+    animateMarker.start((index) =>
+      activeMarkerNum === index
+        ? {
+            opacity: 0.6,
+            y: updatedPos.yPos,
+            x: updatedPos.xPos,
+            immediate: true,
+            r: currentImageData[updatedIndex].r,
+            g: currentImageData[updatedIndex].g,
+            b: currentImageData[updatedIndex].b,
+          }
+        : null
+    );
+
+    if (throttleRef.current) return;
+    const throttle = setTimeout(() => {
+      updateMarkerState(
+        currentImageData,
+        canvasDimension,
+        activeIndex,
+        updatedPos
+      );
+
+      throttleRef.current = null;
+    }, 50);
+
+    throttleRef.current = throttle;
   }
 
   function handleMouseEnter(event: MouseEvent) {
     event.preventDefault();
     if (event.buttons !== 1) setActiveMarkerNum(null);
   }
-
-  // const markers = paletteMarkers.map((marker, index) => {
-  //   const { xPos, yPos } = marker.xy;
-  //   const { r, g, b } = marker;
-  //   const { l } = rgbToHsl({ r, g, b });
-
-  //   return (
-  //     <MarkerIcon
-  //       key={uuidv4()}
-  //       y={yPos}
-  //       x={xPos}
-  //       num={index}
-  //       colorLightness={l}
-  //       color={`rgb(${r}, ${g}, ${b})`}
-  //       active={activeMarkerNum === index}
-  //       setActive={setActiveMarkerNum}
-  //     />
-  //   );
-  // });
 
   const markers = markerStyles.map((marker, index) => {
     const { r, g, b, x, y } = marker;
@@ -234,7 +188,6 @@ const CanvasMarkers: FC = () => {
           left: x,
           cursor: marker.cursor,
           position: 'absolute',
-          touchAction: 'none',
           height: '1rem',
           width: '1rem',
           backgroundColor: 'red',
@@ -242,17 +195,13 @@ const CanvasMarkers: FC = () => {
         }}
         onMouseUp={(e) => handleMouseUp(e, index)}
         onMouseDown={(e) => handleMouseDown(e, index)}
+        onTouchStart={(e) => handleMouseDown(e, index)}
+        onTouchEnd={(e) => handleMouseUp(e, index)}
       >
         <MarkerIcon
-          // y={yPos}
-          // x={xPos}
           num={index}
-          // colorLightness={l}
-
-          // color={`rgb(${r}, ${g}, ${b})`}
           color={{ r, g, b }}
           active={activeMarkerNum === index}
-          // setActive={setActiveMarkerNum}
         />
       </animated.div>
     );
@@ -262,6 +211,7 @@ const CanvasMarkers: FC = () => {
     <Wrapper
       className="field"
       ref={markersWrapperRef}
+      style={{ touchAction: 'none' }}
       onMouseMove={handleMoveMarker}
       onTouchMove={handleMoveMarker}
       onMouseUp={(e) => handleMouseUp(e, activeMarkerNum)}
