@@ -135,6 +135,7 @@ const CanvasMarkers: FC = () => {
     // );
     if (event.type === 'mousemove') {
       const e = event as MouseEvent;
+      if (e.buttons !== 1) return;
       // moveX = e.movementX;
       // moveY = e.movementY;
       // const { xPos, yPos } = markerPosRef.current
