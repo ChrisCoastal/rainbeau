@@ -1,63 +1,70 @@
 import styled from '@emotion/styled';
 
-import { REM_RATIO } from '../../utils/config';
+import { BREAKPOINTS_X, MEDIA_QUERY } from '../../utils/constants';
 
-interface WrapperProps {
-  bgColor: { r: number; g: number; b: number }[];
+interface MainGridProps {
+  windowSize: WindowSize;
 }
 
-interface FlipBoxProps {
-  pxDimension: number;
-}
-
-/* background-color: ${(props) => props.bgColor}; */
-/* background-image: ${(props) =>
-    `linear-gradient(to right bottom, 
-      rgb(${props.bgColor.r},${props.bgColor.g},${props.bgColor.b}),
-      rgb(${props.bgColor.r - 30},${props.bgColor.g - 30},${props.bgColor.b - 30})
-      )`}; */
-
-// prettier-ignore
 export const Wrapper = styled.div`
   position: relative;
   display: flex;
-  align-items: center;
   justify-content: center;
-  gap: 3rem;
+  margin: 4rem 1rem 0 1rem;
   transition: all 0.6s ease-in;
-  height: 100vh;
+
+  @media (min-width: ${BREAKPOINTS_X.md}px) {
+    align-items: center;
+  }
 `;
 
-export const FlipBox = styled.div<FlipBoxProps>`
-  position: relative;
-  perspective: 150rem;
-  width: ${(props) => props.pxDimension / REM_RATIO}rem;
-  height: ${(props) => props.pxDimension / REM_RATIO}rem;
+export const MainGrid = styled.div<MainGridProps>`
+  width: 100%;
+  display: grid;
+  row-gap: 1rem;
+  column-gap: 2rem;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto minmax(0, auto) 20rem;
+  grid-template-areas: 'actions' 'image' 'palette';
+
+  @media ${MEDIA_QUERY.mobile} {
+    width: 100%;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, auto) 20rem;
+    grid-template-areas: 'actions' 'image' 'palette';
+  }
+  @media ${MEDIA_QUERY.tablet} {
+    width: 100%;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, auto) 20rem;
+    grid-template-areas: 'actions' 'image' 'palette';
+  }
+  @media ${MEDIA_QUERY.sm} {
+    width: auto;
+    height: 28rem;
+    grid-template-columns: 28rem minmax(20rem, 24rem);
+    grid-template-rows: 3.625rem 23.375rem;
+    grid-template-areas: 'image actions' 'image palette';
+  }
+  @media ${MEDIA_QUERY.md} {
+    width: auto;
+    height: 36rem;
+    grid-template-columns: 36rem minmax(20rem, 28rem);
+    grid-template-rows: 3.625rem 31.375rem;
+    grid-template-areas: 'image actions' 'image palette';
+  }
+  @media ${MEDIA_QUERY.lg} {
+    width: auto;
+    height: 40rem;
+    grid-template-columns: 40rem minmax(20rem, 28rem);
+    grid-template-rows: 3.625rem 19.375rem 15rem;
+    grid-template-areas: 'image actions' 'image palette' 'image output';
+  }
+  @media ${MEDIA_QUERY.xl} {
+    width: auto;
+    height: 52rem;
+    grid-template-columns: 52rem minmax(20rem, 28rem);
+    grid-template-rows: 3.625rem 27.375rem 19rem;
+    grid-template-areas: 'image actions' 'image palette' 'image output';
+  }
 `;
-
-export const ImageBox = styled.div`
-  text-align: right;
-`;
-
-export const ActionsBox = styled.section`
-  width: 30rem;
-  height: 50rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-`;
-
-// export const Front = styled.div`
-//   position: absolute;
-//   top: 0;
-//   left: 0;
-//   max-width: 100%;
-//   max-height: 100%;
-//   // transform: translate(-50%; -50%);
-//   transition: all 0.8s ease;
-//   box-shadow: 0 1rem 1rem 0 #3333333e;
-
-//   &:hover {
-//     transform: rotateY(-180deg);
-//   }
-// `;

@@ -12,21 +12,19 @@ const useInput = (
   // const [inputFocus, setInputFocus] = useState<boolean>(false);
 
   function inputValueHandler(event: ChangeEvent<HTMLInputElement>) {
-    console.log(event.target.value);
-
     const userInput = (event.target as HTMLInputElement).value;
-    dispatch({
-      type: 'updateColorNames',
-      payload: { index, updatedColorName: userInput },
-    });
+    // dispatch({
+    //   type: 'updateColorNames',
+    //   payload: { index, updatedColorName: userInput },
+    // });
     setInputValue(() => userInput);
   }
 
   function inputReset() {
-    dispatch({
-      type: 'updateColorNames',
-      payload: { index, updatedColorName: '' },
-    });
+    // dispatch({
+    //   type: 'updateColorNames',
+    //   payload: { index, updatedColorName: '' },
+    // });
     setInputValue('');
     if (inputRef.current) inputRef.current.focus();
   }

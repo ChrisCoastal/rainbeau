@@ -1,38 +1,27 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { useReducer } from 'react';
 
 // reducer
-import { reducer } from './utils/reducer';
+import reducer from './context/reducer';
+
+// hooks
+import useWindowSize from './hooks/useResizeWindow';
 
 // components
 import Header from './components/Header/Header';
 import MainView from './components/MainView/MainView';
 
+import { AppContainer } from './App.styles';
+
 function App() {
-  const initialState: appState = {
-    canvasXY: { x: 0, y: 0 },
-    images: [],
-    currentImageData: [],
-    paletteMarkers: [],
-    markerHistory: [],
-  };
-
-  const [state, dispatch] = useReducer(reducer, initialState);
-
   // TODO:
   // useEffect(() => {
   //   sessionStorage.setItem('palette', JSON.stringify(state.paletteMarkers));
   // }, [state.paletteMarkers]);
-
   return (
-    <div className="App">
+    <AppContainer className="App">
       <Header />
-      <MainView
-        images={state.images}
-        currentImageData={state.currentImageData}
-        paletteMarkers={state.paletteMarkers}
-        dispatch={dispatch}
-      />
-    </div>
+      <MainView />
+    </AppContainer>
   );
 }
 

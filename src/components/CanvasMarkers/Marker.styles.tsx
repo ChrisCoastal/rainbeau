@@ -1,12 +1,12 @@
 import styled from '@emotion/styled';
 
-interface CircleProps {
+interface MarkerTargetProps {
   y: number;
   x: number;
   num: number;
 }
 
-export const Circle = styled.div<CircleProps>`
+export const MarkerTarget = styled.div<MarkerTargetProps>`
   position: absolute;
   top: ${(props) => `${props.y}px`};
   left: ${(props) => `${props.x}px`};
@@ -17,6 +17,7 @@ export const Circle = styled.div<CircleProps>`
   background-color: #ffffff30;
   border: 2px solid white;
   mix-blend-mode: exclusion;
+  touch-action: none; /* prevent scrolling on touch devices */
 
   cursor: grab;
 

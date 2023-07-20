@@ -1,187 +1,251 @@
-import { FC, useCallback } from 'react';
-import React, { useRef, useEffect } from 'react';
-
-// images
-import purpleImage from '../../images/martin-brechtl-zs3HRrWW66A-unsplash.jpg';
+import { FC, useCallback, useRef, useEffect } from 'react';
 
 // components
 import CanvasMarkers from '../CanvasMarkers/CanvasMarkers';
 import LoadingSpinner from '../../UI/LoadingSpinner/LoadingSpinner';
 
-// mui
-import Checkbox from '@mui/material/Checkbox';
-import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
-import Favorite from '@mui/icons-material/Favorite';
-
 // config
 import {
-  CANVAS_RESOLUTION,
+  INITIAL_IMAGE,
   MEASUREMENT_PRECISION,
   RGBA_GROUP,
-} from '../../utils/config';
+} from '../../utils/constants';
 
 // helpers
-import { getPxGroupXY, rgbToColorName, rgbToHsl } from '../../utils/helpers';
+import { rgbToHsl, translateApiResponse } from '../../utils/helpers';
+
+// hooks
+import useAppContext from '../../hooks/useAppContext';
+import useMarkers from '../../hooks/useMarkers';
+import useCanvasImage from '../../hooks/useCanvasImage';
 
 // styles
-import { Wrapper, Canvas, ImageFallback } from './CanvasImage.styles';
+import {
+  Canvas,
+  ImageBox,
+  MarkersBox,
+  BlurFallback,
+} from './CanvasImage.styles';
+import { create } from 'domain';
+import { Blurhash } from 'react-blurhash';
 
 interface CanvasImageProps {
-  imageURL: string | null;
-  paletteMarkers: ColorMarker[];
-  addMarkers: (
-    _: React.MouseEvent<HTMLButtonElement, MouseEvent> | null,
-    markerQty?: number
-  ) => ColorMarker[];
-  currentImageData: IndexedPxColor[];
-  isLoading: boolean;
-  isError: boolean;
-  onImageDraw: (imageDrawn: boolean) => void;
-  dispatch: React.Dispatch<ReducerActions>;
+  windowSize: WindowSize;
+  currentImageIndex: number;
 }
 
 const CanvasImage: FC<CanvasImageProps> = ({
-  imageURL,
-  paletteMarkers,
-  currentImageData,
-  isLoading,
-  isError,
-  onImageDraw,
-  dispatch,
+  currentImageIndex,
+  windowSize,
 }) => {
+  const { addMarker } = useMarkers();
+  const { state, dispatch } = useAppContext();
+  const {
+    images,
+    canvasXY,
+    // currentImageIndex,
+    currentImageData,
+    paletteMarkers,
+    isLoading,
+    isError,
+  } = state;
+
+  const imageURL = images[currentImageIndex]?.imageURL || null;
+  const imageBlurHash = images[currentImageIndex]?.blurImage || null;
+
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const imageBoxRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
-  const canvasXY = {
-    x: canvasCtxRef.current?.canvas.width,
-    y: canvasCtxRef.current?.canvas.height,
-  };
+  const canvasCtxRef = useRef<CanvasRenderingContext2D | null>(null);
 
   // px color/position data for current image
   const sampledPxData = useRef<IndexedPxColor[]>([]);
 
-  const createMarkers = useCallback(
-    (indexedImagePx: IndexedPxColor[], markerQty: number = 3) => {
-      const markers: ColorMarker[] = [];
-      const totalPx = indexedImagePx.length; // 640000
-      // TODO: sort by hue
-
-      for (let loop = 0; loop < markerQty; loop++) {
-        const randomIndex = Math.floor(Math.random() * totalPx);
-        const randomPx = indexedImagePx[randomIndex];
-        const { r, g, b } = randomPx;
-        markers.push({
-          ...randomPx,
-          xy: getPxGroupXY(randomPx.i),
-          name: rgbToColorName({ r, g, b }),
-        });
-      }
-
-      dispatch({ type: 'addMarker', payload: markers });
-      return markers;
-    },
-    [dispatch]
-  );
-
   const setImageDataState = useCallback(
     (imageData: Uint8ClampedArray) => {
       const dataPoints = imageData.length;
+      const sampled: IndexedPxColor[] = [];
       // imageData[] format is [r,g,b,a,r,g,b,a...]
       const sampleRate = RGBA_GROUP * MEASUREMENT_PRECISION;
-      console.log('calculating image data...');
 
       for (let i = 0; i < dataPoints; i += sampleRate) {
         const r = imageData[i];
         const g = imageData[i + 1];
         const b = imageData[i + 2];
         // const a = imageData[i + 3]; // this is the alpha channel; account for if transparency
-        const { h, s, l } = rgbToHsl({ r, g, b });
+        // const { h, s, l } = rgbToHsl({ r, g, b });
 
-        //prettier-ignore
-        sampledPxData.current.push({r, g, b, h, s, l, i} as IndexedPxColor);
+        sampled.push({ r, g, b, i });
       }
-
+      sampledPxData.current = sampled;
       dispatch({
         type: 'setCurrentImageData',
-        payload: sampledPxData.current,
+        payload: sampled,
       });
-      return sampledPxData.current;
+      return sampled;
     },
     [dispatch]
   );
 
-  // useEffect(() => {
-  //   const canvasXY = {
-  //     x: canvasCtxRef.current?.canvas.width,
-  //     y: canvasCtxRef.current?.canvas.height,
-  //   };
+  const onImageDraw = useCallback(
+    (imageDrawn: boolean) => {
+      if (!imageDrawn) dispatch({ type: 'setError', payload: true });
+      dispatch({
+        type: 'setLoading',
+        payload: false,
+      });
+    },
+    [dispatch]
+  );
 
-  //   dispatch({ type: 'setCanvasXY', payload: canvasXY });
-  // }, [canvasCtxRef.current]);
+  const createCanvas = useCallback(() => {
+    if (canvasRef.current === null || imageBoxRef.current === null) return;
+    canvasCtxRef.current = canvasRef.current.getContext('2d', {
+      willReadFrequently: true,
+    })!;
+    const ctx = canvasCtxRef.current;
+    // const devicePixelRatio = window.devicePixelRatio || 1;
 
-  useEffect(() => {
-    // setIsLoading(true);
-    if (imageURL === null) return;
-    if (canvasRef.current) {
-      canvasCtxRef.current = canvasRef.current.getContext('2d');
-      const ctx = canvasCtxRef.current;
+    // assign the dimension of the grid area to the canvas
+    ctx.canvas.width = imageBoxRef.current.getBoundingClientRect().width;
+    ctx.canvas.height = imageBoxRef.current.getBoundingClientRect().height;
+    const canvasXY = {
+      x: ctx.canvas.width,
+      y: ctx.canvas.height,
+    };
+    return { ctx, canvasXY };
+  }, []);
 
-      // define canvas resolution
-      ctx!.canvas.width = CANVAS_RESOLUTION.med;
-      ctx!.canvas.height = CANVAS_RESOLUTION.med;
-
-      // dev test marker accuracy (if testing, comment out ctx.drawImage)
-      // ctx!.fillStyle = '#FF0000';
-      // ctx!.fillRect(0, 0, 400, 800);
-      // ctx!.fillStyle = '#00FF00';
-      // ctx!.fillRect(400, 0, 800, 800);
-
+  const drawCanvasImage = useCallback(
+    (ctx: CanvasRenderingContext2D, canvasXY: { x: number; y: number }) => {
+      if (!imageURL) return;
       const canvasImage = new Image();
       canvasImage.setAttribute('crossOrigin', 'anonymous');
+
+      // asign image to canvas context
+      canvasImage.src = imageURL;
 
       // after image is loaded
       canvasImage.onload = () => {
         sampledPxData.current = []; // reset from previous image
 
         // drawImage(image, startx, starty, widthx, widthy)
-        ctx?.drawImage(canvasImage, 0, 0, ctx.canvas.width, ctx.canvas.height);
-        // setIsLoading(false);
-        const imageData = ctx!.getImageData(
-          0,
-          0,
-          ctx!.canvas.width,
-          ctx!.canvas.height
-        ).data;
-
+        ctx.drawImage(canvasImage, 0, 0, canvasXY.x, canvasXY.y);
+        const imageData = ctx.getImageData(0, 0, canvasXY.x, canvasXY.y).data;
         onImageDraw(!!imageData);
 
         const indexedImagePx = setImageDataState(imageData);
-        const markers = createMarkers(indexedImagePx);
-
-        console.log(canvasRef.current?.getBoundingClientRect());
+        addMarker(indexedImagePx, !paletteMarkers.length ? 1 : 0);
       };
+    },
+    [imageURL, addMarker, onImageDraw, paletteMarkers.length, setImageDataState]
+  );
 
-      // asign image to canvas context
-      // canvasImage.src = redImage; //test image
-      canvasImage.src = imageURL;
+  useEffect(() => {
+    dispatch({ type: 'setLoading', payload: true });
+
+    const canvas = createCanvas();
+    if (!canvas?.ctx) return;
+
+    drawCanvasImage(canvas.ctx, canvas.canvasXY);
+
+    // FIXME: intinite rerenders from currentImageData dep in addMarkerHandler
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [imageURL, setImageDataState, onImageDraw]);
+
+  useEffect(() => {
+    const initImage = translateApiResponse(INITIAL_IMAGE);
+    dispatch({ type: 'setImages', payload: [initImage] });
+    // changeImageHandler(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const updateResizeMarkers = useCallback(
+    (
+      prevCanvasXY: { x: number; y: number },
+      canvasXY: { x: number; y: number }
+    ) => {
+      const xRatio = canvasXY.x / prevCanvasXY.x;
+      const yRatio = canvasXY.y / prevCanvasXY.y;
+      const translatedMarkers: ColorMarker[] = paletteMarkers.map((marker) => {
+        const translateX = Math.floor(marker.xy.xPos * xRatio);
+        const translateY = Math.floor(marker.xy.yPos * yRatio);
+        return {
+          ...marker,
+          xy: {
+            xPos: translateX,
+            yPos: translateY,
+          },
+        };
+      });
+      dispatch({
+        type: 'deletePalette',
+      });
+      dispatch({
+        type: 'addMarker',
+        payload: translatedMarkers,
+      });
+    },
+    [dispatch, paletteMarkers]
+  );
+
+  // resize canvas and translate markers on window resize event
+  useEffect(() => {
+    if (canvasCtxRef.current) {
+      const ctx = canvasCtxRef.current;
+
+      // debounce resize effects
+      if (timerRef.current) clearTimeout(timerRef.current);
+      const timer = setTimeout(() => {
+        // dispatch({ type: 'setLoading', payload: true });
+        const prevCanvasXY = {
+          x: ctx.canvas.width,
+          y: ctx.canvas.height,
+        };
+
+        const canvas = createCanvas();
+        if (!canvas?.ctx) return;
+
+        drawCanvasImage(canvas.ctx, canvas.canvasXY);
+        updateResizeMarkers(prevCanvasXY, canvas.canvasXY);
+        timerRef.current = null;
+      }, 150);
+
+      timerRef.current = timer;
     }
-  }, [imageURL, createMarkers, setImageDataState, onImageDraw]);
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [windowSize.innerHeight, windowSize.innerWidth, dispatch]);
 
   return (
-    <Wrapper>
-      {isLoading && <LoadingSpinner />}
+    <>
       {isError && <p>There was an error. Please try again.</p>}
-      <CanvasMarkers
-        paletteMarkers={paletteMarkers}
-        currentImageData={currentImageData}
-        canvasXY={canvasXY}
-        canvasBound={canvasRef.current?.getBoundingClientRect()}
-        dispatch={dispatch}
-      />
-      <Canvas ref={canvasRef}>
-        <ImageFallback src={purpleImage} alt="Fallback image" />
-      </Canvas>
-      <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} />
-    </Wrapper>
+      <ImageBox ref={imageBoxRef} className="imageBox" canvasXY={canvasXY}>
+        {isLoading && <LoadingSpinner />}
+        <Canvas ref={canvasRef} />
+        <BlurFallback>
+          {imageBlurHash && (
+            <Blurhash
+              hash={imageBlurHash}
+              width="100%"
+              height="100%"
+              style={{
+                gridArea: 'image',
+                aspectRatio: '1/1',
+                borderRadius: '8px',
+                overflow: 'hidden',
+              }}
+            />
+          )}
+        </BlurFallback>
+        {/* <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} /> */}
+      </ImageBox>
+      <MarkersBox className="markerBox" canvasXY={canvasXY}>
+        <CanvasMarkers />
+      </MarkersBox>
+    </>
   );
 };
 

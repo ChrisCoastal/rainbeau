@@ -13,45 +13,59 @@ import {
   Wrapper,
   PaletteActions,
   PaletteItemsContainer,
+  PaletteTab,
 } from './Palette.styles';
+
+// hooks
+import useMarkers from '../../hooks/useMarkers';
+import useAppContext from '../../hooks/useAppContext';
 
 // mui
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
 import UndoIcon from '@mui/icons-material/Undo';
 import SaveIcon from '@mui/icons-material/Save';
+import { MAX_NUM_MARKERS } from '../../utils/constants';
 
 interface PaletteProps {
-  paletteMarkers: ColorMarker[];
-  addMarkerHandler: (
-    _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    markerQty?: number
-  ) => ColorMarker[];
-  deletePaletteHandler: () => void;
-  dispatch: React.Dispatch<ReducerActions>;
+  // paletteMarkers: ColorMarker[];
+  // addMarkerHandler: (
+  //   _: React.MouseEvent<HTMLElement, MouseEvent> | null,
+  //   indexedImagePx?: IndexedPxColor[],
+  //   markerQty?: number
+  // ) => ColorMarker[];
+  // deletePaletteHandler: () => void;
+  // dispatch: React.Dispatch<ReducerActions>;
 }
 
-const Palette: FC<PaletteProps> = ({
-  paletteMarkers,
-  addMarkerHandler,
-  deletePaletteHandler,
-  dispatch,
-}) => {
+const Palette: FC<PaletteProps> = () => {
   const [open, setOpen] = useState<boolean>(false);
+  const { state, dispatch } = useAppContext();
+  const { paletteMarkers, activeMenuTab } = state;
+  const { addMarker } = useMarkers();
+
+  const deletePalette = () => {
+    dispatch({ type: 'deletePalette', payload: null });
+  };
+
+  const setActiveMenuTab = () => {
+    console.log('activeTabPALETTE', state.activeMenuTab);
+    dispatch({ type: 'setActiveMenuTab', payload: 'palette' });
+  };
 
   const modalHandler = (isVisible: boolean, action?: string) => {
     setOpen(isVisible);
-    if (action === 'delete') deletePaletteHandler();
+    if (action === 'delete') deletePalette();
   };
 
   const undoHandler = () => {
-    dispatch({ type: 'undoPalette' });
+    dispatch({ type: 'undoPalette', payload: null });
   };
 
   const disableDeletePalette = paletteMarkers.length === 0;
-  const disableAddMarker = paletteMarkers.length >= 8;
+  const disableAddMarker = paletteMarkers.length >= MAX_NUM_MARKERS;
 
   const deletePaletteModal = {
     openState: open,
@@ -65,7 +79,7 @@ const Palette: FC<PaletteProps> = ({
             onClick={() => modalHandler(true)}
             disabled={disableDeletePalette}
           >
-            <RemoveCircleIcon />
+            <CancelIcon />
           </IconButton>
         </span>
       </Tooltip>
@@ -82,14 +96,22 @@ const Palette: FC<PaletteProps> = ({
   ));
 
   return (
-    <Wrapper>
+    <Wrapper activeMenuTab={activeMenuTab}>
+      <PaletteTab onClick={setActiveMenuTab} activeMenuTab={activeMenuTab}>
+        palette
+      </PaletteTab>
       <PaletteActions>
-        <p>Palette</p>
         <div>
-          <Tooltip title="add marker">
+          <Tooltip
+            title={
+              paletteMarkers.length >= MAX_NUM_MARKERS
+                ? 'max markers reached'
+                : 'add marker'
+            }
+          >
             <span>
               <IconButton
-                onClick={addMarkerHandler}
+                onClick={() => addMarker(state.currentImageData, 1)}
                 disabled={disableAddMarker}
               >
                 <AddCircleIcon />
@@ -112,7 +134,7 @@ const Palette: FC<PaletteProps> = ({
           </Tooltip>
           <Tooltip title="save palette">
             <span>
-              <IconButton onClick={() => console.log('SAVED')} disabled={true}>
+              <IconButton onClick={() => null} disabled={true}>
                 <SaveIcon />
               </IconButton>
             </span>

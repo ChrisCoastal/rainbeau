@@ -1,8 +1,9 @@
-import type { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { useState, useMemo, useRef } from 'react';
 
 // hooks
 import useInput from '../../hooks/useInput';
+import useMarkers from '../../hooks/useMarkers';
 
 // components
 import Swatch from '../Swatch/Swatch';
@@ -36,6 +37,7 @@ interface PaletteItemProps {
 const PaletteItem: FC<PaletteItemProps> = ({ marker, markerNum, dispatch }) => {
   const initialValue = marker.customName || marker.name;
   const { r, g, b } = marker;
+  const { deleteMarker } = useMarkers();
 
   const [prevInputValue, setPrevInputValue] = useState<string>('');
   const [inputValue, setInputValue] = useState<string>(initialValue);
@@ -87,16 +89,32 @@ const PaletteItem: FC<PaletteItemProps> = ({ marker, markerNum, dispatch }) => {
     }
   };
 
-  const deleteMarkerHandler = (marker: ColorMarker) => {
-    dispatch({ type: 'deleteMarker', payload: marker });
-  };
-
   const colorToClipboard = () => {
     if (colorRef.current) {
       navigator.clipboard.writeText(colorRef.current?.innerText);
     }
   };
 
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (closeButtonRef.current) {
+      closeButtonRef.current.focus();
+    }
+  }, []);
+
+  // return (
+  //   // ... other JSX
+  //   <button
+  //     aria-label="Close"
+  //     className={theme.close.base}
+  //     type="button"
+  //     onClick={onClose}
+  //     ref={closeButtonRef}
+  //   >
+  //     <HiOutlineX aria-hidden className={theme.close.icon} />
+  //   </button>
+  // );
   // TODO: add dnd change item order
   return (
     <Wrapper>
@@ -117,7 +135,7 @@ const PaletteItem: FC<PaletteItemProps> = ({ marker, markerNum, dispatch }) => {
           ></input>
           <Tooltip title="clear color name">
             <IconButton onClick={inputReset}>
-              <HighlightOffIcon fontSize="small" />
+              <RemoveCircleOutlineIcon fontSize="small" />
             </IconButton>
           </Tooltip>
         </SwatchContainer>
@@ -133,8 +151,8 @@ const PaletteItem: FC<PaletteItemProps> = ({ marker, markerNum, dispatch }) => {
       </ItemContent>
       <ItemControls>
         <Tooltip title="delete color">
-          <IconButton onClick={() => deleteMarkerHandler(marker)}>
-            <RemoveCircleOutlineIcon fontSize="small" />
+          <IconButton onClick={() => deleteMarker(marker)}>
+            <HighlightOffIcon fontSize="small" />
           </IconButton>
         </Tooltip>
         {/* <Tooltip title="reorder">

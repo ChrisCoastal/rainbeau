@@ -1,26 +1,98 @@
 // state and reducer
-interface appState {
+interface AppState {
   canvasXY: { x: number; y: number };
   images: Image[];
+  currentImageIndex: number;
   currentImageData: IndexedPxColor[];
   paletteMarkers: ColorMarker[];
   markerHistory: ColorMarker[][];
+  activeMenuTab: 'palette' | 'output';
+  isLoading: boolean;
+  isError: boolean;
 }
 
-interface ReducerActions {
-  type:
-    | 'setCanvasXY'
-    | 'setImages'
-    | 'setCurrentImageData'
-    | 'addMarker'
-    | 'deleteMarker'
-    | 'addColorName'
-    | 'updateColorNames'
-    | 'updatePalette'
-    | 'deletePalette'
-    | 'undoPalette';
-  payload?: any;
-}
+type AppContextType = {
+  state: AppState;
+  dispatch: Dispatch<ReducerActions>;
+};
+
+type SetCanvasXYAction = {
+  type: 'setCanvasXY';
+  payload: { x: number; y: number };
+};
+type SetImagesAction = {
+  type: 'setImages';
+  payload: Image[];
+};
+type SetCurrentImageIndexAction = {
+  type: 'setCurrentImageIndex';
+  payload?: number;
+};
+type SetCurrentImageDataAction = {
+  type: 'setCurrentImageData';
+  payload: IndexedPxColor[];
+};
+type SetLoadingAction = {
+  type: 'setLoading';
+  payload: boolean;
+};
+type SetErrorAction = {
+  type: 'setError';
+  payload: boolean;
+};
+type AddMarkerAction = {
+  type: 'addMarker';
+  payload: ColorMarker[];
+};
+type DeleteMarkerAction = {
+  type: 'deleteMarker';
+  payload: ColorMarker;
+};
+type SetActiveMarkerAction = {
+  type: 'setActiveMarker';
+  payload: ColorMarker;
+};
+type AddColorNameAction = {
+  type: 'addColorName';
+  payload: ColorName;
+};
+type UpdateColorNamesAction = {
+  type: 'updateColorNames';
+  payload: ColorName[];
+};
+type UpdatePaletteAction = {
+  type: 'updatePalette';
+  payload: { markerNum: number; updatedMarker: ColorMarker };
+};
+type DeletePaletteAction = {
+  type: 'deletePalette';
+  payload?: undefined;
+};
+type UndoPaletteAction = {
+  type: 'undoPalette';
+  payload?: undefined;
+};
+type SetActiveMenuTabAction = {
+  type: 'setActiveMenuTab';
+  payload: 'palette' | 'output';
+};
+
+type ReducerActions =
+  | SetCanvasXYAction
+  | SetImagesAction
+  | SetCurrentImageIndexAction
+  | SetCurrentImageDataAction
+  | SetLoadingAction
+  | SetErrorAction
+  | AddMarkerAction
+  | DeleteMarkerAction
+  | SetActiveMarkerAction
+  | AddColorNameAction
+  | UpdateColorNamesAction
+  | UpdatePaletteAction
+  | DeletePaletteAction
+  | UndoPaletteAction
+  | SetActiveMenuTabAction;
 
 // API response
 interface APIImageData {
@@ -32,6 +104,7 @@ interface APIImageData {
   width: number;
   id: string;
   links: {
+    html: string;
     download: string;
   };
   urls: {
@@ -44,7 +117,7 @@ interface APIImageData {
     username: string;
     portfolio_url: string;
   };
-  [key: string]: string | number | null;
+  [key: string]: any;
 }
 
 type APIResponse = APIImageData[];
@@ -58,13 +131,21 @@ interface Image {
   imageURL: string;
   imageThumb: string;
   downloadLink: string;
+  unsplashLink: string;
   id: string;
   artistName: string | null;
   artistLink: string | null;
 }
 
+// canvas and windowSize
+
+type WindowSize = {
+  innerWidth: number;
+  innerHeight: number;
+};
+
 // px and markers
-type MarkerPosition = Array<[number, number]>;
+// type MarkerPosition = Array<[number, number]>;
 
 interface rgbType {
   r: number;
@@ -78,24 +159,42 @@ interface hslType {
   l: number;
 }
 
-interface IndexedPxColor extends rgbType, hslType {
+interface IndexedPxColor extends rgbType {
   i: number;
 }
 
-interface coordinate {
+interface Coordinate {
   xPos: number;
   yPos: number;
 }
 
 interface ColorMarker extends IndexedPxColor {
-  xy: coordinate;
+  id: string;
+  markerNum: number;
+  xy: Coordinate;
   name: string;
   customName?: string;
+  // active: boolean;
+  // hovered: boolean;
 }
 
-interface ColorName {
-  name: string;
-  r: number;
-  g: number;
-  b: number;
-}
+// interface ColorName {
+//   name: string;
+//   r: number;
+//   g: number;
+//   b: number;
+// }
+
+declare module '*.mp4';
+
+declare module '*.jpeg';
+
+declare module '*.png';
+
+declare module '*.jpg';
+
+declare module '*.webm';
+
+declare module '*.svg';
+
+declare module '*.gif';

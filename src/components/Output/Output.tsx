@@ -1,6 +1,12 @@
 import type { FC } from 'react';
 import { useState, useEffect } from 'react';
 
+// components
+import SelectFormatButton from './SelectFormatButton';
+
+// hooks
+import useAppContext from '../../hooks/useAppContext';
+
 // mui
 import Zoom from '@mui/material/Zoom';
 import Fade from '@mui/material/Fade';
@@ -13,16 +19,11 @@ import CheckIcon from '@mui/icons-material/Check';
 // styles
 import {
   Wrapper,
-  OutputActions,
   CopyIconWrapper,
   TextArea,
   FormatContainer,
+  OutputTab,
 } from './Output.styles';
-import SelectFormatButton from './SelectFormatButton';
-
-interface OutputProps {
-  paletteMarkers: ColorMarker[];
-}
 
 interface Format {
   detail: string;
@@ -38,9 +39,11 @@ interface Styles {
   css: Format;
 }
 
-const Output: FC<OutputProps> = ({ paletteMarkers }) => {
-  const [format, setFormat] = useState<keyof Styles>('styled');
-  const [copied, setCopied] = useState<boolean>(true);
+const Output: FC = () => {
+  const { state, dispatch } = useAppContext();
+  const { paletteMarkers, activeMenuTab } = state;
+  const [format, setFormat] = useState<keyof Styles>('tailwind');
+  const [copied, setCopied] = useState<boolean>(false);
 
   const cssMarkerColors = paletteMarkers
     .map((marker, i) => {
@@ -122,6 +125,11 @@ const Output: FC<OutputProps> = ({ paletteMarkers }) => {
     mui: muiFormatted,
   };
 
+  const setActiveMenuTab = () => {
+    console.log('activeTabOUTPUT', state.activeMenuTab);
+    dispatch({ type: 'setActiveMenuTab', payload: 'output' });
+  };
+
   const copyToClipboard = () => {
     setCopied(true);
     navigator.clipboard.writeText(style[format].text);
@@ -165,9 +173,9 @@ const Output: FC<OutputProps> = ({ paletteMarkers }) => {
           </Tooltip>
         )}
       </CopyIconWrapper>
-      <Typography fontSize="small" color={'#555'}>
+      {/* <Typography fontSize="small" color={'#555'}>
         {style[format].detail}
-      </Typography>
+      </Typography> */}
     </FormatContainer>
   );
 
@@ -185,15 +193,15 @@ const Output: FC<OutputProps> = ({ paletteMarkers }) => {
   const formatOptions = ['css', 'scss', 'tailwind', 'mui', 'styled', 'emotion'];
 
   return (
-    <Wrapper>
-      <OutputActions>
-        <Typography>Output</Typography>
-        <SelectFormatButton
-          options={formatOptions}
-          format={format}
-          setFormat={setFormat}
-        />
-      </OutputActions>
+    <Wrapper activeMenuTab={activeMenuTab}>
+      <OutputTab onClick={setActiveMenuTab} activeMenuTab={activeMenuTab}>
+        export
+      </OutputTab>
+      <SelectFormatButton
+        options={formatOptions}
+        format={format}
+        setFormat={setFormat}
+      />
       {paletteMarkers.length !== 0 ? stylesTextArea : fallbackTextArea}
     </Wrapper>
   );

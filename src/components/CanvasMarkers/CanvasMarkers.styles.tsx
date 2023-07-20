@@ -5,10 +5,8 @@ interface WrapperProps {
 }
 
 export const Wrapper = styled.div<WrapperProps>`
-  position: absolute;
+  position: relative;
   width: 100%;
   height: 100%;
-  /* overflow: visible; */
-  z-index: 1000;
-  mix-blend-mode: exclusion;
+  z-index: 100;
 `;

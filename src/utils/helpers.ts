@@ -1,5 +1,63 @@
-import { COLOR_NAMES, RGBA_GROUP, CANVAS_SIZE } from './config';
+import { COLOR_NAMES, RGBA_GROUP } from './constants';
 
+// api
+export const translateApiResponse = (dataFromAPI: APIResponse) => {
+  const imageData = dataFromAPI.map((image) => ({
+    altText: image.alt_description || image.description,
+    blurImage: image.blur_hash,
+    color: image.color,
+    imageDimensions: { x: image.width, y: image.height },
+    imageURL: image.urls.full,
+    imageThumb: image.urls.thumb,
+    downloadLink: image.links.download,
+    unsplashLink: image.links.html,
+    id: image.id,
+    artistName: image.user.name || image.user.username,
+    artistLink: image.user.portfolio_url,
+  }));
+  return imageData;
+};
+
+// unit conversions
+export const pxToRem = (px: number) => px / 16;
+export const remToPx = (rem: number) => rem * 16;
+
+// canvas
+
+// assumes 4 channels per pixel, square image
+export const getCanvasDimension = (imageDataLength: number) => {
+  const dim = Math.sqrt(imageDataLength);
+  return dim;
+};
+
+export const checkBounds = (pos: number, canvasBound: number) => {
+  if (pos <= 0) return 0;
+  if (pos >= canvasBound) return canvasBound;
+  return pos;
+};
+
+// translate canvas index (from getImageData()) to x y values on the canvas
+export const getPxGroupXY = (index: number, canvasDimension: number) => {
+  const yPos = Math.floor(index / (canvasDimension * RGBA_GROUP));
+  const xPos = (index % (canvasDimension * RGBA_GROUP)) / RGBA_GROUP; // channel values per width * canvaswidth/channelvalues/width ;
+
+  return { xPos, yPos };
+};
+
+export const getPxGroupIndex = (
+  xPos: number,
+  yPos: number,
+  canvasDimension: number
+) => {
+  let rgbIndex = yPos * canvasDimension * RGBA_GROUP;
+  if (xPos !== canvasDimension) rgbIndex += xPos * RGBA_GROUP;
+  const pxIndex = rgbIndex / RGBA_GROUP;
+
+  // return +pxIndex.toFixed(0);
+  return pxIndex;
+};
+
+// color unit conversions
 export function rgbToHex(r: number, g: number, b: number) {
   let hexR = r.toString(16);
   let hexG = g.toString(16);
@@ -51,23 +109,6 @@ export function rgbToHsl(rgbColor: { r: number; g: number; b: number }) {
   // 'hsl(' + h + ',' + s + '%,' + l + '%)';
   return { h, s, l };
 }
-
-// translate canvas index (from getImageData()) to x y values on the canvas
-export const getPxGroupXY = (index: number) => {
-  const yPos = Math.floor(index / (CANVAS_SIZE.med * RGBA_GROUP));
-  const xPos = (index % (CANVAS_SIZE.med * RGBA_GROUP)) / RGBA_GROUP; // channel values per width * canvaswidth/channelvalues/width ;
-
-  return { xPos, yPos };
-};
-
-export const getPxGroupIndex = (xPos: number, yPos: number) => {
-  let rgbIndex = yPos * 3200;
-  if (xPos !== 800) rgbIndex += xPos * 4;
-  const pxIndex = rgbIndex / RGBA_GROUP;
-
-  // return +pxIndex.toFixed(0);
-  return pxIndex;
-};
 
 // export const getImagePx = () => {
 
@@ -143,7 +184,7 @@ export const getMedianColor = (
       r: acc.r + rgb.r / length,
       g: acc.g + rgb.g / length,
       b: acc.b + rgb.b / length,
-      xy: getPxGroupXY(rgb.i),
+      xy: getPxGroupXY(rgb.i, Math.sqrt(length)),
     }),
     { r: 0, g: 0, b: 0, xy: { xPos: 0, yPos: 0 } }
   );
@@ -183,7 +224,6 @@ export function rgbToColorName(rgb: rgbType | IndexedPxColor | ColorMarker) {
     },
     { name: 'default-color-name', r: -1, g: -1, b: -1, diff: Infinity }
   ) as { name: string; r: number; g: number; b: number; diff: number };
-  console.log(name);
 
   return name.name;
 }
@@ -228,7 +268,6 @@ export function hslToColorName(rgbPaletteColor: ColorMarker) {
     },
     { name: 'default-color-name', r: -1, g: -1, b: -1, diff: Infinity }
   ) as { name: string; r: number; g: number; b: number; diff: number };
-  // console.log(hslColor, name);
 
   return name.name;
 }
@@ -240,7 +279,7 @@ const changeToWarmth = (color: string) => {
 };
 
 export const hslToColorDescription = (paletteColor: IndexedPxColor) => {
-  const { h, s, l } = paletteColor;
+  const { h, s, l } = rgbToHsl(paletteColor);
   let color = hueToColor(h);
   let satur = saturationToColor(s);
   let light = lightToColor(l);

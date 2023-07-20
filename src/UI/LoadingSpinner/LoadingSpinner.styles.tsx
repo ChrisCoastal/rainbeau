@@ -10,7 +10,7 @@ export const Wrapper = styled.div`
 export const Spinner = styled.div`
   width: 2.4rem;
   height: 2.4rem;
-  border-radius: 6px;
+  border-radius: 8px;
   backface-visibility: visible;
   animation-name: flip;
   animation-duration: 5.2s;

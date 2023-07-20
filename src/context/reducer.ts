@@ -1,6 +1,4 @@
-import { palette } from '@mui/system';
-
-export const reducer = (state: appState, action: ReducerActions): appState => {
+const reducer = (state: AppState, action: ReducerActions): AppState => {
   const { type, payload } = action;
   switch (type) {
     case 'setCanvasXY':
@@ -12,19 +10,47 @@ export const reducer = (state: appState, action: ReducerActions): appState => {
       return {
         ...state,
         images: payload,
-        // markerHistory: [...state.markerHistory, state.paletteMarkers],
+      };
+    case 'setCurrentImageIndex':
+      const { images, currentImageIndex } = state;
+      return {
+        ...state,
+        currentImageIndex:
+          images.length > 0 && images.length > currentImageIndex + 1
+            ? currentImageIndex + 1
+            : 0,
       };
     case 'setCurrentImageData':
       return {
         ...state,
         currentImageData: payload,
-        // markerHistory: [...state.markerHistory, state.paletteMarkers],
+      };
+    case 'setLoading':
+      return {
+        ...state,
+        isLoading: payload,
+      };
+    case 'setError':
+      return {
+        ...state,
+        isError: payload,
       };
     case 'addMarker':
       return {
         ...state,
         paletteMarkers: [...state.paletteMarkers, ...payload],
-        // markerHistory: [...state.markerHistory, state.paletteMarkers],
+      };
+    case 'setActiveMarker':
+      return {
+        ...state,
+        paletteMarkers: state.paletteMarkers.map((marker) =>
+          marker.i === payload.i
+            ? {
+                ...marker,
+                isActive: true,
+              }
+            : marker
+        ),
       };
     case 'deleteMarker':
       return {
@@ -32,7 +58,6 @@ export const reducer = (state: appState, action: ReducerActions): appState => {
         paletteMarkers: state.paletteMarkers.filter(
           (marker) => marker.i !== payload.i
         ),
-        // markerHistory: [...state.markerHistory, state.paletteMarkers],
       };
     case 'updatePalette':
       const updatedPaletteMarkers = [...state.paletteMarkers];
@@ -40,13 +65,11 @@ export const reducer = (state: appState, action: ReducerActions): appState => {
       return {
         ...state,
         paletteMarkers: updatedPaletteMarkers,
-        // markerHistory: [...state.markerHistory, state.paletteMarkers],
       };
     case 'deletePalette':
       return {
         ...state,
         paletteMarkers: [],
-        // markerHistory: [...state.markerHistory, state.paletteMarkers],
       };
     case 'undoPalette':
       return {
@@ -54,7 +77,14 @@ export const reducer = (state: appState, action: ReducerActions): appState => {
         // paletteMarkers: state.markerHistory[-1],
         // markerHistory: state.markerHistory.slice(0, -2),
       };
+    case 'setActiveMenuTab':
+      return {
+        ...state,
+        activeMenuTab: payload,
+      };
     default:
       return state;
   }
 };
+
+export default reducer;
