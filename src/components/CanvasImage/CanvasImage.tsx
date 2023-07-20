@@ -22,6 +22,7 @@ import useCanvasImage from '../../hooks/useCanvasImage';
 // styles
 import {
   Canvas,
+  ChildBox,
   ImageBox,
   MarkersBox,
   BlurFallback,
@@ -32,11 +33,13 @@ import { Blurhash } from 'react-blurhash';
 interface CanvasImageProps {
   windowSize: WindowSize;
   currentImageIndex: number;
+  children?: React.ReactNode;
 }
 
 const CanvasImage: FC<CanvasImageProps> = ({
   currentImageIndex,
   windowSize,
+  children,
 }) => {
   const { addMarker } = useMarkers();
   const { state, dispatch } = useAppContext();
@@ -165,6 +168,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
       prevCanvasXY: { x: number; y: number },
       canvasXY: { x: number; y: number }
     ) => {
+      console.log('updateResizeMarkers', canvasXY, prevCanvasXY);
       const xRatio = canvasXY.x / prevCanvasXY.x;
       const yRatio = canvasXY.y / prevCanvasXY.y;
       const translatedMarkers: ColorMarker[] = paletteMarkers.map((marker) => {
@@ -194,7 +198,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
     if (canvasCtxRef.current) {
       const ctx = canvasCtxRef.current;
 
-      // debounce resize effects
+      // throttle resize effects
       if (timerRef.current) clearTimeout(timerRef.current);
       const timer = setTimeout(() => {
         // dispatch({ type: 'setLoading', payload: true });
@@ -222,7 +226,11 @@ const CanvasImage: FC<CanvasImageProps> = ({
   return (
     <>
       {isError && <p>There was an error. Please try again.</p>}
-      <ImageBox ref={imageBoxRef} className="imageBox" canvasXY={canvasXY}>
+      <ImageBox
+        ref={imageBoxRef}
+        className="imageBox"
+        style={{ touchAction: 'none' }}
+      >
         {isLoading && <LoadingSpinner />}
         <Canvas ref={canvasRef} />
         <BlurFallback>
@@ -242,9 +250,10 @@ const CanvasImage: FC<CanvasImageProps> = ({
         </BlurFallback>
         {/* <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} /> */}
       </ImageBox>
-      <MarkersBox className="markerBox" canvasXY={canvasXY}>
+      <MarkersBox className="markerBox">
         <CanvasMarkers />
       </MarkersBox>
+      <ChildBox>{children}</ChildBox>
     </>
   );
 };

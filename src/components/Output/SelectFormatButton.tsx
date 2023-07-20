@@ -23,16 +23,31 @@ const SelectFormatButton: FC<SelectFormatButtonProps> = ({
   // const anchorRef = useRef<HTMLDivElement>(null);
   const [selectedIndex, setSelectedIndex] = useState(1);
 
+  const selectSx = {
+    marginBottom: '0.8rem',
+    '& .MuiSelect-select': {
+      padding: 0,
+    },
+    '& .MuiSelect-outined': {
+      '&:hover': {
+        borderColor: '#7dffbe',
+      },
+    },
+  };
+
   const formSx = {
-    marginBottom: 1,
+    alignSelf: 'end',
     p: 0,
     minWidth: '5.6rem',
     border: 'none',
     transition: 'all 1.2s ease',
-    backgroundColor: 'red',
     '&:hover': {
       borderColor: '#7dffbe',
     },
+  };
+
+  const menuSx = {
+    fontSize: '0.8rem',
   };
 
   const menuSelectHandler = (
@@ -40,7 +55,7 @@ const SelectFormatButton: FC<SelectFormatButtonProps> = ({
     index: number
   ) => {
     setSelectedIndex(index);
-    setOpen(false);
+    // setOpen(false);
   };
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -48,34 +63,36 @@ const SelectFormatButton: FC<SelectFormatButtonProps> = ({
   };
 
   return (
-    // <FormControl sx={formSx}>
-    <Select
-      sx={{ marginBottom: '0.8rem' }}
-      labelId="format"
-      id="format"
-      value={format}
-      onChange={handleChange}
-      renderValue={(value) => (
-        <Chip
-          sx={{ border: 'none' }}
-          key={value}
-          label={value}
-          variant="outlined"
-        />
-      )}
-    >
-      {options.map((option, index) => (
-        <MenuItem
-          key={option}
-          value={option}
-          selected={index === selectedIndex}
-          onClick={(event) => menuSelectHandler(event, index)}
-        >
-          {option}
-        </MenuItem>
-      ))}
-    </Select>
-    // </FormControl>
+    <FormControl sx={formSx}>
+      <Select
+        sx={selectSx}
+        labelId="format"
+        id="format"
+        value={format}
+        onChange={handleChange}
+        renderValue={(value) => (
+          <Chip
+            sx={{ border: 'none' }}
+            key={value}
+            label={value}
+            variant="outlined"
+          />
+        )}
+      >
+        {options.map((option, index) => (
+          <MenuItem
+            sx={menuSx}
+            key={option}
+            value={option}
+            selected={index === selectedIndex}
+            dense={true}
+            onClick={(event) => menuSelectHandler(event, index)}
+          >
+            {option}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
   );
 };
 

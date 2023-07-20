@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Wrapper, Logo } from './Header.styles';
-import logo from '../../assets/rainbeau-logo.png';
+import logo from '../../assets/rainbeau-logo-320x56.png';
 
 const Header = () => {
   return (

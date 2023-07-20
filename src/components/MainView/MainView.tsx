@@ -24,11 +24,14 @@ import Actions from '../Actions/Actions';
 import useAppContext from '../../hooks/useAppContext';
 import useResizeWindow from '../../hooks/useResizeWindow';
 import { Blurhash } from 'react-blurhash';
+import Credit from '../Credit/Credit';
 
 const MainView: FC = () => {
-  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
-  const { state, dispatch } = useAppContext();
-  const { images, canvasXY } = state;
+  // const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
+  const {
+    state: { images, currentImageIndex },
+    dispatch,
+  } = useAppContext();
 
   const fetchAPIKey = async () => {
     try {
@@ -95,10 +98,9 @@ const MainView: FC = () => {
       dispatch({ type: 'setLoading', payload: true });
 
       if (images.length > 0 && images.length > currentImageIndex + 1) {
-        dispatch({
-          type: 'setCurrentImageIndex',
-        });
-        setCurrentImageIndex((prev) => prev + indexStep);
+        dispatch({ type: 'setCurrentImageIndex' });
+        // dispatch({type: 'setCurrentImageIndex', payload: currentImageIndex + indexStep})
+        // setCurrentImageIndex((prev) => prev + indexStep);
       } else if (currentImageIndex + 1 >= images.length) {
         const apiKey = (await fetchAPIKey()) as string;
         const images = await fetchImages(apiKey);
@@ -107,7 +109,7 @@ const MainView: FC = () => {
           throw new Error('Failed to load new image; please try again.');
 
         setImagesState(images);
-        setCurrentImageIndex(0);
+        dispatch({ type: 'setCurrentImageIndex' });
       }
       //FIXME: combine state dispatches
       dispatch({ type: 'deletePalette', payload: null });
@@ -142,10 +144,9 @@ const MainView: FC = () => {
     <Wrapper>
       <MainGrid className="main-grid" windowSize={size}>
         <Suspense fallback={imageBlurFallback}>
-          <CanvasImage
-            currentImageIndex={currentImageIndex}
-            windowSize={size}
-          />
+          <CanvasImage currentImageIndex={currentImageIndex} windowSize={size}>
+            <Credit link={unsplashLink} name={artistName} />
+          </CanvasImage>
         </Suspense>
         <Actions
           changeImageHandler={changeImageHandler}

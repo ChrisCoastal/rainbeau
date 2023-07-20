@@ -6,6 +6,8 @@ interface LinkProps {
 
 export const Wrapper = styled.div`
   position: absolute;
+  bottom: -1.5rem;
+  left: 0;
   margin-top: 1rem;
   margin-left: 0.8rem;
 `;

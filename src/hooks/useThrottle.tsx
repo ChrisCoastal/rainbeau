@@ -1,53 +1,28 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef } from 'react';
 
-export function useThrottle(value: any, interval = 500) {
-  const [throttledValue, setThrottledValue] = useState(value);
-  const lastUpdated = useRef(0);
+function useThrottle(callback: (...args: any[]) => unknown, interval = 500) {
+  const throttleRef = useRef<NodeJS.Timeout | null>(null);
+  const argsRef = useRef<unknown[] | null>(null);
 
-  useEffect(() => {
-    const now = Date.now();
+  function throttled(args: unknown[]) {
+    argsRef.current = args;
+    if (throttleRef.current) return;
 
-    if (now >= lastUpdated.current + interval) {
-      lastUpdated.current = now;
-      setThrottledValue(value);
-    } else {
-      const id = window.setTimeout(() => {
-        lastUpdated.current = now;
-        setThrottledValue(value);
-      }, interval);
+    const throttle = setTimeout(() => {
+      const args = argsRef.current;
+      args && callback(...args);
+      throttleRef.current = null;
+    }, 50);
 
-      return () => window.clearTimeout(id);
-    }
-  }, [value, interval]);
+    throttleRef.current = throttle;
+  }
 
-  return throttledValue;
+  function cancelThrottle() {
+    throttleRef.current && clearTimeout(throttleRef.current);
+    throttleRef.current = null;
+  }
+
+  return { throttled, cancelThrottle };
 }
 
-// import { useRef, useCallback } from 'react';
-
-// export function useThrottle() {
-//   const prevArgsRef = useRef<unknown[] | null>(null);
-
-//   const throttled = useCallback(
-//     (
-//       args: unknown[],
-//       callback: (...args: unknown[]) => any,
-//       interval = 200
-//     ) => {
-//       const throttle = !!prevArgsRef.current;
-//       prevArgsRef.current = args;
-
-//       if (throttle) return;
-
-//       window.setTimeout(() => {
-//         if (!prevArgsRef.current) return;
-//         console.log(prevArgsRef.current);
-//         callback(prevArgsRef.current);
-//         prevArgsRef.current = null;
-//       }, interval);
-//     },
-//     []
-//   );
-
-//   return throttled;
-// }
+export default useThrottle;

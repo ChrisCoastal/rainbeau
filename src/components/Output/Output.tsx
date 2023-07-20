@@ -203,6 +203,7 @@ const Output: FC = () => {
         setFormat={setFormat}
       />
       {paletteMarkers.length !== 0 ? stylesTextArea : fallbackTextArea}
+      {/* <div style={{ backgroundColor: 'red', height: '100%' }}></div> */}
     </Wrapper>
   );
 };

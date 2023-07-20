@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { SpringValue } from '@react-spring/web';
 import { ReactNode, TouchEvent } from 'react';
 
 interface WrapperProps {
@@ -25,6 +26,11 @@ interface FillPathProps {
 }
 
 interface MarkerNumberProps {
+  color: {
+    r: SpringValue<number>;
+    g: SpringValue<number>;
+    b: SpringValue<number>;
+  };
   children?: React.ReactNode;
 }
 
@@ -35,9 +41,9 @@ export const Wrapper = styled.div<WrapperProps>`
 
   cursor: ${(props) => (!props.active ? 'grab' : 'grabbing')};
 
-  &:active {
+  /* &:active {
     cursor: grabbing;
-  }
+  } */
 
   &::after {
     content: ${(props) => props.num + 1};
@@ -81,11 +87,10 @@ export const StrokePath = styled.path``;
 
 export const MarkerNumber = styled.span<MarkerNumberProps>`
   position: absolute;
-  top: 1rem;
-  left: 1rem;
-  height: 1rem;
-  width: 1rem;
-  border-radius: 50%;
-  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  transform: translate(-50%, -2.05rem);
   z-index: 10;
 `;

@@ -8,6 +8,8 @@ interface OutputProps {
 export const Wrapper = styled.div<OutputProps>`
   position: relative;
   grid-area: palette;
+  display: flex;
+  flex-direction: column;
   justify-self: stretch;
   margin-top: 2rem;
   padding: 1rem 1rem;
@@ -41,7 +43,7 @@ export const OutputTab = styled.button<OutputProps>`
   right: -1px;
   width: 5rem;
   height: 2rem;
-
+  color: ${(props) => (props.activeMenuTab === 'output' ? '#444' : '#777')};
   background-color: #fff;
   border-radius: 8px 8px 0 0;
   border: solid 1px #ddd;
@@ -67,11 +69,19 @@ export const CopyIconWrapper = styled.div`
   right: 0.6rem;
 `;
 
+// export const TextAreaWrapper = styled.div`
+//   /* position: relative; */
+//   /* height: 100%; */
+//   width: 100%;
+//   background-color: #f00;
+// `;
+
 export const TextArea = styled.textarea`
   width: 98%;
-  height: 60%;
+  height: 100%;
   line-height: 125%;
   resize: none;
+  overflow: scroll;
   font-size: 0.7rem;
   border-radius: 8px;
   border: solid 1px #ddd;
@@ -84,6 +94,8 @@ export const TextArea = styled.textarea`
 
 export const FormatContainer = styled.div`
   position: relative;
+  display: flex;
+  flex-direction: column;
   height: 100%;
   text-align: right;
 `;

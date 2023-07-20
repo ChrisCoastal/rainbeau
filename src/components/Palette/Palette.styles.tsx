@@ -34,6 +34,7 @@ export const PaletteTab = styled.button<PaletteProps>`
   right: 5rem;
   width: 5rem;
   height: 2rem;
+  color: ${(props) => (props.activeMenuTab === 'palette' ? '#444' : '#777')};
   background-color: #fff;
   border-radius: 8px 8px 0 0;
   border: solid 1px #ddd;
