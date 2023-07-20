@@ -22,14 +22,15 @@ import { Wrapper } from './CanvasMarkers.styles';
 import MarkerIcon from '../../UI/Marker/MarkerIcon';
 
 const CanvasMarkers: FC = () => {
-  const [activeMarkerNum, setActiveMarkerNum] = useState<number | null>(null);
+  // const [activeMarkerNum, setActiveMarkerNum] = useState<number | null>(null);
   const throttleRef = useRef<NodeJS.Timeout | null>(null);
   const prevMoveRef = useRef<Coordinate | null>(null);
   const markerPosRef = useRef<Coordinate | null>(null);
 
-  const { state, dispatch } = useAppContext();
-  const { paletteMarkers, currentImageData } = state;
-
+  const {
+    state: { paletteMarkers, currentImageData, activeMarker },
+    dispatch,
+  } = useAppContext();
   const { moveMarker, updateMarkerState } = useMarkers();
 
   const [markerStyles, animateMarker] = useSprings(
@@ -53,7 +54,7 @@ const CanvasMarkers: FC = () => {
     markerIndex: number
   ) {
     event.preventDefault();
-    setActiveMarkerNum(markerIndex);
+    dispatch({ type: 'setActiveMarker', payload: markerIndex });
     markerPosRef.current = {
       xPos: paletteMarkers[markerIndex].xy.xPos,
       yPos: paletteMarkers[markerIndex].xy.yPos,
@@ -76,13 +77,13 @@ const CanvasMarkers: FC = () => {
       opacity: 0.8,
       immediate: true,
     });
-    setActiveMarkerNum(null);
+    dispatch({ type: 'setActiveMarker', payload: null });
     prevMoveRef.current = null;
   }
 
   function handleMoveMarker(event: MouseEvent | TouchEvent) {
     event.preventDefault();
-    if (activeMarkerNum === null) return;
+    if (activeMarker === null) return;
 
     // const { xy, r, b, g } = moveMarker(event, activeMarkerNum);
     // animateMarker.start((index) =>
@@ -100,7 +101,7 @@ const CanvasMarkers: FC = () => {
     //       }
     //     : null
     // );
-    const activeIndex = activeMarkerNum;
+    const activeIndex = activeMarker;
     const canvasDimension = getCanvasDimension(currentImageData.length);
     const pointer =
       event.type === 'touchmove'
@@ -135,7 +136,7 @@ const CanvasMarkers: FC = () => {
     const { r, g, b } = currentImageData[updatedIndex];
     markerPosRef.current = { xPos: x, yPos: y };
     animateMarker.start((index) =>
-      activeMarkerNum === index
+      activeMarker === index
         ? {
             y,
             x,
@@ -164,8 +165,8 @@ const CanvasMarkers: FC = () => {
   // a mouseup will not be registered if released outside of the canvas
   // check if the mouse is still down when the mouse enters the canvas
   function handleMouseEnter(event: MouseEvent) {
-    event.preventDefault();
-    if (event.buttons !== 1) setActiveMarkerNum(null);
+    if (event.buttons !== 1 && activeMarker)
+      dispatch({ type: 'setActiveMarker', payload: null });
   }
 
   // update spring ref if a marker is moved by action other than dragging
@@ -178,6 +179,14 @@ const CanvasMarkers: FC = () => {
       immediate: true,
     }));
   }, [paletteMarkers, animateMarker, dispatch]);
+
+  useEffect(() => {
+    if (activeMarker !== null) return;
+    animateMarker.start((index) => ({
+      cursor: 'grab',
+      immediate: true,
+    }));
+  }, [activeMarker, animateMarker, dispatch]);
 
   const markers = markerStyles.map((marker, index) => {
     const { x, y, r, g, b } = marker;
@@ -199,7 +208,7 @@ const CanvasMarkers: FC = () => {
         <MarkerIcon
           num={index}
           color={{ r, g, b }}
-          active={activeMarkerNum === index}
+          active={activeMarker === index}
         />
       </animated.div>
     );

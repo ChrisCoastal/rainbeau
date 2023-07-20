@@ -4,7 +4,7 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 import { Wrapper } from './Credit.styles';
 interface CreditProps {
-  link: string;
+  link?: string;
   name: string | null;
 }
 
@@ -24,7 +24,10 @@ const Credit: FC<CreditProps> = ({ link, name }) => {
         color="#444"
       >
         <Typography fontSize="small">via {name?.split(' ')[0]}</Typography>
-        <OpenInNewIcon fontSize="inherit" />
+        <OpenInNewIcon
+          sx={{ color: link ? '#444' : '#999' }}
+          fontSize="inherit"
+        />
       </Link>
     </Wrapper>
   );

@@ -43,14 +43,7 @@ const reducer = (state: AppState, action: ReducerActions): AppState => {
     case 'setActiveMarker':
       return {
         ...state,
-        paletteMarkers: state.paletteMarkers.map((marker) =>
-          marker.i === payload.i
-            ? {
-                ...marker,
-                isActive: true,
-              }
-            : marker
-        ),
+        activeMarker: payload,
       };
     case 'deleteMarker':
       return {

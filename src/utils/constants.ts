@@ -5,6 +5,7 @@ export const INITIAL_STATE: AppState = {
   currentImageIndex: 0,
   currentImageData: [],
   paletteMarkers: [],
+  activeMarker: null,
   markerHistory: [],
   activeMenuTab: 'palette',
   isLoading: false,
@@ -67,7 +68,7 @@ export const IMAGE_COUNT = 8;
 
 export const INITIAL_IMAGE = [
   {
-    alt_description: 'a multicolored sculpture of a fish on a white background',
+    alt_description: 'a multicolored rainbow on a white background',
     blur_hash: 'LOP?E%XnqEvfN^i_M{b^YjngmST1',
     color: '#d9d9d9',
     created_at: '2023-06-16T06:20:41Z',
@@ -79,13 +80,13 @@ export const INITIAL_IMAGE = [
     liked_by_user: false,
     likes: 93,
     links: {
-      download:
-        'https://unsplash.com/photos/8UHu4sfnXqA/download?ixid=M3wzNDUxODl8MHwxfHJhbmRvbXx8fHx8fHx8fDE2ODg0OTcxMzB8',
-      download_location:
-        'https://api.unsplash.com/photos/8UHu4sfnXqA/download?ixid=M3wzNDUxODl8MHwxfHJhbmRvbXx8fHx8fHx8fDE2ODg0OTcxMzB8',
-      html: 'https://unsplash.com/photos/a-multicolored-sculpture-of-a-fish-on-a-white-background-8UHu4sfnXqA',
-      self: 'https://api.unsplash.com/photos/a-multicolored-sculpture-of-a-fish-on-a-white-background-8UHu4sfnXqA',
-      slug: 'a-multicolored-sculpture-of-a-fish-on-a-white-background-8UHu4sfnXqA',
+      // download:
+      //   'https://unsplash.com/photos/8UHu4sfnXqA/download?ixid=M3wzNDUxODl8MHwxfHJhbmRvbXx8fHx8fHx8fDE2ODg0OTcxMzB8',
+      // download_location:
+      //   'https://api.unsplash.com/photos/8UHu4sfnXqA/download?ixid=M3wzNDUxODl8MHwxfHJhbmRvbXx8fHx8fHx8fDE2ODg0OTcxMzB8',
+      // html: 'https://unsplash.com/photos/a-multicolored-sculpture-of-a-fish-on-a-white-background-8UHu4sfnXqA',
+      // self: 'https://api.unsplash.com/photos/a-multicolored-sculpture-of-a-fish-on-a-white-background-8UHu4sfnXqA',
+      // slug: 'a-multicolored-sculpture-of-a-fish-on-a-white-background-8UHu4sfnXqA',
     },
     sponsorship: null,
     urls: {
