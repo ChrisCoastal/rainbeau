@@ -10,7 +10,7 @@ export const Wrapper = styled.div`
   position: relative;
   display: flex;
   justify-content: center;
-  margin: 4rem 1rem 0 1rem;
+  margin: 4rem 1rem 1rem 1rem;
   transition: all 0.6s ease-in;
 
   @media (min-width: ${BREAKPOINTS_X.md}px) {

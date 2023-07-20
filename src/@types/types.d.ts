@@ -5,10 +5,17 @@ interface AppState {
   currentImageIndex: number;
   currentImageData: IndexedPxColor[];
   paletteMarkers: ColorMarker[];
-  markerHistory: ColorMarker[][];
+  activeMarker: number | null;
+  markerHistory: MarkerHistory[];
   activeMenuTab: 'palette' | 'output';
   isLoading: boolean;
   isError: boolean;
+}
+
+interface MarkerHistory {
+  canvasXY: { x: number; y: number };
+  currentImageIndex: number;
+  paletteMarkers: ColorMarker[];
 }
 
 type AppContextType = {
@@ -50,7 +57,7 @@ type DeleteMarkerAction = {
 };
 type SetActiveMarkerAction = {
   type: 'setActiveMarker';
-  payload: ColorMarker;
+  payload: number | null;
 };
 type AddColorNameAction = {
   type: 'addColorName';
@@ -63,6 +70,10 @@ type UpdateColorNamesAction = {
 type UpdatePaletteAction = {
   type: 'updatePalette';
   payload: { markerNum: number; updatedMarker: ColorMarker };
+};
+type UpdateMarkerHistoryAction = {
+  type: 'updateMarkerHistory';
+  payload: MarkerHistory;
 };
 type DeletePaletteAction = {
   type: 'deletePalette';
@@ -104,8 +115,8 @@ interface APIImageData {
   width: number;
   id: string;
   links: {
-    html: string;
-    download: string;
+    html?: string;
+    download?: string;
   };
   urls: {
     full: string;
@@ -113,9 +124,9 @@ interface APIImageData {
     thumb: string;
   };
   user: {
-    name: string;
-    username: string;
-    portfolio_url: string;
+    name?: string;
+    username?: string;
+    portfolio_url?: string;
   };
   [key: string]: any;
 }

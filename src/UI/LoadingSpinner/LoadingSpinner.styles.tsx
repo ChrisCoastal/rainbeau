@@ -6,6 +6,8 @@ export const Wrapper = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   perspective: 8rem;
+  pointer-events: none;
+  z-index: 1000;
 `;
 export const Spinner = styled.div`
   width: 2.4rem;
@@ -21,19 +23,19 @@ export const Spinner = styled.div`
     0%,
     100% {
       transform: rotateY(0deg) rotateX(0deg);
-      background-color: rgba(26, 85, 234, 0.75);
+      background-color: rgba(149, 26, 198, 0.75);
     }
     25% {
       transform: rotateY(1080deg) rotateX(0deg);
-      background-color: rgba(101, 238, 170, 0.75);
+      background-color: rgba(109, 225, 239, 0.75);
     }
     50% {
       transform: rotateY(1080deg) rotateX(-1080deg);
-      background-color: rgba(249, 173, 7, 0.75);
+      background-color: rgba(255, 223, 146, 0.75);
     }
     75% {
       transform: rotateY(0deg) rotateX(-1080deg);
-      background-color: rgba(243, 39, 36, 0.75);
+      background-color: rgba(245, 5, 184, 0.75);
     }
   }
 `;

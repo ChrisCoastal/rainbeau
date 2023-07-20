@@ -1,5 +1,5 @@
 import { FC, Suspense } from 'react';
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 
 // firestore
 import { functions } from '../../firestore.config';
@@ -9,11 +9,7 @@ import { httpsCallable } from 'firebase/functions';
 import CanvasImage from '../CanvasImage/CanvasImage';
 
 // config
-import {
-  IMAGE_BASE_URL,
-  IMAGE_COUNT,
-  INITIAL_IMAGE,
-} from '../../utils/constants';
+import { IMAGE_COUNT, INITIAL_IMAGE } from '../../utils/constants';
 
 // styles
 import { Wrapper, MainGrid } from './MainView.styles';
@@ -27,7 +23,6 @@ import { Blurhash } from 'react-blurhash';
 import Credit from '../Credit/Credit';
 
 const MainView: FC = () => {
-  // const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
   const {
     state: { images, currentImageIndex },
     dispatch,
@@ -86,22 +81,14 @@ const MainView: FC = () => {
 
   useEffect(() => {
     setImagesState(INITIAL_IMAGE);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [setImagesState]);
 
-  const changeImageHandler = async (
-    _: React.MouseEvent<HTMLElement, MouseEvent> | null,
-    indexStep: number = 1
-  ) => {
+  const changeImageHandler = async (indexStep: number = 1) => {
     try {
       dispatch({ type: 'setError', payload: false });
       dispatch({ type: 'setLoading', payload: true });
 
-      if (images.length > 0 && images.length > currentImageIndex + 1) {
-        dispatch({ type: 'setCurrentImageIndex' });
-        // dispatch({type: 'setCurrentImageIndex', payload: currentImageIndex + indexStep})
-        // setCurrentImageIndex((prev) => prev + indexStep);
-      } else if (currentImageIndex + 1 >= images.length) {
+      if (currentImageIndex + 1 >= images.length) {
         const apiKey = (await fetchAPIKey()) as string;
         const images = await fetchImages(apiKey);
 
@@ -109,9 +96,8 @@ const MainView: FC = () => {
           throw new Error('Failed to load new image; please try again.');
 
         setImagesState(images);
-        dispatch({ type: 'setCurrentImageIndex' });
       }
-      //FIXME: combine state dispatches
+      dispatch({ type: 'setCurrentImageIndex' });
       dispatch({ type: 'deletePalette', payload: null });
       dispatch({ type: 'setLoading', payload: false });
     } catch (err) {
@@ -149,7 +135,7 @@ const MainView: FC = () => {
           </CanvasImage>
         </Suspense>
         <Actions
-          changeImageHandler={changeImageHandler}
+          changeImageHandler={() => changeImageHandler()}
           imageDownloadURL={downloadLink}
         />
         <Palette />
