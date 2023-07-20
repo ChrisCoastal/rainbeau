@@ -84,79 +84,81 @@ const CanvasMarkers: FC = () => {
     event.preventDefault();
     if (activeMarkerNum === null) return;
 
-    const { xy, r, b, g } = moveMarker(event, activeMarkerNum);
-    animateMarker.start((index) =>
-      activeMarkerNum === index
-        ? {
-            r,
-            g,
-            b,
-            y: xy.yPos,
-            x: xy.xPos,
-            opacity: 0.6,
-            immediate: true,
-          }
-        : null
-    );
-    // const activeIndex = activeMarkerNum;
-    // const canvasDimension = getCanvasDimension(currentImageData.length);
-    // const pointer =
-    //   event.type === 'touchmove'
-    //     ? (event as TouchEvent).touches[0]
-    //     : (event as MouseEvent);
-    // const prevMove = prevMoveRef.current;
-    // const markerPos = markerPosRef.current;
-    // // cannot reliably use .movementX and .movementY on mouse events because it is
-    // // implemented differently in different browsers https://github.com/w3c/pointerlock/issues/42
-    // // Safari uses DIP rather than px
-    // const moveX = calcMove(prevMove?.xPos, pointer.screenX);
-    // const moveY = calcMove(prevMove?.yPos, pointer.screenY);
-    // prevMoveRef.current = { xPos: pointer.screenX, yPos: pointer.screenY };
-
-    // if (moveX === 0 && moveY === 0) return;
-
-    // const { x, y } = {
-    //   y: checkBounds(
-    //     (markerPos?.yPos || paletteMarkers[activeIndex].xy.yPos) + moveY,
-    //     canvasDimension
-    //   ),
-    //   x: checkBounds(
-    //     (markerPos?.xPos || paletteMarkers[activeIndex].xy.xPos) + moveX,
-    //     canvasDimension
-    //   ),
-    // };
-
-    // const updatedIndex = getPxGroupIndex(x, y, canvasDimension);
-
-    // if (updatedIndex > currentImageData.length) return;
-
-    // const { r, g, b } = currentImageData[updatedIndex];
-    // markerPosRef.current = { xPos: x, yPos: y };
+    // const { xy, r, b, g } = moveMarker(event, activeMarkerNum);
     // animateMarker.start((index) =>
     //   activeMarkerNum === index
     //     ? {
-    //         y,
-    //         x,
     //         r,
     //         g,
     //         b,
+    //         y,
+    //         x,
+    //         // y: xy.yPos,
+    //         // x: xy.xPos,
     //         opacity: 0.6,
     //         immediate: true,
     //       }
     //     : null
     // );
+    const activeIndex = activeMarkerNum;
+    const canvasDimension = getCanvasDimension(currentImageData.length);
+    const pointer =
+      event.type === 'touchmove'
+        ? (event as TouchEvent).touches[0]
+        : (event as MouseEvent);
+    const prevMove = prevMoveRef.current;
+    const markerPos = markerPosRef.current;
+    // cannot reliably use .movementX and .movementY on mouse events because it is
+    // implemented differently in different browsers https://github.com/w3c/pointerlock/issues/42
+    // Safari uses DIP rather than px
+    const moveX = calcMove(prevMove?.xPos, pointer.screenX);
+    const moveY = calcMove(prevMove?.yPos, pointer.screenY);
+    prevMoveRef.current = { xPos: pointer.screenX, yPos: pointer.screenY };
 
-    // if (throttleRef.current) return;
-    // const throttle = setTimeout(() => {
-    //   updateMarkerState(currentImageData, canvasDimension, activeIndex, {
-    //     xPos: markerPosRef.current?.xPos || x,
-    //     yPos: markerPosRef.current?.yPos || y,
-    //   });
+    if (moveX === 0 && moveY === 0) return;
 
-    //   throttleRef.current = null;
-    // }, 50);
+    const { x, y } = {
+      y: checkBounds(
+        (markerPos?.yPos || paletteMarkers[activeIndex].xy.yPos) + moveY,
+        canvasDimension
+      ),
+      x: checkBounds(
+        (markerPos?.xPos || paletteMarkers[activeIndex].xy.xPos) + moveX,
+        canvasDimension
+      ),
+    };
 
-    // throttleRef.current = throttle;
+    const updatedIndex = getPxGroupIndex(x, y, canvasDimension);
+
+    if (updatedIndex > currentImageData.length) return;
+
+    const { r, g, b } = currentImageData[updatedIndex];
+    markerPosRef.current = { xPos: x, yPos: y };
+    animateMarker.start((index) =>
+      activeMarkerNum === index
+        ? {
+            y,
+            x,
+            r,
+            g,
+            b,
+            opacity: 0.6,
+            immediate: true,
+          }
+        : null
+    );
+
+    if (throttleRef.current) return;
+    const throttle = setTimeout(() => {
+      updateMarkerState(currentImageData, canvasDimension, activeIndex, {
+        xPos: markerPosRef.current?.xPos || x,
+        yPos: markerPosRef.current?.yPos || y,
+      });
+
+      throttleRef.current = null;
+    }, 50);
+
+    throttleRef.current = throttle;
   }
 
   // a mouseup will not be registered if released outside of the canvas

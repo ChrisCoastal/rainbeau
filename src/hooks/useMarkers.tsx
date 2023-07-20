@@ -76,7 +76,7 @@ const useMarkers = () => {
       xy: updatedXY,
       name: updatedName,
     };
-    console.log(activeMarkerNum, updatedMarker);
+
     dispatch({
       type: 'updatePalette',
       payload: { markerNum: activeMarkerNum, updatedMarker },
