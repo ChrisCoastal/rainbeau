@@ -43,7 +43,7 @@ export const OutputTab = styled.button<OutputProps>`
   right: -1px;
   width: 5rem;
   height: 2rem;
-
+  color: ${(props) => (props.activeMenuTab === 'output' ? '#444' : '#777')};
   background-color: #fff;
   border-radius: 8px 8px 0 0;
   border: solid 1px #ddd;

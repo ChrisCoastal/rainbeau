@@ -21,7 +21,7 @@ const Credit: FC<CreditProps> = ({ link, name }) => {
         underline="none"
         rel="noreferrer"
         target="_blank"
-        color="#333"
+        color="#444"
       >
         <Typography fontSize="small">via {name?.split(' ')[0]}</Typography>
         <OpenInNewIcon fontSize="inherit" />

@@ -22,6 +22,7 @@ import useCanvasImage from '../../hooks/useCanvasImage';
 // styles
 import {
   Canvas,
+  ChildBox,
   ImageBox,
   MarkersBox,
   BlurFallback,
@@ -32,11 +33,13 @@ import { Blurhash } from 'react-blurhash';
 interface CanvasImageProps {
   windowSize: WindowSize;
   currentImageIndex: number;
+  children?: React.ReactNode;
 }
 
 const CanvasImage: FC<CanvasImageProps> = ({
   currentImageIndex,
   windowSize,
+  children,
 }) => {
   const { addMarker } = useMarkers();
   const { state, dispatch } = useAppContext();
@@ -226,7 +229,6 @@ const CanvasImage: FC<CanvasImageProps> = ({
       <ImageBox
         ref={imageBoxRef}
         className="imageBox"
-        canvasXY={canvasXY}
         style={{ touchAction: 'none' }}
       >
         {isLoading && <LoadingSpinner />}
@@ -248,9 +250,10 @@ const CanvasImage: FC<CanvasImageProps> = ({
         </BlurFallback>
         {/* <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} /> */}
       </ImageBox>
-      <MarkersBox className="markerBox" canvasXY={canvasXY}>
+      <MarkersBox className="markerBox">
         <CanvasMarkers />
       </MarkersBox>
+      <ChildBox>{children}</ChildBox>
     </>
   );
 };
