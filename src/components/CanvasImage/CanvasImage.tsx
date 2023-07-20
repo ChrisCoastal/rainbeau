@@ -165,6 +165,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
       prevCanvasXY: { x: number; y: number },
       canvasXY: { x: number; y: number }
     ) => {
+      console.log('updateResizeMarkers', canvasXY, prevCanvasXY);
       const xRatio = canvasXY.x / prevCanvasXY.x;
       const yRatio = canvasXY.y / prevCanvasXY.y;
       const translatedMarkers: ColorMarker[] = paletteMarkers.map((marker) => {
@@ -194,7 +195,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
     if (canvasCtxRef.current) {
       const ctx = canvasCtxRef.current;
 
-      // debounce resize effects
+      // throttle resize effects
       if (timerRef.current) clearTimeout(timerRef.current);
       const timer = setTimeout(() => {
         // dispatch({ type: 'setLoading', payload: true });
@@ -222,7 +223,12 @@ const CanvasImage: FC<CanvasImageProps> = ({
   return (
     <>
       {isError && <p>There was an error. Please try again.</p>}
-      <ImageBox ref={imageBoxRef} className="imageBox" canvasXY={canvasXY}>
+      <ImageBox
+        ref={imageBoxRef}
+        className="imageBox"
+        canvasXY={canvasXY}
+        style={{ touchAction: 'none' }}
+      >
         {isLoading && <LoadingSpinner />}
         <Canvas ref={canvasRef} />
         <BlurFallback>

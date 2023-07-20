@@ -30,6 +30,12 @@ export const getCanvasDimension = (imageDataLength: number) => {
   return dim;
 };
 
+export const calcMove = (prevPos: number | undefined, newPos: number) => {
+  if (prevPos === undefined) return 0;
+  const move = newPos - prevPos;
+  return move;
+};
+
 export const checkBounds = (pos: number, canvasBound: number) => {
   if (pos <= 0) return 0;
   if (pos >= canvasBound) return canvasBound;
