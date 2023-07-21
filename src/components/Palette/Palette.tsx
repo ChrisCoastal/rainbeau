@@ -6,7 +6,7 @@ import PaletteItem from '../PaletteItem/PaletteItem';
 import Modal from '../../UI/Modal/Modal';
 
 // uuid
-import { v4 as uuidv4 } from 'uuid';
+import { nanoid } from 'nanoid';
 
 // styles
 import {
@@ -26,32 +26,38 @@ import IconButton from '@mui/material/IconButton';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import UndoIcon from '@mui/icons-material/Undo';
+import RedoIcon from '@mui/icons-material/Redo';
 import SaveIcon from '@mui/icons-material/Save';
 import { MAX_NUM_MARKERS } from '../../utils/constants';
 
-interface PaletteProps {
-  // paletteMarkers: ColorMarker[];
-  // addMarkerHandler: (
-  //   _: React.MouseEvent<HTMLElement, MouseEvent> | null,
-  //   indexedImagePx?: IndexedPxColor[],
-  //   markerQty?: number
-  // ) => ColorMarker[];
-  // deletePaletteHandler: () => void;
-  // dispatch: React.Dispatch<ReducerActions>;
-}
-
-const Palette: FC<PaletteProps> = () => {
+const Palette: FC = () => {
   const [open, setOpen] = useState<boolean>(false);
-  const { state, dispatch } = useAppContext();
-  const { paletteMarkers, activeMenuTab } = state;
+  const {
+    state: {
+      paletteMarkers,
+      activeMenuTab,
+      currentImageData,
+      history,
+      canvasXY,
+      currentImageIndex,
+    },
+    dispatch,
+  } = useAppContext();
   const { addMarker } = useMarkers();
 
   const deletePalette = () => {
     dispatch({ type: 'deletePalette', payload: null });
+    dispatch({
+      type: 'updateHistory',
+      payload: {
+        canvasXY,
+        paletteMarkers: [] as ColorMarker[],
+        currentImageIndex,
+      } as History,
+    });
   };
 
   const setActiveMenuTab = () => {
-    console.log('activeTabPALETTE', state.activeMenuTab);
     dispatch({ type: 'setActiveMenuTab', payload: 'palette' });
   };
 
@@ -60,8 +66,8 @@ const Palette: FC<PaletteProps> = () => {
     if (action === 'delete') deletePalette();
   };
 
-  const undoHandler = () => {
-    dispatch({ type: 'undoPalette', payload: null });
+  const undoHandler = (action: 'undo' | 'redo') => {
+    dispatch({ type: 'undoAction', payload: action });
   };
 
   const disableDeletePalette = paletteMarkers.length === 0;
@@ -88,7 +94,7 @@ const Palette: FC<PaletteProps> = () => {
 
   const paletteItems = paletteMarkers.map((marker, i) => (
     <PaletteItem
-      key={uuidv4()}
+      key={nanoid()}
       markerNum={i}
       marker={marker}
       dispatch={dispatch}
@@ -111,7 +117,7 @@ const Palette: FC<PaletteProps> = () => {
           >
             <span>
               <IconButton
-                onClick={() => addMarker(state.currentImageData, 1)}
+                onClick={() => addMarker(currentImageData, 1)}
                 disabled={disableAddMarker}
               >
                 <AddCircleIcon />
@@ -127,8 +133,21 @@ const Palette: FC<PaletteProps> = () => {
           />
           <Tooltip title="undo">
             <span>
-              <IconButton onClick={undoHandler} disabled={true}>
+              <IconButton
+                onClick={() => undoHandler('undo')}
+                disabled={history.index <= 0}
+              >
                 <UndoIcon />
+              </IconButton>
+            </span>
+          </Tooltip>
+          <Tooltip title="redo">
+            <span>
+              <IconButton
+                onClick={() => undoHandler('redo')}
+                disabled={history.index >= history.snapshots.length - 1}
+              >
+                <RedoIcon />
               </IconButton>
             </span>
           </Tooltip>

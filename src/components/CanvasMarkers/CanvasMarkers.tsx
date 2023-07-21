@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, MouseEvent, TouchEvent } from 'react';
+import { useRef, useEffect, MouseEvent, TouchEvent } from 'react';
 
 import { useSprings, animated, to } from '@react-spring/web';
 
@@ -22,7 +22,6 @@ import { Wrapper } from './CanvasMarkers.styles';
 import MarkerIcon from '../../UI/Marker/MarkerIcon';
 
 const CanvasMarkers: FC = () => {
-  // const [activeMarkerNum, setActiveMarkerNum] = useState<number | null>(null);
   const throttleRef = useRef<NodeJS.Timeout | null>(null);
   const prevMoveRef = useRef<Coordinate | null>(null);
   const markerPosRef = useRef<Coordinate | null>(null);
@@ -31,14 +30,14 @@ const CanvasMarkers: FC = () => {
     state: { paletteMarkers, currentImageData, activeMarker },
     dispatch,
   } = useAppContext();
-  const { moveMarker, updateMarkerState } = useMarkers();
+  const { updateMarkerState } = useMarkers();
 
   const [markerStyles, animateMarker] = useSprings(
     paletteMarkers.length,
     (index) => ({
       from: {
-        y: paletteMarkers[index].xy.yPos,
-        x: paletteMarkers[index].xy.xPos,
+        y: paletteMarkers[index].x,
+        x: paletteMarkers[index].y,
         cursor: 'grab',
         opacity: 0.8,
         r: paletteMarkers[index].r,
@@ -55,9 +54,10 @@ const CanvasMarkers: FC = () => {
   ) {
     event.preventDefault();
     dispatch({ type: 'setActiveMarker', payload: markerIndex });
+    prevMoveRef.current = null;
     markerPosRef.current = {
-      xPos: paletteMarkers[markerIndex].xy.xPos,
-      yPos: paletteMarkers[markerIndex].xy.yPos,
+      x: paletteMarkers[markerIndex].x,
+      y: paletteMarkers[markerIndex].y,
     };
     animateMarker.start((index) =>
       markerIndex === index
@@ -71,31 +71,29 @@ const CanvasMarkers: FC = () => {
   }
 
   function handlePointerUp(event: MouseEvent | TouchEvent) {
+    // appState is set in App component
     event.preventDefault();
     animateMarker.start({
       cursor: 'grab',
       opacity: 0.8,
       immediate: true,
     });
-    dispatch({ type: 'setActiveMarker', payload: null });
-    prevMoveRef.current = null;
   }
 
   function handleMoveMarker(event: MouseEvent | TouchEvent) {
     event.preventDefault();
     if (activeMarker === null) return;
 
-    // const { xy, r, b, g } = moveMarker(event, activeMarkerNum);
+    // FIXME: causing stutter when logic mover to hook
+    // const { x, y, r, b, g } = moveMarker(event, activeMarker);
     // animateMarker.start((index) =>
-    //   activeMarkerNum === index
+    //   activeMarker === index
     //     ? {
     //         r,
     //         g,
     //         b,
     //         y,
     //         x,
-    //         // y: xy.yPos,
-    //         // x: xy.xPos,
     //         opacity: 0.6,
     //         immediate: true,
     //       }
@@ -109,22 +107,23 @@ const CanvasMarkers: FC = () => {
         : (event as MouseEvent);
     const prevMove = prevMoveRef.current;
     const markerPos = markerPosRef.current;
-    // cannot reliably use .movementX and .movementY on mouse events because it is
-    // implemented differently in different browsers https://github.com/w3c/pointerlock/issues/42
-    // Safari uses DIP rather than px
-    const moveX = calcMove(prevMove?.xPos, pointer.screenX);
-    const moveY = calcMove(prevMove?.yPos, pointer.screenY);
-    prevMoveRef.current = { xPos: pointer.screenX, yPos: pointer.screenY };
+
+    // .movementX and .movementY are unreliable due to differing implementations
+    // in different browsers https://github.com/w3c/pointerlock/issues/42
+    // ie: Safari uses DIP rather than px
+    const moveX = calcMove(prevMove?.x, pointer.screenX);
+    const moveY = calcMove(prevMove?.y, pointer.screenY);
+    prevMoveRef.current = { x: pointer.screenX, y: pointer.screenY };
 
     if (moveX === 0 && moveY === 0) return;
 
     const { x, y } = {
-      y: checkBounds(
-        (markerPos?.yPos || paletteMarkers[activeIndex].xy.yPos) + moveY,
+      x: checkBounds(
+        (markerPos?.x || paletteMarkers[activeIndex].x) + moveX,
         canvasDimension
       ),
-      x: checkBounds(
-        (markerPos?.xPos || paletteMarkers[activeIndex].xy.xPos) + moveX,
+      y: checkBounds(
+        (markerPos?.y || paletteMarkers[activeIndex].y) + moveY,
         canvasDimension
       ),
     };
@@ -134,7 +133,7 @@ const CanvasMarkers: FC = () => {
     if (updatedIndex > currentImageData.length) return;
 
     const { r, g, b } = currentImageData[updatedIndex];
-    markerPosRef.current = { xPos: x, yPos: y };
+    markerPosRef.current = { x, y };
     animateMarker.start((index) =>
       activeMarker === index
         ? {
@@ -152,8 +151,8 @@ const CanvasMarkers: FC = () => {
     if (throttleRef.current) return;
     const throttle = setTimeout(() => {
       updateMarkerState(currentImageData, canvasDimension, activeIndex, {
-        xPos: markerPosRef.current?.xPos || x,
-        yPos: markerPosRef.current?.yPos || y,
+        x: markerPosRef.current?.x || x,
+        y: markerPosRef.current?.y || y,
       });
 
       throttleRef.current = null;
@@ -174,8 +173,11 @@ const CanvasMarkers: FC = () => {
   useEffect(() => {
     animateMarker.start((index) => ({
       opacity: 0,
-      y: paletteMarkers[index].xy.yPos,
-      x: paletteMarkers[index].xy.xPos,
+      r: paletteMarkers[index].r,
+      g: paletteMarkers[index].g,
+      b: paletteMarkers[index].b,
+      x: paletteMarkers[index].x,
+      y: paletteMarkers[index].y,
       immediate: true,
     }));
   }, [paletteMarkers, animateMarker, dispatch]);

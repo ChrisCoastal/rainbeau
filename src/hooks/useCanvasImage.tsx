@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect } from 'react';
 import useAppContext from './useAppContext';
 
 // firestore
@@ -48,20 +48,10 @@ const useCanvasImage = () => {
   useEffect(() => {
     const initImage = translateApiResponse(INITIAL_IMAGE);
     dispatch({ type: 'setImages', payload: [initImage] });
-    // changeImageHandler(null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // useEffect(() => {
-  //   setImagesState(INITIAL_IMAGE);
-  //   // changeImageHandler(null);
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
-
-  async function changeImage(
-    _: React.MouseEvent<HTMLElement, MouseEvent> | null,
-    indexStep: number = 1
-  ) {
+  async function changeImage() {
     try {
       dispatch({ type: 'setError', payload: false });
       dispatch({ type: 'setLoading', payload: true });

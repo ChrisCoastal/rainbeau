@@ -6,13 +6,13 @@ interface AppState {
   currentImageData: IndexedPxColor[];
   paletteMarkers: ColorMarker[];
   activeMarker: number | null;
-  markerHistory: MarkerHistory[];
+  history: { index: number; snapshots: History[] };
   activeMenuTab: 'palette' | 'output';
   isLoading: boolean;
   isError: boolean;
 }
 
-interface MarkerHistory {
+interface History {
   canvasXY: { x: number; y: number };
   currentImageIndex: number;
   paletteMarkers: ColorMarker[];
@@ -71,17 +71,17 @@ type UpdatePaletteAction = {
   type: 'updatePalette';
   payload: { markerNum: number; updatedMarker: ColorMarker };
 };
-type UpdateMarkerHistoryAction = {
-  type: 'updateMarkerHistory';
-  payload: MarkerHistory;
+type UpdateHistoryAction = {
+  type: 'updateHistory';
+  payload: History;
 };
 type DeletePaletteAction = {
   type: 'deletePalette';
   payload?: undefined;
 };
-type UndoPaletteAction = {
-  type: 'undoPalette';
-  payload?: undefined;
+type UndoAction = {
+  type: 'undoAction';
+  payload?: 'undo' | 'redo';
 };
 type SetActiveMenuTabAction = {
   type: 'setActiveMenuTab';
@@ -101,8 +101,9 @@ type ReducerActions =
   | AddColorNameAction
   | UpdateColorNamesAction
   | UpdatePaletteAction
+  | UpdateHistoryAction
   | DeletePaletteAction
-  | UndoPaletteAction
+  | UndoAction
   | SetActiveMenuTabAction;
 
 // API response
@@ -149,15 +150,12 @@ interface Image {
 }
 
 // canvas and windowSize
-
 type WindowSize = {
   innerWidth: number;
   innerHeight: number;
 };
 
 // px and markers
-// type MarkerPosition = Array<[number, number]>;
-
 interface rgbType {
   r: number;
   g: number;
@@ -175,26 +173,18 @@ interface IndexedPxColor extends rgbType {
 }
 
 interface Coordinate {
-  xPos: number;
-  yPos: number;
+  x: number;
+  y: number;
 }
 
 interface ColorMarker extends IndexedPxColor {
-  id: string;
-  markerNum: number;
-  xy: Coordinate;
-  name: string;
+  readonly id: string;
+  readonly name: string;
   customName?: string;
-  // active: boolean;
-  // hovered: boolean;
+  markerNum: number;
+  x: number;
+  y: number;
 }
-
-// interface ColorName {
-//   name: string;
-//   r: number;
-//   g: number;
-//   b: number;
-// }
 
 declare module '*.mp4';
 

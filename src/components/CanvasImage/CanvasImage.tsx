@@ -12,12 +12,14 @@ import {
 } from '../../utils/constants';
 
 // helpers
-import { rgbToHsl, translateApiResponse } from '../../utils/helpers';
+import {
+  translateApiResponse,
+  translateResizeMarkers,
+} from '../../utils/helpers';
 
 // hooks
 import useAppContext from '../../hooks/useAppContext';
 import useMarkers from '../../hooks/useMarkers';
-import useCanvasImage from '../../hooks/useCanvasImage';
 
 // styles
 import {
@@ -27,7 +29,6 @@ import {
   MarkersBox,
   BlurFallback,
 } from './CanvasImage.styles';
-import { create } from 'domain';
 import { Blurhash } from 'react-blurhash';
 
 interface CanvasImageProps {
@@ -43,15 +44,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
 }) => {
   const { addMarker } = useMarkers();
   const { state, dispatch } = useAppContext();
-  const {
-    images,
-    canvasXY,
-    // currentImageIndex,
-    currentImageData,
-    paletteMarkers,
-    isLoading,
-    isError,
-  } = state;
+  const { images, paletteMarkers, isLoading, isError } = state;
 
   const imageURL = images[currentImageIndex]?.imageURL || null;
   const imageBlurHash = images[currentImageIndex]?.blurImage || null;
@@ -75,9 +68,6 @@ const CanvasImage: FC<CanvasImageProps> = ({
         const r = imageData[i];
         const g = imageData[i + 1];
         const b = imageData[i + 2];
-        // const a = imageData[i + 3]; // this is the alpha channel; account for if transparency
-        // const { h, s, l } = rgbToHsl({ r, g, b });
-
         sampled.push({ r, g, b, i });
       }
       sampledPxData.current = sampled;
@@ -107,9 +97,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
       willReadFrequently: true,
     })!;
     const ctx = canvasCtxRef.current;
-    // const devicePixelRatio = window.devicePixelRatio || 1;
 
-    // assign the dimension of the grid area to the canvas
     ctx.canvas.width = imageBoxRef.current.getBoundingClientRect().width;
     ctx.canvas.height = imageBoxRef.current.getBoundingClientRect().height;
     const canvasXY = {
@@ -132,7 +120,6 @@ const CanvasImage: FC<CanvasImageProps> = ({
       canvasImage.onload = () => {
         sampledPxData.current = []; // reset from previous image
 
-        // drawImage(image, startx, starty, widthx, widthy)
         ctx.drawImage(canvasImage, 0, 0, canvasXY.x, canvasXY.y);
         const imageData = ctx.getImageData(0, 0, canvasXY.x, canvasXY.y).data;
         onImageDraw(!!imageData);
@@ -159,36 +146,29 @@ const CanvasImage: FC<CanvasImageProps> = ({
   useEffect(() => {
     const initImage = translateApiResponse(INITIAL_IMAGE);
     dispatch({ type: 'setImages', payload: [initImage] });
-    // changeImageHandler(null);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dispatch]);
 
   const updateResizeMarkers = useCallback(
     (
       prevCanvasXY: { x: number; y: number },
       canvasXY: { x: number; y: number }
     ) => {
-      console.log('updateResizeMarkers', canvasXY, prevCanvasXY);
-      const xRatio = canvasXY.x / prevCanvasXY.x;
-      const yRatio = canvasXY.y / prevCanvasXY.y;
-      const translatedMarkers: ColorMarker[] = paletteMarkers.map((marker) => {
-        const translateX = Math.floor(marker.xy.xPos * xRatio);
-        const translateY = Math.floor(marker.xy.yPos * yRatio);
-        return {
-          ...marker,
-          xy: {
-            xPos: translateX,
-            yPos: translateY,
-          },
-        };
-      });
+      const translatedMarkers = translateResizeMarkers(
+        prevCanvasXY,
+        canvasXY,
+        paletteMarkers
+      );
       dispatch({
         type: 'deletePalette',
       });
-      dispatch({
-        type: 'addMarker',
-        payload: translatedMarkers,
-      });
+      dispatch({ type: 'setCanvasXY', payload: canvasXY });
+
+      if (translatedMarkers.length) {
+        dispatch({
+          type: 'addMarker',
+          payload: translatedMarkers,
+        });
+      }
     },
     [dispatch, paletteMarkers]
   );
@@ -201,7 +181,6 @@ const CanvasImage: FC<CanvasImageProps> = ({
       // throttle resize effects
       if (timerRef.current) clearTimeout(timerRef.current);
       const timer = setTimeout(() => {
-        // dispatch({ type: 'setLoading', payload: true });
         const prevCanvasXY = {
           x: ctx.canvas.width,
           y: ctx.canvas.height,
@@ -248,7 +227,6 @@ const CanvasImage: FC<CanvasImageProps> = ({
             />
           )}
         </BlurFallback>
-        {/* <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} /> */}
       </ImageBox>
       <MarkersBox className="markerBox">
         <CanvasMarkers />

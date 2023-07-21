@@ -42,21 +42,36 @@ export const checkBounds = (pos: number, canvasBound: number) => {
   return pos;
 };
 
+export const translateResizeMarkers = (
+  prevCanvas: Coordinate,
+  curCanvas: Coordinate,
+  paletteMarkers: ColorMarker[]
+) => {
+  const xRatio = curCanvas.x / prevCanvas.x;
+  const yRatio = curCanvas.y / prevCanvas.y;
+  const translatedMarkers: ColorMarker[] = paletteMarkers.map((marker) => {
+    const translateX = Math.floor(marker.x * xRatio);
+    const translateY = Math.floor(marker.y * yRatio);
+    return { ...marker, x: translateX, y: translateY };
+  });
+
+  return translatedMarkers;
+};
 // translate canvas index (from getImageData()) to x y values on the canvas
 export const getPxGroupXY = (index: number, canvasDimension: number) => {
-  const yPos = Math.floor(index / (canvasDimension * RGBA_GROUP));
-  const xPos = (index % (canvasDimension * RGBA_GROUP)) / RGBA_GROUP; // channel values per width * canvaswidth/channelvalues/width ;
+  const y = Math.floor(index / (canvasDimension * RGBA_GROUP));
+  const x = (index % (canvasDimension * RGBA_GROUP)) / RGBA_GROUP; // channel values per width * canvaswidth/channelvalues/width ;
 
-  return { xPos, yPos };
+  return { x, y };
 };
 
 export const getPxGroupIndex = (
-  xPos: number,
-  yPos: number,
+  x: number,
+  y: number,
   canvasDimension: number
 ) => {
-  let rgbIndex = yPos * canvasDimension * RGBA_GROUP;
-  if (xPos !== canvasDimension) rgbIndex += xPos * RGBA_GROUP;
+  let rgbIndex = y * canvasDimension * RGBA_GROUP;
+  if (x !== canvasDimension) rgbIndex += x * RGBA_GROUP;
   const pxIndex = rgbIndex / RGBA_GROUP;
 
   // return +pxIndex.toFixed(0);
@@ -112,46 +127,15 @@ export function rgbToHsl(rgbColor: { r: number; g: number; b: number }) {
   s = +(s * 100).toFixed(0);
   l = +(l * 100).toFixed(0);
 
-  // 'hsl(' + h + ',' + s + '%,' + l + '%)';
   return { h, s, l };
 }
-
-// export const getImagePx = () => {
-
-// for (let i = 0; i < dataPoints; i += sampleRate) {
-//   const rPx = imageData[i];
-//   const gPx = imageData[i + 1];
-//   const bPx = imageData[i + 2];
-//   // const a = imageData[i + 3]; // this is the alpha channel; can be accounted for when transparency
-
-//   sampledPxData.current.push({
-//     r: rPx,
-//     g: gPx,
-//     b: bPx,
-//     i: i,
-//     // xy: getXY(i),
-//   });
-//   channelTotal.current.r += rPx;
-//   channelTotal.current.g += gPx;
-//   channelTotal.current.b += bPx;
-// }}
 
 export const getDominantChannel = (rgbChannels: rgbType) => {
   const { r, g, b } = rgbChannels;
   if (r >= g && r >= b) return 'r';
   if (g >= r && g >= b) return 'g';
   if (b >= g && b >= r) return 'b';
-  // TODO: is this cleaner?
-  // const chanMax = Math.max(
-  //   channelTotal.current.r,
-  //   channelTotal.current.g,
-  //   channelTotal.current.b
-  // );
-  // const chanMin = Math.min(
-  //   channelTotal.current.r,
-  //   channelTotal.current.g,
-  //   channelTotal.current.b
-  // );
+
   return 'r';
 };
 
@@ -174,11 +158,6 @@ export const getSortedPx = (
   return sortedPx;
 };
 
-// determine lower/upper
-// const sampleSize = {
-//   lowerLimit: Math.floor(sampledPxData.current.length * 0.5),
-//   upperLimit: Math.floor(sampledPxData.current.length * 0.5) + 1,
-// };
 export const getMedianColor = (
   imagePx: IndexedPxColor[],
   lowerLimit: number,
@@ -186,24 +165,19 @@ export const getMedianColor = (
 ) => {
   if (imagePx.length < upperLimit || lowerLimit < 0) return;
   imagePx.slice(lowerLimit, upperLimit).reduce(
-    (acc, rgb, _, { length }) => ({
-      r: acc.r + rgb.r / length,
-      g: acc.g + rgb.g / length,
-      b: acc.b + rgb.b / length,
-      xy: getPxGroupXY(rgb.i, Math.sqrt(length)),
-    }),
-    { r: 0, g: 0, b: 0, xy: { xPos: 0, yPos: 0 } }
+    (acc, rgb, _, { length }) => {
+      const { x, y } = getPxGroupXY(rgb.i, Math.sqrt(length));
+      return {
+        r: acc.r + rgb.r / length,
+        g: acc.g + rgb.g / length,
+        b: acc.b + rgb.b / length,
+        x,
+        y,
+      };
+    },
+    { r: 0, g: 0, b: 0, x: 0, y: 0 }
   );
 };
-
-const filterChannel = (
-  channelValue: number,
-  channelName: 'r' | 'g' | 'b',
-  colorNames = COLOR_NAMES
-) =>
-  colorNames.filter(
-    (colorName) => Math.abs(colorName[channelName] - channelValue) < 4
-  );
 
 export function rgbToColorName(rgb: rgbType | IndexedPxColor | ColorMarker) {
   const name = COLOR_NAMES.reduce(
@@ -314,15 +288,6 @@ export const hueToColor = (hue: number) => {
   if (hue > 256 && hue <= 288) return 'purple';
   if (hue > 288 && hue <= 342) return 'pink';
   else return '';
-  // const hueName: string[] = [];
-  // if (hue > 338 && hue <= 18) hueName.push('red');
-  // if (hue > 38 && hue <= 86) hueName.push('yellow');
-  // if (hue > 160 && hue <= 256) hueName.push('blue');
-  // if (hue > 10 && hue <= 46) hueName.push('orange');
-  // if (hue > 66 && hue <= 166) hueName.push('green');
-  // if (hue > 256 && hue <= 308) hueName.push('purple');
-  // if (hue > 284 && hue <= 344) hueName.push('pink');
-  // return hueName.join('-');
 };
 
 const lightToColor = (light: number) => {

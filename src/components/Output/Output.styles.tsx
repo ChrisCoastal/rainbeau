@@ -65,19 +65,12 @@ export const OutputTab = styled.button<OutputProps>`
 
 export const CopyIconWrapper = styled.div`
   position: absolute;
-  top: 0.6rem;
-  right: 0.6rem;
+  bottom: 2rem;
+  right: 1rem;
+  z-index: 100;
 `;
 
-// export const TextAreaWrapper = styled.div`
-//   /* position: relative; */
-//   /* height: 100%; */
-//   width: 100%;
-//   background-color: #f00;
-// `;
-
 export const TextArea = styled.textarea`
-  width: 98%;
   height: 100%;
   line-height: 125%;
   resize: none;

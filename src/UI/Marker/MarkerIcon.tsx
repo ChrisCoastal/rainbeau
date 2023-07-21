@@ -1,13 +1,12 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
+
+// components
 import { animated, SpringValue, to } from '@react-spring/web';
 
-import {
-  FillPath,
-  MarkerNumber,
-  StrokePath,
-  SvgMarker,
-} from './MarkerIcon.styles';
+// styles
+import { FillPath, StrokePath, SvgMarker } from './MarkerIcon.styles';
 
+// helpers
 import { rgbToHsl } from '../../utils/helpers';
 
 type MarkerIconProps = {
@@ -18,15 +17,9 @@ type MarkerIconProps = {
     b: SpringValue<number>;
   };
   active: boolean;
-  animate?: boolean;
 };
 
-const MarkerIcon: FC<MarkerIconProps> = ({
-  num,
-  color,
-  active,
-  animate = false,
-}) => {
+const MarkerIcon: FC<MarkerIconProps> = ({ num, color, active }) => {
   return (
     <>
       <SvgMarker
@@ -46,7 +39,7 @@ const MarkerIcon: FC<MarkerIconProps> = ({
 			c8.63,0,15.65,7.02,15.65,15.65c0,1.8-0.87,5.17-0.89,5.23l0,0c0,0-0.44,1.06-0.58,1.36L18,47.26L3.82,22.74z"
             />
             <StrokePath
-              fill="#000000dd"
+              fill="#111111dd"
               d="M18,0.76c8.49,0,15.4,6.91,15.4,15.4c0,1.68-0.78,4.79-0.87,5.14c-0.08,0.18-0.45,1.07-0.56,1.31L18,46.76L4.05,22.65
 			c-0.11-0.24-0.44-1.07-0.55-1.36c-0.6-1.69-0.9-3.41-0.9-5.13C2.6,7.67,9.51,0.76,18,0.76 M18,0.26c-8.78,0-15.9,7.12-15.9,15.9
 			c0,1.86,0.34,3.64,0.93,5.3c0,0,0.42,1.09,0.57,1.4L18,47.76l14.4-24.9c0.15-0.31,0.6-1.4,0.6-1.4s0.9-3.44,0.9-5.3
@@ -78,7 +71,7 @@ const MarkerIcon: FC<MarkerIconProps> = ({
           zIndex: 10,
           transition: 'color 1s ease-in-out',
           color: to([color.r, color.g, color.b], (r, g, b) =>
-            rgbToHsl({ r, g, b }).l > 75 ? '#000' : '#fff'
+            rgbToHsl({ r, g, b }).l > 75 ? '#111' : '#fff'
           ),
         }}
       >

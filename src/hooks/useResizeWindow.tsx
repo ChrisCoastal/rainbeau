@@ -25,6 +25,7 @@ const useResizeWindow = (callback?: Function): WindowSize => {
     handleSize();
 
     return () => window.removeEventListener('resize', handleSize);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return windowSize;

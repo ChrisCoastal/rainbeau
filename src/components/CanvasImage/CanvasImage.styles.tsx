@@ -1,10 +1,6 @@
 import type { ReactNode } from 'react';
 import styled from '@emotion/styled';
 
-// interface BoxProps {
-//   canvasXY: { x: number; y: number };
-// }
-
 interface BlurFallbackProps {
   children: ReactNode;
 }

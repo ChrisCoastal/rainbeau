@@ -18,9 +18,6 @@ const SelectFormatButton: FC<SelectFormatButtonProps> = ({
   format,
   setFormat,
 }) => {
-  const [open, setOpen] = useState(false);
-  // const [formats, setFormats] = useState('');
-  // const anchorRef = useRef<HTMLDivElement>(null);
   const [selectedIndex, setSelectedIndex] = useState(1);
 
   const selectSx = {
@@ -55,7 +52,6 @@ const SelectFormatButton: FC<SelectFormatButtonProps> = ({
     index: number
   ) => {
     setSelectedIndex(index);
-    // setOpen(false);
   };
 
   const handleChange = (event: SelectChangeEvent) => {

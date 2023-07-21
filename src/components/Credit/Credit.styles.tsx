@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { BREAKPOINTS_X } from '../../utils/constants';
+
 interface LinkProps {
   href: string;
 }
