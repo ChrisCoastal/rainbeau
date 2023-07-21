@@ -6,7 +6,7 @@ export const INITIAL_STATE: AppState = {
   currentImageData: [],
   paletteMarkers: [],
   activeMarker: null,
-  markerHistory: [],
+  history: { index: -1, snapshots: [] },
   activeMenuTab: 'palette',
   isLoading: false,
   isError: false,
@@ -46,20 +46,6 @@ export const REM_RATIO = 16;
 export const RGBA_GROUP = 4; // fixed jpg rgb px grouping (do not change)
 
 export const MEASUREMENT_PRECISION = 1; // can be adjusted? FIXME: check for num > 1
-
-// export const CANVAS_RESOLUTION = {
-//   low: 400,
-//   med: 800,
-//   high: 1000,
-//   max: 1600,
-// } as const;
-
-// export const CANVAS_SIZE = {
-//   sm: 320,
-//   md: 540,
-//   lg: 800,
-//   xl: 1000,
-// } as const;
 
 // unsplash api
 export const IMAGE_BASE_URL = 'https://api.unsplash.com/photos/';

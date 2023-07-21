@@ -44,11 +44,13 @@ const useMarkers = () => {
       const randomPxIndex = Math.floor(Math.random() * totalPx);
       const randomMarker = indexedImagePx[randomPxIndex];
       const { r, g, b } = randomMarker;
+      const { x, y } = getPxGroupXY(randomMarker.i, canvasDimension);
       markers.push({
         id: nanoid(),
         markerNum: loopIndex,
         ...randomMarker,
-        xy: getPxGroupXY(randomMarker.i, canvasDimension),
+        x,
+        y,
         name: rgbToColorName({ r, g, b }),
       });
     }
@@ -60,20 +62,18 @@ const useMarkers = () => {
     indexedImagePx: IndexedPxColor[],
     canvasDimension: number,
     activeMarkerNum: number,
-    updatedXY: { xPos: number; yPos: number }
+    updatedXY: { x: number; y: number }
   ) {
     const marker = paletteMarkers[activeMarkerNum];
-    const updatedIndex = getPxGroupIndex(
-      updatedXY.xPos,
-      updatedXY.yPos,
-      canvasDimension
-    );
+    const { x, y } = updatedXY;
+    const updatedIndex = getPxGroupIndex(x, y, canvasDimension);
     const updatedPx = indexedImagePx[updatedIndex];
     const updatedName = rgbToColorName(updatedPx);
-    const updatedMarker = {
+    const updatedMarker: ColorMarker = {
       ...marker,
       ...updatedPx,
-      xy: updatedXY,
+      x,
+      y,
       name: updatedName,
     };
 
@@ -96,21 +96,15 @@ const useMarkers = () => {
     // cannot reliably use .movementX and .movementY on mouse events because it is
     // implemented differently in different browsers https://github.com/w3c/pointerlock/issues/42
     // Safari uses DIP rather than px
-    const moveX = calcMove(prevMove?.xPos, pointer.screenX);
-    const moveY = calcMove(prevMove?.yPos, pointer.screenY);
-    prevMoveRef.current = { xPos: pointer.screenX, yPos: pointer.screenY };
+    const moveX = calcMove(prevMove?.x, pointer.screenX);
+    const moveY = calcMove(prevMove?.y, pointer.screenY);
+    prevMoveRef.current = { x: pointer.screenX, y: pointer.screenY };
 
     if (moveX === 0 && moveY === 0) return prevMarker;
 
     const { x, y } = {
-      y: checkBounds(
-        (markerPos?.yPos || prevMarker.xy.yPos) + moveY,
-        canvasDimension
-      ),
-      x: checkBounds(
-        (markerPos?.xPos || prevMarker.xy.xPos) + moveX,
-        canvasDimension
-      ),
+      y: checkBounds((markerPos?.y || prevMarker.y) + moveY, canvasDimension),
+      x: checkBounds((markerPos?.x || prevMarker.x) + moveX, canvasDimension),
     };
 
     const updatedIndex = getPxGroupIndex(x, y, canvasDimension);
@@ -118,12 +112,13 @@ const useMarkers = () => {
     if (updatedIndex > currentImageData.length) return prevMarker;
 
     const { r, g, b } = currentImageData[updatedIndex];
-    markerPosRef.current = { xPos: x, yPos: y };
+    markerPosRef.current = { x, y };
 
     const updatedMarker: ColorMarker = {
       ...prevMarker,
       ...currentImageData[updatedIndex],
-      xy: { xPos: x, yPos: y },
+      x,
+      y,
       name: rgbToColorName({ r, g, b }),
     };
 
@@ -132,8 +127,8 @@ const useMarkers = () => {
       canvasDimension,
       activeIndex,
       {
-        xPos: markerPosRef.current?.xPos || x,
-        yPos: markerPosRef.current?.yPos || y,
+        xPos: markerPosRef.current?.x || x,
+        yPos: markerPosRef.current?.y || y,
       },
     ]);
     return updatedMarker;

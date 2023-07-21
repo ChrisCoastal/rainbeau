@@ -12,7 +12,11 @@ import {
 } from '../../utils/constants';
 
 // helpers
-import { rgbToHsl, translateApiResponse } from '../../utils/helpers';
+import {
+  getCanvasDimension,
+  rgbToHsl,
+  translateApiResponse,
+} from '../../utils/helpers';
 
 // hooks
 import useAppContext from '../../hooks/useAppContext';
@@ -168,23 +172,17 @@ const CanvasImage: FC<CanvasImageProps> = ({
       prevCanvasXY: { x: number; y: number },
       canvasXY: { x: number; y: number }
     ) => {
-      console.log('updateResizeMarkers', canvasXY, prevCanvasXY);
       const xRatio = canvasXY.x / prevCanvasXY.x;
       const yRatio = canvasXY.y / prevCanvasXY.y;
       const translatedMarkers: ColorMarker[] = paletteMarkers.map((marker) => {
-        const translateX = Math.floor(marker.xy.xPos * xRatio);
-        const translateY = Math.floor(marker.xy.yPos * yRatio);
-        return {
-          ...marker,
-          xy: {
-            xPos: translateX,
-            yPos: translateY,
-          },
-        };
+        const translateX = Math.floor(marker.x * xRatio);
+        const translateY = Math.floor(marker.y * yRatio);
+        return { ...marker, x: translateX, y: translateY };
       });
       dispatch({
         type: 'deletePalette',
       });
+      dispatch({ type: 'setCanvasXY', payload: canvasXY });
       dispatch({
         type: 'addMarker',
         payload: translatedMarkers,
@@ -195,6 +193,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
 
   // resize canvas and translate markers on window resize event
   useEffect(() => {
+    console.log('resize');
     if (canvasCtxRef.current) {
       const ctx = canvasCtxRef.current;
 

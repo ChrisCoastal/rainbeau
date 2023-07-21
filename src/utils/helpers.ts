@@ -44,19 +44,19 @@ export const checkBounds = (pos: number, canvasBound: number) => {
 
 // translate canvas index (from getImageData()) to x y values on the canvas
 export const getPxGroupXY = (index: number, canvasDimension: number) => {
-  const yPos = Math.floor(index / (canvasDimension * RGBA_GROUP));
-  const xPos = (index % (canvasDimension * RGBA_GROUP)) / RGBA_GROUP; // channel values per width * canvaswidth/channelvalues/width ;
+  const y = Math.floor(index / (canvasDimension * RGBA_GROUP));
+  const x = (index % (canvasDimension * RGBA_GROUP)) / RGBA_GROUP; // channel values per width * canvaswidth/channelvalues/width ;
 
-  return { xPos, yPos };
+  return { x, y };
 };
 
 export const getPxGroupIndex = (
-  xPos: number,
-  yPos: number,
+  x: number,
+  y: number,
   canvasDimension: number
 ) => {
-  let rgbIndex = yPos * canvasDimension * RGBA_GROUP;
-  if (xPos !== canvasDimension) rgbIndex += xPos * RGBA_GROUP;
+  let rgbIndex = y * canvasDimension * RGBA_GROUP;
+  if (x !== canvasDimension) rgbIndex += x * RGBA_GROUP;
   const pxIndex = rgbIndex / RGBA_GROUP;
 
   // return +pxIndex.toFixed(0);
@@ -186,13 +186,17 @@ export const getMedianColor = (
 ) => {
   if (imagePx.length < upperLimit || lowerLimit < 0) return;
   imagePx.slice(lowerLimit, upperLimit).reduce(
-    (acc, rgb, _, { length }) => ({
-      r: acc.r + rgb.r / length,
-      g: acc.g + rgb.g / length,
-      b: acc.b + rgb.b / length,
-      xy: getPxGroupXY(rgb.i, Math.sqrt(length)),
-    }),
-    { r: 0, g: 0, b: 0, xy: { xPos: 0, yPos: 0 } }
+    (acc, rgb, _, { length }) => {
+      const { x, y } = getPxGroupXY(rgb.i, Math.sqrt(length));
+      return {
+        r: acc.r + rgb.r / length,
+        g: acc.g + rgb.g / length,
+        b: acc.b + rgb.b / length,
+        x,
+        y,
+      };
+    },
+    { r: 0, g: 0, b: 0, x: 0, y: 0 }
   );
 };
 

@@ -15,18 +15,20 @@ function App() {
     dispatch,
   } = useAppContext();
 
-  function handleMouseUp() {
-    if (activeMarker !== null) {
-      dispatch({
-        type: 'updateMarkerHistory',
-        payload: {
-          canvasXY,
-          paletteMarkers,
-          currentImageIndex,
-        } as MarkerHistory,
-      });
-      dispatch({ type: 'setActiveMarker', payload: null });
-    }
+  // set history state and return activeMarker to null
+  // placed here to account for marker actions that complete with cursor outside of canvas
+  function handlePointerUp() {
+    if (activeMarker === null) return;
+    dispatch({ type: 'setActiveMarker', payload: null });
+    console.log(canvasXY, paletteMarkers, currentImageIndex);
+    dispatch({
+      type: 'updateMarkerHistory',
+      payload: {
+        canvasXY,
+        paletteMarkers,
+        currentImageIndex,
+      } as History,
+    });
   }
 
   // TODO:
@@ -35,7 +37,11 @@ function App() {
   // }, [state.paletteMarkers]);
 
   return (
-    <AppContainer className="App" onMouseUp={handleMouseUp}>
+    <AppContainer
+      className="App"
+      onMouseUp={handlePointerUp}
+      onTouchEnd={handlePointerUp}
+    >
       <Header />
       <MainView />
     </AppContainer>

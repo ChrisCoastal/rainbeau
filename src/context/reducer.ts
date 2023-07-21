@@ -1,3 +1,5 @@
+import { update } from '@react-spring/web';
+
 const reducer = (state: AppState, action: ReducerActions): AppState => {
   const { type, payload } = action;
   switch (type) {
@@ -64,11 +66,40 @@ const reducer = (state: AppState, action: ReducerActions): AppState => {
         ...state,
         paletteMarkers: [],
       };
-    case 'undoPalette':
+    case 'updateHistory':
+      const updatedHistory = [...state.history.snapshots].slice(
+        0,
+        state.history.index + 1
+      );
+      updatedHistory.push(payload);
+      if (updatedHistory.length > 10) updatedHistory.shift();
+
       return {
         ...state,
-        // paletteMarkers: state.markerHistory[-1],
-        // markerHistory: state.markerHistory.slice(0, -2),
+        history: { index: updatedHistory.length, snapshots: updatedHistory },
+      };
+    case 'undoAction':
+      const canvasDim = state.canvasXY.x;
+      let updatedHistoryIndex = state.history.index;
+      if (payload === 'undo' && state.history.index > 0) updatedHistoryIndex--;
+      if (
+        payload === 'redo' &&
+        state.history.index < state.history.snapshots.length
+      )
+        updatedHistoryIndex++;
+
+      const markerRatio =
+        canvasDim / state.history.snapshots[updatedHistoryIndex].canvasXY.x;
+      const updatedMarkers = state.history.snapshots[
+        updatedHistoryIndex
+      ].paletteMarkers.map((marker) => {
+        marker.x = marker.x * markerRatio;
+        marker.y = marker.y * markerRatio;
+        return marker;
+      });
+
+      return {
+        ...state,
       };
     case 'setActiveMenuTab':
       return {
