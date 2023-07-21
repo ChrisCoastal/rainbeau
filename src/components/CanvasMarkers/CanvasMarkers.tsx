@@ -174,6 +174,9 @@ const CanvasMarkers: FC = () => {
   useEffect(() => {
     animateMarker.start((index) => ({
       opacity: 0,
+      r: paletteMarkers[index].r,
+      g: paletteMarkers[index].g,
+      b: paletteMarkers[index].b,
       x: paletteMarkers[index].x,
       y: paletteMarkers[index].y,
       immediate: true,

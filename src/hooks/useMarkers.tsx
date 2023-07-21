@@ -16,12 +16,12 @@ import useAppContext from './useAppContext';
 import useThrottle from './useThrottle';
 
 const useMarkers = () => {
-  const throttleRef = useRef<NodeJS.Timeout | null>(null);
+  // const throttleRef = useRef<NodeJS.Timeout | null>(null);
   const prevMoveRef = useRef<Coordinate | null>(null);
   const markerPosRef = useRef<Coordinate | null>(null);
 
   const {
-    state: { currentImageData, paletteMarkers, canvasXY },
+    state: { currentImageData, currentImageIndex, paletteMarkers, canvasXY },
     dispatch,
   } = useAppContext();
   const { throttled } = useThrottle(updateMarkerState, 50);
@@ -54,8 +54,15 @@ const useMarkers = () => {
         name: rgbToColorName({ r, g, b }),
       });
     }
-    console.log(markers);
     dispatch({ type: 'addMarker', payload: markers });
+    dispatch({
+      type: 'updateHistory',
+      payload: {
+        canvasXY: { x: canvasDimension, y: canvasDimension },
+        paletteMarkers: [...paletteMarkers, ...markers],
+        currentImageIndex,
+      } as History,
+    });
   };
 
   function updateMarkerState(

@@ -67,6 +67,10 @@ const reducer = (state: AppState, action: ReducerActions): AppState => {
         paletteMarkers: [],
       };
     case 'updateHistory':
+      console.log(payload);
+      if (payload.canvasXY.x === 0 || payload.canvasXY.y === 0) return state;
+      if (payload.paletteMarkers.length === 0 && state.history.index === -1)
+        return state;
       const updatedHistory = [...state.history.snapshots].slice(
         0,
         state.history.index + 1
@@ -76,23 +80,26 @@ const reducer = (state: AppState, action: ReducerActions): AppState => {
 
       return {
         ...state,
-        history: { index: updatedHistory.length, snapshots: updatedHistory },
+        history: {
+          index: updatedHistory.length - 1,
+          snapshots: updatedHistory,
+        },
       };
     case 'undoAction':
-      const canvasDim = state.canvasXY.x;
-      let updatedHistoryIndex = state.history.index;
-      if (payload === 'undo' && state.history.index > 0) updatedHistoryIndex--;
+      const { index, snapshots } = state.history;
       if (
-        payload === 'redo' &&
-        state.history.index < state.history.snapshots.length
+        (payload === 'undo' && index <= 0) ||
+        (payload === 'redo' && index >= snapshots.length - 1) ||
+        (payload !== 'redo' && payload !== 'undo')
       )
-        updatedHistoryIndex++;
+        return state;
 
-      const markerRatio =
-        canvasDim / state.history.snapshots[updatedHistoryIndex].canvasXY.x;
-      const updatedMarkers = state.history.snapshots[
-        updatedHistoryIndex
-      ].paletteMarkers.map((marker) => {
+      const updatedIndex = payload === 'undo' ? index - 1 : index + 1;
+      const snapshot = snapshots[updatedIndex];
+      console.log(snapshot, updatedIndex);
+      const canvasDim = state.canvasXY.x;
+      const markerRatio = canvasDim / (snapshot.canvasXY?.x || canvasDim);
+      const updatedMarkers = snapshot.paletteMarkers.map((marker) => {
         marker.x = marker.x * markerRatio;
         marker.y = marker.y * markerRatio;
         return marker;
@@ -100,6 +107,11 @@ const reducer = (state: AppState, action: ReducerActions): AppState => {
 
       return {
         ...state,
+        paletteMarkers: updatedMarkers,
+        history: {
+          index: updatedIndex,
+          snapshots: state.history.snapshots,
+        },
       };
     case 'setActiveMenuTab':
       return {

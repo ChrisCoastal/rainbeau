@@ -22,7 +22,7 @@ function App() {
     dispatch({ type: 'setActiveMarker', payload: null });
     console.log(canvasXY, paletteMarkers, currentImageIndex);
     dispatch({
-      type: 'updateMarkerHistory',
+      type: 'updateHistory',
       payload: {
         canvasXY,
         paletteMarkers,

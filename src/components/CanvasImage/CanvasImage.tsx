@@ -126,6 +126,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
   const drawCanvasImage = useCallback(
     (ctx: CanvasRenderingContext2D, canvasXY: { x: number; y: number }) => {
       if (!imageURL) return;
+      console.log(canvasXY);
       const canvasImage = new Image();
       canvasImage.setAttribute('crossOrigin', 'anonymous');
 
@@ -183,10 +184,13 @@ const CanvasImage: FC<CanvasImageProps> = ({
         type: 'deletePalette',
       });
       dispatch({ type: 'setCanvasXY', payload: canvasXY });
-      dispatch({
-        type: 'addMarker',
-        payload: translatedMarkers,
-      });
+
+      if (translatedMarkers.length) {
+        dispatch({
+          type: 'addMarker',
+          payload: translatedMarkers,
+        });
+      }
     },
     [dispatch, paletteMarkers]
   );

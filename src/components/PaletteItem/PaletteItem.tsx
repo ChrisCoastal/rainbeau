@@ -139,15 +139,17 @@ const PaletteItem: FC<PaletteItemProps> = ({ marker, markerNum, dispatch }) => {
             </IconButton>
           </Tooltip>
         </SwatchContainer>
-        <ColorValue onClick={colorToClipboard}>
-          <Typography fontSize="small" ref={colorRef}>
-            {`rgb(
-          ${marker.r},
-          ${marker.g},
-          ${marker.b}
-          )`}
-          </Typography>
-        </ColorValue>
+        <Tooltip title="copy color">
+          <ColorValue onClick={colorToClipboard}>
+            <Typography fontSize="small" ref={colorRef}>
+              {`rgb(
+              ${marker.r},
+              ${marker.g},
+              ${marker.b}
+              )`}
+            </Typography>
+          </ColorValue>
+        </Tooltip>
       </ItemContent>
       <ItemControls>
         <Tooltip title="delete color">
