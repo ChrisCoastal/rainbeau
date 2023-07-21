@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, MouseEvent, TouchEvent } from 'react';
+import { useRef, useEffect, MouseEvent, TouchEvent } from 'react';
 
 import { useSprings, animated, to } from '@react-spring/web';
 
@@ -22,7 +22,6 @@ import { Wrapper } from './CanvasMarkers.styles';
 import MarkerIcon from '../../UI/Marker/MarkerIcon';
 
 const CanvasMarkers: FC = () => {
-  // const [activeMarkerNum, setActiveMarkerNum] = useState<number | null>(null);
   const throttleRef = useRef<NodeJS.Timeout | null>(null);
   const prevMoveRef = useRef<Coordinate | null>(null);
   const markerPosRef = useRef<Coordinate | null>(null);
@@ -31,7 +30,7 @@ const CanvasMarkers: FC = () => {
     state: { paletteMarkers, currentImageData, activeMarker },
     dispatch,
   } = useAppContext();
-  const { moveMarker, updateMarkerState } = useMarkers();
+  const { updateMarkerState } = useMarkers();
 
   const [markerStyles, animateMarker] = useSprings(
     paletteMarkers.length,
@@ -85,17 +84,16 @@ const CanvasMarkers: FC = () => {
     event.preventDefault();
     if (activeMarker === null) return;
 
-    // const { xy, r, b, g } = moveMarker(event, activeMarkerNum);
+    // FIXME: causing stutter when logic mover to hook
+    // const { x, y, r, b, g } = moveMarker(event, activeMarker);
     // animateMarker.start((index) =>
-    //   activeMarkerNum === index
+    //   activeMarker === index
     //     ? {
     //         r,
     //         g,
     //         b,
     //         y,
     //         x,
-    //         // y: xy.yPos,
-    //         // x: xy.xPos,
     //         opacity: 0.6,
     //         immediate: true,
     //       }
@@ -109,9 +107,10 @@ const CanvasMarkers: FC = () => {
         : (event as MouseEvent);
     const prevMove = prevMoveRef.current;
     const markerPos = markerPosRef.current;
-    // cannot reliably use .movementX and .movementY on mouse events because it is
-    // implemented differently in different browsers https://github.com/w3c/pointerlock/issues/42
-    // Safari uses DIP rather than px
+
+    // .movementX and .movementY are unreliable due to differing implementations
+    // in different browsers https://github.com/w3c/pointerlock/issues/42
+    // ie: Safari uses DIP rather than px
     const moveX = calcMove(prevMove?.x, pointer.screenX);
     const moveY = calcMove(prevMove?.y, pointer.screenY);
     prevMoveRef.current = { x: pointer.screenX, y: pointer.screenY };

@@ -150,15 +150,12 @@ interface Image {
 }
 
 // canvas and windowSize
-
 type WindowSize = {
   innerWidth: number;
   innerHeight: number;
 };
 
 // px and markers
-// type MarkerPosition = Array<[number, number]>;
-
 interface rgbType {
   r: number;
   g: number;
@@ -187,16 +184,7 @@ interface ColorMarker extends IndexedPxColor {
   markerNum: number;
   x: number;
   y: number;
-  // active: boolean;
-  // hovered: boolean;
 }
-
-// interface ColorName {
-//   name: string;
-//   r: number;
-//   g: number;
-//   b: number;
-// }
 
 declare module '*.mp4';
 

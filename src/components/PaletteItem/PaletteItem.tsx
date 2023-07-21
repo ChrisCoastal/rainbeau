@@ -1,8 +1,7 @@
 import { FC, useEffect } from 'react';
-import { useState, useMemo, useRef } from 'react';
+import { useState, useRef } from 'react';
 
 // hooks
-import useInput from '../../hooks/useInput';
 import useMarkers from '../../hooks/useMarkers';
 
 // components
@@ -13,10 +12,6 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
-import DragHandleIcon from '@mui/icons-material/DragHandle';
-
-// helpers
-import { rgbToColorName } from '../../utils/helpers';
 
 // styles
 import {
@@ -100,7 +95,6 @@ const PaletteItem: FC<PaletteItemProps> = ({ marker, markerNum, dispatch }) => {
     }
   }, []);
 
-  // TODO: add dnd change item order
   return (
     <Wrapper>
       <ItemContent>
@@ -112,7 +106,6 @@ const PaletteItem: FC<PaletteItemProps> = ({ marker, markerNum, dispatch }) => {
           <input
             value={inputValue}
             onChange={inputValueHandler}
-            // autoFocus={focus}
             onFocus={focusHandler}
             onBlur={focusHandler}
             onKeyDown={(event) => keyDownHandler(event)}
@@ -142,11 +135,6 @@ const PaletteItem: FC<PaletteItemProps> = ({ marker, markerNum, dispatch }) => {
             <HighlightOffIcon fontSize="small" />
           </IconButton>
         </Tooltip>
-        {/* <Tooltip title="reorder">
-          <IconButton onClick={deleteMarker}>
-            <DragHandleIcon fontSize="small" />
-          </IconButton>
-        </Tooltip> */}
       </ItemControls>
     </Wrapper>
   );

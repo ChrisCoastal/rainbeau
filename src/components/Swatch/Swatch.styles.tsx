@@ -15,9 +15,4 @@ export const Color = styled.div<WrapperProps>`
     ${props.bgColor.b}
   )`};
   border: solid 1px #ddd;
-
-  /* &:hover {
-    border-color: #7dffbe;
-    cursor: copy;
-  } */
 `;

@@ -1,4 +1,3 @@
-import { update } from '@react-spring/web';
 import { translateResizeMarkers } from '../utils/helpers';
 
 const reducer = (state: AppState, action: ReducerActions): AppState => {
@@ -72,10 +71,12 @@ const reducer = (state: AppState, action: ReducerActions): AppState => {
         paletteMarkers: [],
       };
     case 'updateHistory':
-      console.log(payload);
       if (payload.canvasXY.x === 0 || payload.canvasXY.y === 0) return state;
       if (payload.paletteMarkers.length === 0 && state.history.index === -1)
         return state;
+
+      // if history is not at last index (ie: there have been undo actions)
+      // slice history at current index and push new snapshot
       const updatedHistory = [...state.history.snapshots].slice(
         0,
         state.history.index + 1
@@ -101,7 +102,6 @@ const reducer = (state: AppState, action: ReducerActions): AppState => {
 
       const updatedIndex = payload === 'undo' ? index - 1 : index + 1;
       const snapshot = snapshots[updatedIndex];
-      console.log(snapshot, updatedIndex);
       const updatedMarkers =
         snapshot.canvasXY.x === state.canvasXY.x
           ? snapshot.paletteMarkers

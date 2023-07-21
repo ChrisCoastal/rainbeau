@@ -35,15 +35,9 @@ interface MarkerNumberProps {
 }
 
 export const Wrapper = styled.div<WrapperProps>`
-  /* position: absolute; */
-  /* display: flex; */
   z-index: 100;
 
   cursor: ${(props) => (!props.active ? 'grab' : 'grabbing')};
-
-  /* &:active {
-    cursor: grabbing;
-  } */
 
   &::after {
     content: ${(props) => props.num + 1};
@@ -53,13 +47,11 @@ export const Wrapper = styled.div<WrapperProps>`
     height: 1rem;
     width: 1rem;
     top: -1.5rem;
-    color: black;
+    color: #111;
     font-size: 0.8rem;
     height: 0.9rem;
     width: 0.9rem;
     border-radius: 50%;
-    /* background-color: #fff; */
-    /* border: 1px solid #777; */
     opacity: ${(props) => (props.active ? 0.5 : 0.6)};
     z-index: 1000;
   }
@@ -67,8 +59,6 @@ export const Wrapper = styled.div<WrapperProps>`
 
 export const SvgMarker = styled.svg<SvgProps>`
   position: absolute;
-  /* top: ${(props) => `${props.y}px`}; */
-  /* left: ${(props) => `${props.x}px`}; */
   height: 36px;
   width: 27px;
   border-radius: 50%;

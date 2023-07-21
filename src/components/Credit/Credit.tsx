@@ -1,8 +1,13 @@
-import React, { FC } from 'react';
-import { Typography, Link } from '@mui/material';
+import type { FC } from 'react';
+
+// mui
+import Typography from '@mui/material/Typography';
+import Link from '@mui/material/Link';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
+// styles
 import { Wrapper } from './Credit.styles';
+
 interface CreditProps {
   link?: string;
   name: string | null;

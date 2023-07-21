@@ -13,8 +13,6 @@ import {
 
 // helpers
 import {
-  getCanvasDimension,
-  rgbToHsl,
   translateApiResponse,
   translateResizeMarkers,
 } from '../../utils/helpers';
@@ -22,7 +20,6 @@ import {
 // hooks
 import useAppContext from '../../hooks/useAppContext';
 import useMarkers from '../../hooks/useMarkers';
-import useCanvasImage from '../../hooks/useCanvasImage';
 
 // styles
 import {
@@ -32,7 +29,6 @@ import {
   MarkersBox,
   BlurFallback,
 } from './CanvasImage.styles';
-import { create } from 'domain';
 import { Blurhash } from 'react-blurhash';
 
 interface CanvasImageProps {
@@ -48,15 +44,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
 }) => {
   const { addMarker } = useMarkers();
   const { state, dispatch } = useAppContext();
-  const {
-    images,
-    canvasXY,
-    // currentImageIndex,
-    currentImageData,
-    paletteMarkers,
-    isLoading,
-    isError,
-  } = state;
+  const { images, paletteMarkers, isLoading, isError } = state;
 
   const imageURL = images[currentImageIndex]?.imageURL || null;
   const imageBlurHash = images[currentImageIndex]?.blurImage || null;
@@ -80,9 +68,6 @@ const CanvasImage: FC<CanvasImageProps> = ({
         const r = imageData[i];
         const g = imageData[i + 1];
         const b = imageData[i + 2];
-        // const a = imageData[i + 3]; // this is the alpha channel; account for if transparency
-        // const { h, s, l } = rgbToHsl({ r, g, b });
-
         sampled.push({ r, g, b, i });
       }
       sampledPxData.current = sampled;
@@ -112,9 +97,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
       willReadFrequently: true,
     })!;
     const ctx = canvasCtxRef.current;
-    // const devicePixelRatio = window.devicePixelRatio || 1;
 
-    // assign the dimension of the grid area to the canvas
     ctx.canvas.width = imageBoxRef.current.getBoundingClientRect().width;
     ctx.canvas.height = imageBoxRef.current.getBoundingClientRect().height;
     const canvasXY = {
@@ -127,7 +110,6 @@ const CanvasImage: FC<CanvasImageProps> = ({
   const drawCanvasImage = useCallback(
     (ctx: CanvasRenderingContext2D, canvasXY: { x: number; y: number }) => {
       if (!imageURL) return;
-      console.log(canvasXY);
       const canvasImage = new Image();
       canvasImage.setAttribute('crossOrigin', 'anonymous');
 
@@ -138,7 +120,6 @@ const CanvasImage: FC<CanvasImageProps> = ({
       canvasImage.onload = () => {
         sampledPxData.current = []; // reset from previous image
 
-        // drawImage(image, startx, starty, widthx, widthy)
         ctx.drawImage(canvasImage, 0, 0, canvasXY.x, canvasXY.y);
         const imageData = ctx.getImageData(0, 0, canvasXY.x, canvasXY.y).data;
         onImageDraw(!!imageData);
@@ -165,9 +146,7 @@ const CanvasImage: FC<CanvasImageProps> = ({
   useEffect(() => {
     const initImage = translateApiResponse(INITIAL_IMAGE);
     dispatch({ type: 'setImages', payload: [initImage] });
-    // changeImageHandler(null);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dispatch]);
 
   const updateResizeMarkers = useCallback(
     (
@@ -179,13 +158,6 @@ const CanvasImage: FC<CanvasImageProps> = ({
         canvasXY,
         paletteMarkers
       );
-      // const xRatio = canvasXY.x / prevCanvasXY.x;
-      // const yRatio = canvasXY.y / prevCanvasXY.y;
-      // const translatedMarkers: ColorMarker[] = paletteMarkers.map((marker) => {
-      //   const translateX = Math.floor(marker.x * xRatio);
-      //   const translateY = Math.floor(marker.y * yRatio);
-      //   return { ...marker, x: translateX, y: translateY };
-      // });
       dispatch({
         type: 'deletePalette',
       });
@@ -203,14 +175,12 @@ const CanvasImage: FC<CanvasImageProps> = ({
 
   // resize canvas and translate markers on window resize event
   useEffect(() => {
-    console.log('resize');
     if (canvasCtxRef.current) {
       const ctx = canvasCtxRef.current;
 
       // throttle resize effects
       if (timerRef.current) clearTimeout(timerRef.current);
       const timer = setTimeout(() => {
-        // dispatch({ type: 'setLoading', payload: true });
         const prevCanvasXY = {
           x: ctx.canvas.width,
           y: ctx.canvas.height,
@@ -257,7 +227,6 @@ const CanvasImage: FC<CanvasImageProps> = ({
             />
           )}
         </BlurFallback>
-        {/* <Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} /> */}
       </ImageBox>
       <MarkersBox className="markerBox">
         <CanvasMarkers />

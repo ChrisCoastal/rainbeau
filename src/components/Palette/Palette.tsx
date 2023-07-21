@@ -6,7 +6,7 @@ import PaletteItem from '../PaletteItem/PaletteItem';
 import Modal from '../../UI/Modal/Modal';
 
 // uuid
-import { v4 as uuidv4 } from 'uuid';
+import { nanoid } from 'nanoid';
 
 // styles
 import {
@@ -30,18 +30,7 @@ import RedoIcon from '@mui/icons-material/Redo';
 import SaveIcon from '@mui/icons-material/Save';
 import { MAX_NUM_MARKERS } from '../../utils/constants';
 
-interface PaletteProps {
-  // paletteMarkers: ColorMarker[];
-  // addMarkerHandler: (
-  //   _: React.MouseEvent<HTMLElement, MouseEvent> | null,
-  //   indexedImagePx?: IndexedPxColor[],
-  //   markerQty?: number
-  // ) => ColorMarker[];
-  // deletePaletteHandler: () => void;
-  // dispatch: React.Dispatch<ReducerActions>;
-}
-
-const Palette: FC<PaletteProps> = () => {
+const Palette: FC = () => {
   const [open, setOpen] = useState<boolean>(false);
   const {
     state: {
@@ -69,7 +58,6 @@ const Palette: FC<PaletteProps> = () => {
   };
 
   const setActiveMenuTab = () => {
-    console.log('activeTabPALETTE', activeMenuTab);
     dispatch({ type: 'setActiveMenuTab', payload: 'palette' });
   };
 
@@ -106,14 +94,12 @@ const Palette: FC<PaletteProps> = () => {
 
   const paletteItems = paletteMarkers.map((marker, i) => (
     <PaletteItem
-      key={uuidv4()}
+      key={nanoid()}
       markerNum={i}
       marker={marker}
       dispatch={dispatch}
     />
   ));
-
-  console.log(history.snapshots, history.index, history.snapshots.length);
 
   return (
     <Wrapper activeMenuTab={activeMenuTab}>

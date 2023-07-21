@@ -10,9 +10,9 @@ import useAppContext from '../../hooks/useAppContext';
 // mui
 import Zoom from '@mui/material/Zoom';
 import Fade from '@mui/material/Fade';
-import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import CheckIcon from '@mui/icons-material/Check';
 
@@ -126,7 +126,6 @@ const Output: FC = () => {
   };
 
   const setActiveMenuTab = () => {
-    console.log('activeTabOUTPUT', state.activeMenuTab);
     dispatch({ type: 'setActiveMenuTab', payload: 'output' });
   };
 
@@ -173,9 +172,9 @@ const Output: FC = () => {
           </Tooltip>
         )}
       </CopyIconWrapper>
-      {/* <Typography fontSize="small" color={'#555'}>
-        {style[format].detail}
-      </Typography> */}
+      <Typography fontSize={12} color={'#555'} sx={{ marginRight: '1rem' }}>
+        {paletteMarkers.length ? style[format].detail : ' '}
+      </Typography>
     </FormatContainer>
   );
 
@@ -203,7 +202,6 @@ const Output: FC = () => {
         setFormat={setFormat}
       />
       {paletteMarkers.length !== 0 ? stylesTextArea : fallbackTextArea}
-      {/* <div style={{ backgroundColor: 'red', height: '100%' }}></div> */}
     </Wrapper>
   );
 };
