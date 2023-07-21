@@ -77,13 +77,10 @@ const PaletteItem: FC<PaletteItemProps> = ({ marker, markerNum, dispatch }) => {
 
   const keyDownHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      // setPrevInputValue(inputValue);
       inputRef.current && inputRef.current.blur();
-      // TODO: this should call the focusHandler??
       setFocus(false);
     }
     if (event.key === 'Escape') {
-      // setInputValue(prevInputValue);
       inputRef.current && inputRef.current.blur();
       setFocus(false);
     }
@@ -103,18 +100,6 @@ const PaletteItem: FC<PaletteItemProps> = ({ marker, markerNum, dispatch }) => {
     }
   }, []);
 
-  // return (
-  //   // ... other JSX
-  //   <button
-  //     aria-label="Close"
-  //     className={theme.close.base}
-  //     type="button"
-  //     onClick={onClose}
-  //     ref={closeButtonRef}
-  //   >
-  //     <HiOutlineX aria-hidden className={theme.close.icon} />
-  //   </button>
-  // );
   // TODO: add dnd change item order
   return (
     <Wrapper>

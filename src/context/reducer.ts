@@ -1,4 +1,5 @@
 import { update } from '@react-spring/web';
+import { translateResizeMarkers } from '../utils/helpers';
 
 const reducer = (state: AppState, action: ReducerActions): AppState => {
   const { type, payload } = action;
@@ -21,6 +22,10 @@ const reducer = (state: AppState, action: ReducerActions): AppState => {
           images.length > 0 && images.length > currentImageIndex + 1
             ? currentImageIndex + 1
             : 0,
+        history: {
+          index: -1,
+          snapshots: [],
+        },
       };
     case 'setCurrentImageData':
       return {
@@ -97,13 +102,14 @@ const reducer = (state: AppState, action: ReducerActions): AppState => {
       const updatedIndex = payload === 'undo' ? index - 1 : index + 1;
       const snapshot = snapshots[updatedIndex];
       console.log(snapshot, updatedIndex);
-      const canvasDim = state.canvasXY.x;
-      const markerRatio = canvasDim / (snapshot.canvasXY?.x || canvasDim);
-      const updatedMarkers = snapshot.paletteMarkers.map((marker) => {
-        marker.x = marker.x * markerRatio;
-        marker.y = marker.y * markerRatio;
-        return marker;
-      });
+      const updatedMarkers =
+        snapshot.canvasXY.x === state.canvasXY.x
+          ? snapshot.paletteMarkers
+          : translateResizeMarkers(
+              snapshot.canvasXY,
+              state.canvasXY,
+              snapshot.paletteMarkers
+            );
 
       return {
         ...state,

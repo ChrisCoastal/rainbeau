@@ -16,6 +16,7 @@ import {
   getCanvasDimension,
   rgbToHsl,
   translateApiResponse,
+  translateResizeMarkers,
 } from '../../utils/helpers';
 
 // hooks
@@ -173,13 +174,18 @@ const CanvasImage: FC<CanvasImageProps> = ({
       prevCanvasXY: { x: number; y: number },
       canvasXY: { x: number; y: number }
     ) => {
-      const xRatio = canvasXY.x / prevCanvasXY.x;
-      const yRatio = canvasXY.y / prevCanvasXY.y;
-      const translatedMarkers: ColorMarker[] = paletteMarkers.map((marker) => {
-        const translateX = Math.floor(marker.x * xRatio);
-        const translateY = Math.floor(marker.y * yRatio);
-        return { ...marker, x: translateX, y: translateY };
-      });
+      const translatedMarkers = translateResizeMarkers(
+        prevCanvasXY,
+        canvasXY,
+        paletteMarkers
+      );
+      // const xRatio = canvasXY.x / prevCanvasXY.x;
+      // const yRatio = canvasXY.y / prevCanvasXY.y;
+      // const translatedMarkers: ColorMarker[] = paletteMarkers.map((marker) => {
+      //   const translateX = Math.floor(marker.x * xRatio);
+      //   const translateY = Math.floor(marker.y * yRatio);
+      //   return { ...marker, x: translateX, y: translateY };
+      // });
       dispatch({
         type: 'deletePalette',
       });

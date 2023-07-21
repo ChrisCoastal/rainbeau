@@ -42,6 +42,21 @@ export const checkBounds = (pos: number, canvasBound: number) => {
   return pos;
 };
 
+export const translateResizeMarkers = (
+  prevCanvas: Coordinate,
+  curCanvas: Coordinate,
+  paletteMarkers: ColorMarker[]
+) => {
+  const xRatio = curCanvas.x / prevCanvas.x;
+  const yRatio = curCanvas.y / prevCanvas.y;
+  const translatedMarkers: ColorMarker[] = paletteMarkers.map((marker) => {
+    const translateX = Math.floor(marker.x * xRatio);
+    const translateY = Math.floor(marker.y * yRatio);
+    return { ...marker, x: translateX, y: translateY };
+  });
+
+  return translatedMarkers;
+};
 // translate canvas index (from getImageData()) to x y values on the canvas
 export const getPxGroupXY = (index: number, canvasDimension: number) => {
   const y = Math.floor(index / (canvasDimension * RGBA_GROUP));
