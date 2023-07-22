@@ -143,11 +143,6 @@ const CanvasImage: FC<CanvasImageProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [imageURL, setImageDataState, onImageDraw]);
 
-  useEffect(() => {
-    const initImage = translateApiResponse(INITIAL_IMAGE);
-    dispatch({ type: 'setImages', payload: [initImage] });
-  }, [dispatch]);
-
   const updateResizeMarkers = useCallback(
     (
       prevCanvasXY: { x: number; y: number },
@@ -175,27 +170,30 @@ const CanvasImage: FC<CanvasImageProps> = ({
 
   // resize canvas and translate markers on window resize event
   useEffect(() => {
-    if (canvasCtxRef.current) {
-      const ctx = canvasCtxRef.current;
+    if (!canvasCtxRef.current) return;
+    const ctx = canvasCtxRef.current;
+    const prevCanvasXY = {
+      x: ctx.canvas.width,
+      y: ctx.canvas.height,
+    };
 
-      // throttle resize effects
-      if (timerRef.current) clearTimeout(timerRef.current);
-      const timer = setTimeout(() => {
-        const prevCanvasXY = {
-          x: ctx.canvas.width,
-          y: ctx.canvas.height,
-        };
+    // if the grid area is the same size as the current canvas no resize needed
+    if (prevCanvasXY.x === imageBoxRef.current?.getBoundingClientRect().width)
+      return;
 
-        const canvas = createCanvas();
-        if (!canvas?.ctx) return;
+    // throttle resize effects
+    if (timerRef.current) clearTimeout(timerRef.current);
+    const timer = setTimeout(() => {
+      const canvas = createCanvas();
+      if (!canvas?.ctx) return;
 
-        drawCanvasImage(canvas.ctx, canvas.canvasXY);
-        updateResizeMarkers(prevCanvasXY, canvas.canvasXY);
-        timerRef.current = null;
-      }, 150);
+      drawCanvasImage(canvas.ctx, canvas.canvasXY);
+      updateResizeMarkers(prevCanvasXY, canvas.canvasXY);
+      timerRef.current = null;
+    }, 100);
 
-      timerRef.current = timer;
-    }
+    timerRef.current = timer;
+
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };

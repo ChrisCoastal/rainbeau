@@ -79,10 +79,6 @@ const MainView: FC = () => {
     [dispatch]
   );
 
-  useEffect(() => {
-    setImagesState(INITIAL_IMAGE);
-  }, [setImagesState]);
-
   const changeImageHandler = async (indexStep: number = 1) => {
     try {
       dispatch({ type: 'setError', payload: false });
@@ -119,6 +115,7 @@ const MainView: FC = () => {
       height="100%"
       style={{
         gridArea: 'image',
+        height: '100%',
         aspectRatio: '1/1',
         borderRadius: '8px',
         overflow: 'hidden',
@@ -126,9 +123,14 @@ const MainView: FC = () => {
     />
   );
 
+  useEffect(() => {
+    setImagesState(INITIAL_IMAGE);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <Wrapper>
-      <MainGrid className="main-grid" windowSize={size}>
+      <MainGrid className="main-grid">
         <Suspense fallback={imageBlurFallback}>
           <CanvasImage currentImageIndex={currentImageIndex} windowSize={size}>
             <Credit link={unsplashLink} name={artistName} />
