@@ -55,12 +55,12 @@ const reducer = (state: AppState, action: ReducerActions): AppState => {
       return {
         ...state,
         paletteMarkers: state.paletteMarkers.filter(
-          (marker) => marker.i !== payload.i
+          (marker) => marker.id !== payload.id
         ),
       };
     case 'updatePalette':
       const updatedPaletteMarkers = [...state.paletteMarkers];
-      updatedPaletteMarkers[payload.markerNum] = payload.updatedMarker;
+      updatedPaletteMarkers[payload.markerIndex] = payload.updatedMarker;
       return {
         ...state,
         paletteMarkers: updatedPaletteMarkers,
