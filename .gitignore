@@ -13,11 +13,6 @@
 
 # firebase
 /functions
-firestore.config.ts
-firebase.json
-firestore.indexes.json
-firestore.rules
-.firebaserc
 
 # misc
 .DS_Store
