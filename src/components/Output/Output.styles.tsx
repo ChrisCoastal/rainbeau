@@ -89,6 +89,7 @@ export const FormatContainer = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
+  gap: 0.5rem;
   height: 100%;
   text-align: right;
 `;

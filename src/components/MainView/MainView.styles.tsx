@@ -2,10 +2,6 @@ import styled from '@emotion/styled';
 
 import { BREAKPOINTS_X, MEDIA_QUERY } from '../../utils/constants';
 
-interface MainGridProps {
-  windowSize: WindowSize;
-}
-
 export const Wrapper = styled.div`
   position: relative;
   display: flex;
@@ -18,7 +14,7 @@ export const Wrapper = styled.div`
   }
 `;
 
-export const MainGrid = styled.div<MainGridProps>`
+export const MainGrid = styled.div`
   width: 100%;
   display: grid;
   row-gap: 1rem;
