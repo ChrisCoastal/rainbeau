@@ -5,17 +5,10 @@ import CanvasMarkers from '../CanvasMarkers/CanvasMarkers';
 import LoadingSpinner from '../../UI/LoadingSpinner/LoadingSpinner';
 
 // config
-import {
-  INITIAL_IMAGE,
-  MEASUREMENT_PRECISION,
-  RGBA_GROUP,
-} from '../../utils/constants';
+import { MEASUREMENT_PRECISION, RGBA_GROUP } from '../../utils/constants';
 
 // helpers
-import {
-  translateApiResponse,
-  translateResizeMarkers,
-} from '../../utils/helpers';
+import { translateResizeMarkers } from '../../utils/helpers';
 
 // hooks
 import useAppContext from '../../hooks/useAppContext';
@@ -43,8 +36,10 @@ const CanvasImage: FC<CanvasImageProps> = ({
   children,
 }) => {
   const { addMarker } = useMarkers();
-  const { state, dispatch } = useAppContext();
-  const { images, paletteMarkers, isLoading, isError } = state;
+  const {
+    state: { images, paletteMarkers, isLoading, isError, canvasXY },
+    dispatch,
+  } = useAppContext();
 
   const imageURL = images[currentImageIndex]?.imageURL || null;
   const imageBlurHash = images[currentImageIndex]?.blurImage || null;
@@ -177,6 +172,9 @@ const CanvasImage: FC<CanvasImageProps> = ({
       y: ctx.canvas.height,
     };
 
+    // initialize the canvasXY state
+    if (!canvasXY.x && !canvasXY.y)
+      dispatch({ type: 'setCanvasXY', payload: prevCanvasXY });
     // if the grid area is the same size as the current canvas no resize needed
     if (prevCanvasXY.x === imageBoxRef.current?.getBoundingClientRect().width)
       return;
