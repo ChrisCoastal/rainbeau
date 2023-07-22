@@ -10,13 +10,7 @@ import { AppContainer } from './App.styles';
 
 function App() {
   const {
-    state: {
-      activeMarker,
-      canvasXY,
-      paletteMarkers,
-      currentImageIndex,
-      history,
-    },
+    state: { activeMarker, canvasXY, paletteMarkers, currentImageIndex },
     dispatch,
   } = useAppContext();
 
@@ -25,7 +19,6 @@ function App() {
   function handlePointerUp() {
     if (activeMarker === null) return;
     dispatch({ type: 'setActiveMarker', payload: null });
-    console.log(history, canvasXY, paletteMarkers, currentImageIndex);
     dispatch({
       type: 'updateHistory',
       payload: {
