@@ -2,6 +2,7 @@ import { FC, useEffect } from 'react';
 import { useState, useRef } from 'react';
 
 // hooks
+import useAppContext from '../../hooks/useAppContext';
 import useMarkers from '../../hooks/useMarkers';
 
 // components
@@ -25,13 +26,16 @@ import { Typography } from '@mui/material';
 
 interface PaletteItemProps {
   marker: ColorMarker;
-  markerNum: number;
-  dispatch: React.Dispatch<ReducerActions>;
+  markerIndex: number;
 }
 
-const PaletteItem: FC<PaletteItemProps> = ({ marker, markerNum, dispatch }) => {
+const PaletteItem: FC<PaletteItemProps> = ({ marker, markerIndex }) => {
   const initialValue = marker.customName || marker.name;
   const { r, g, b } = marker;
+  const {
+    state: { canvasXY, currentImageIndex, paletteMarkers },
+    dispatch,
+  } = useAppContext();
   const { deleteMarker } = useMarkers();
 
   const [prevInputValue, setPrevInputValue] = useState<string>('');
@@ -59,13 +63,32 @@ const PaletteItem: FC<PaletteItemProps> = ({ marker, markerNum, dispatch }) => {
     if (event.type === 'focus') setFocus(true);
     if (event.type === 'blur' && focus) {
       !inputValue && setInputValue(prevInputValue);
-      dispatch({
-        type: 'updatePalette',
-        payload: {
-          markerNum,
-          updatedMarker: { ...marker, customName: inputValue },
-        },
-      });
+
+      const curName =
+        paletteMarkers[markerIndex].customName ||
+        paletteMarkers[markerIndex].name;
+      if (inputValue !== curName) {
+        const updatedMarkers = paletteMarkers.map((paletteMarker) =>
+          paletteMarker.id === marker.id
+            ? { ...paletteMarker, customName: inputValue }
+            : paletteMarker
+        );
+        dispatch({
+          type: 'updatePalette',
+          payload: {
+            markerIndex,
+            updatedMarker: { ...marker, customName: inputValue },
+          },
+        });
+        dispatch({
+          type: 'updateHistory',
+          payload: {
+            canvasXY,
+            currentImageIndex,
+            paletteMarkers: updatedMarkers,
+          },
+        });
+      }
     }
     if (event.type === 'blur') setFocus(false);
   };
@@ -100,7 +123,7 @@ const PaletteItem: FC<PaletteItemProps> = ({ marker, markerNum, dispatch }) => {
       <ItemContent>
         <SwatchContainer>
           <Typography fontSize="small" pr={1}>
-            {markerNum + 1}
+            {markerIndex + 1}
           </Typography>
           <Swatch color={{ r, g, b }} />
           <input

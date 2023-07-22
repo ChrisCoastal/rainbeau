@@ -19,7 +19,7 @@ const useMarkers = () => {
   // const markerPosRef = useRef<Coordinate | null>(null);
 
   const {
-    state: { currentImageIndex, paletteMarkers },
+    state: { currentImageIndex, currentImageData, paletteMarkers },
     dispatch,
   } = useAppContext();
   // const { throttled } = useThrottle(updateMarkerState, 50);
@@ -41,7 +41,7 @@ const useMarkers = () => {
       const { x, y } = getPxGroupXY(randomMarker.i, canvasDimension);
       markers.push({
         id: nanoid(),
-        markerNum: loopIndex,
+        markerIndex: paletteMarkers.length + loopIndex,
         ...randomMarker,
         x,
         y,
@@ -76,11 +76,12 @@ const useMarkers = () => {
       x,
       y,
       name: updatedName,
+      customName: '',
     };
 
     dispatch({
       type: 'updatePalette',
-      payload: { markerNum: activeMarkerNum, updatedMarker },
+      payload: { markerIndex: activeMarkerNum, updatedMarker },
     });
   }
   // FIXME: causing bad frame rate
@@ -136,7 +137,19 @@ const useMarkers = () => {
   // }
 
   const deleteMarker = (marker: ColorMarker) => {
+    const canvasDimension = getCanvasDimension(currentImageData.length);
+    const updatedMarkers = paletteMarkers.filter(
+      (paletteMarker) => paletteMarker.id !== marker.id
+    );
     dispatch({ type: 'deleteMarker', payload: marker });
+    dispatch({
+      type: 'updateHistory',
+      payload: {
+        canvasXY: { x: canvasDimension, y: canvasDimension },
+        paletteMarkers: updatedMarkers,
+        currentImageIndex,
+      } as History,
+    });
   };
 
   return { addMarker, updateMarkerState, deleteMarker };

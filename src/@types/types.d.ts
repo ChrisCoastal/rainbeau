@@ -12,12 +12,6 @@ interface AppState {
   isError: boolean;
 }
 
-interface History {
-  canvasXY: { x: number; y: number };
-  currentImageIndex: number;
-  paletteMarkers: ColorMarker[];
-}
-
 type AppContextType = {
   state: AppState;
   dispatch: Dispatch<ReducerActions>;
@@ -69,7 +63,7 @@ type UpdateColorNamesAction = {
 };
 type UpdatePaletteAction = {
   type: 'updatePalette';
-  payload: { markerNum: number; updatedMarker: ColorMarker };
+  payload: { markerIndex: number; updatedMarker: ColorMarker };
 };
 type UpdateHistoryAction = {
   type: 'updateHistory';
@@ -105,6 +99,12 @@ type ReducerActions =
   | DeletePaletteAction
   | UndoAction
   | SetActiveMenuTabAction;
+
+interface History {
+  canvasXY: { x: number; y: number };
+  currentImageIndex: number;
+  paletteMarkers: ColorMarker[];
+}
 
 // API response
 interface APIImageData {
@@ -181,7 +181,7 @@ interface ColorMarker extends IndexedPxColor {
   readonly id: string;
   readonly name: string;
   customName?: string;
-  markerNum: number;
+  markerIndex: number;
   x: number;
   y: number;
 }

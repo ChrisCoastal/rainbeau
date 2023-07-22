@@ -93,12 +93,7 @@ const Palette: FC = () => {
   };
 
   const paletteItems = paletteMarkers.map((marker, i) => (
-    <PaletteItem
-      key={nanoid()}
-      markerNum={i}
-      marker={marker}
-      dispatch={dispatch}
-    />
+    <PaletteItem key={nanoid()} markerIndex={i} marker={marker} />
   ));
 
   return (
