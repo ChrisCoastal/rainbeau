@@ -54,12 +54,11 @@ export const IMAGE_COUNT = 8;
 
 export const INITIAL_IMAGE = [
   {
-    alt_description: 'a multicolored rainbow on a white background',
+    alt_description: 'a multicolored rainbeau floating on a white background',
     blur_hash: 'LOP?E%XnqEvfN^i_M{b^YjngmST1',
     color: '#d9d9d9',
     created_at: '2023-06-16T06:20:41Z',
-    description:
-      'Abstract colorful curves forming 3D motion shape. Futuristic colorful 3D render background',
+    description: 'a multicolored rainbeau floating on a white background',
     downloads: 6340,
     height: 6000,
     id: '8UHu4sfnXqA',
