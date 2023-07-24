@@ -14,13 +14,13 @@
     <img src="public/readme-images/rainbeau-repo-logo-1200x480.jpg" alt="rainbeau logo over a colorful background">
   </a>
     <p align="center">
-      A colour theming assistant that takes inspiration from the read world. 🌈
+      A color theming assistant that takes inspiration from the read world.
     <br />
     </p>
 
   <h3 align="center">
     <a href="https://rainbeau.netlify.app/" target="blank">
-      Check out rainbeau for yourself.
+      Check out Rainbeau
     </a>
   </h3>
 
@@ -192,7 +192,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 I'm currently looking for new projects to work on, or an inspiring team to join for longer term. If you think we would be a good fit (or if you just want to say 'hey'), I'm happy to hear from you!
 
-ChrisCoastal: contactchriscoastal@gmail.com 🌊
+ChrisCoastal: hello@chriscoastal.com 🌊
 
 Project Link: [https://github.com/ChrisCoastal/rainbeau](https://github.com/ChrisCoastal/rainbeau)
 
