@@ -91,8 +91,8 @@ Rainbeau is an SPA that allows users to browse through and pull colors directly 
 
 <p align="center">
   <img src='public/readme-images/rainbeau-appview.jpg'>
-  <span align='right'>Image by <a href='https://stock.adobe.com/contributor/202246000/niquirk?load_type=author' target="_blank">Niquirk</a></span>
 </p>
+<p align='center' style='font-size: 10pt'>Image by <a href='https://stock.adobe.com/contributor/202246000/niquirk?load_type=author' target="_blank">Niquirk</a></p>
 
 ### Create
 
@@ -129,8 +129,8 @@ Some highlights from what I wanted to accomplish and include in the project:
 
 <p align="center">
   <img src='public/readme-images/rainbeau-canvasview.jpg' >
-  <span align='right'>Image by <a href='https://unsplash.com/@dimadallacqua' target="_blank">Dima DallAcqua</a></span>
 </p>
+<p align='center' style='font-size: 10pt'>Image by <a href='https://unsplash.com/@dimadallacqua' target="_blank">Dima DallAcqua</a></p>
 
 There is still more work and ideas I would love to add (or go back and change 😅) to Rainbeau, but I'm happy with where the project is at in terms of what I set out to make - primarily an exercise to better understand the workings of the Canvas API. I do hope to add a few more of the features planned. The roadmap for future features includes adding auth, saving and sharing palettes between users, and the ability to upload images for local use. If you would like to help implement any, please see the contribution guidelines in the next section.
 
