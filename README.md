@@ -11,7 +11,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/ChrisCoastal/rainbeau">
-    <img src="public/readme-images/rainbeau-repo-logo-1200x480.jpg" alt="rainbeau logo over a colorful background">
+    <img src="https://github.com/ChrisCoastal/rainbeau/repo-assets/readme-images/rainbeau-repo-logo-1200x480.jpg" alt="rainbeau logo over a colorful background">
   </a>
     <p align="center">
       A color theming assistant that takes inspiration from the read world.
@@ -90,7 +90,7 @@ Rainbeau is an SPA that allows users to browse through and pull colors directly 
 ## Rainbeau App
 
 <p align="center">
-  <img src='public/readme-images/rainbeau-appview.jpg'>
+  <img src='https://github.com/ChrisCoastal/rainbeau/repo-assets/readme-images/rainbeau-appview.jpg'>
 </p>
 <p align='center' style='font-size: 10pt'>Image by <a href='https://stock.adobe.com/contributor/202246000/niquirk?load_type=author' target="_blank">Niquirk</a></p>
 
@@ -128,7 +128,7 @@ Some highlights from what I wanted to accomplish and include in the project:
 ## Roadmap
 
 <p align="center">
-  <img src='public/readme-images/rainbeau-canvasview.jpg' >
+  <img src='https://github.com/ChrisCoastal/rainbeau/repo-assets/readme-images/rainbeau-canvasview.jpg' >
 </p>
 <p align='center' style='font-size: 10pt'>Image by <a href='https://unsplash.com/@dimadallacqua' target="_blank">Dima DallAcqua</a></p>
 
@@ -224,5 +224,5 @@ Project Link: [https://github.com/ChrisCoastal/rainbeau](https://github.com/Chri
 [license-url]: https://github.com/ChrisCoastal/rainbeau/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/christopher-allen-3194371b5
-[product-screenshot-a]: public/readme-images/rainbeau-appview.jpg
-[product-screenshot-b]: public/readme-images/rainbeau-canvasview.jpg
+[product-screenshot-a]: https://github.com/ChrisCoastal/rainbeau/repo-assets/readme-images/rainbeau-appview.jpg
+[product-screenshot-b]: https://github.com/ChrisCoastal/rainbeau/repo-assets/readme-images/rainbeau-canvasview.jpg
