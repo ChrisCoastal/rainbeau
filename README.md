@@ -204,7 +204,7 @@ Project Link: [https://github.com/ChrisCoastal/rainbeau](https://github.com/Chri
 
 - Thank you to everyone responsible for writing and maintaining the libraries, packages, and other code that are a part of this project. 🙏
 - Big thank you to the artist's whose work appears in Rainbeau. Make sure to check out their work via the lin kin the app.
-- Extra big thank you to <a href='https://stock.adobe.com/contributor/202246000/niquirk?load_type=author' target="_blank">Niquirk</a>, whose image is the unofficial 'rainbeau'. Also thanks to <a href='https://unsplash.com/@dimadallacqua' target="_blank">Dima DallAcqua</a>, <a href='https://unsplash.com/@jasrolyn' target="_blank">Jas Rolyn</a>, and <a href='https://unsplash.com/@godling' target="_blank">Zhaoli Jin</a> whose beautiful photos appear in Rainbeau demo stills, video, and this README. 🌈📷💚💙💜🧡💛📷
+- Extra big thank you to <a href='https://stock.adobe.com/contributor/202246000/niquirk?load_type=author' target="_blank">Niquirk</a>, whose image is the unofficial 'rainbeau'. Also thanks to <a href='https://unsplash.com/@dimadallacqua' target="_blank">Dima DallAcqua</a>, <a href='https://unsplash.com/@jasrolyn' target="_blank">Jas Rolyn</a>, and <a href='https://unsplash.com/@godling' target="_blank">Zhaoli Jin</a> whose work appears in Rainbeau demo stills, video, and this README. 🌈
 - Thanks, as always, to the authors of the innumerable articles, Stack Overflow answers, and other resources that allow learning to keeping going everyday. ⛑
 - And to the person I catch rainbows with - thank you for your love of color and imagination.
 
