@@ -91,11 +91,12 @@ Rainbeau is an SPA that allows users to browse through and pull colors directly 
 
 <p align="center">
   <img src='public/readme-images/rainbeau-appview.jpg'>
+  <span align='right'>Image by <a href='https://stock.adobe.com/contributor/202246000/niquirk?load_type=author' target="_blank">Niquirk</a></span>
 </p>
 
 ### Create
 
-You can check out the app at <a href="https://rainbeau.netlify.app/" target="_blank">Rainbeau</a>.
+You can check out the app and create your own color themes at <a href="https://rainbeau.netlify.app/" target="_blank">Rainbeau</a>.
 
 ## Project
 
@@ -128,6 +129,7 @@ Some highlights from what I wanted to accomplish and include in the project:
 
 <p align="center">
   <img src='public/readme-images/rainbeau-canvasview.jpg' >
+  <span align='right'>Image by <a href='https://unsplash.com/@dimadallacqua' target="_blank">Dima DallAcqua</a></span>
 </p>
 
 There is still more work and ideas I would love to add (or go back and change 😅) to Rainbeau, but I'm happy with where the project is at in terms of what I set out to make - primarily an exercise to better understand the workings of the Canvas API. I do hope to add a few more of the features planned. The roadmap for future features includes adding auth, saving and sharing palettes between users, and the ability to upload images for local use. If you would like to help implement any, please see the contribution guidelines in the next section.
@@ -201,7 +203,9 @@ Project Link: [https://github.com/ChrisCoastal/rainbeau](https://github.com/Chri
 ## Acknowledgments
 
 - Thank you to everyone responsible for writing and maintaining the libraries, packages, and other code that are a part of this project. 🙏
-- Thanks as always to the authors of the innumerable articles, Stack Overflow answers, and other resources that allow learning to keeping going everyday. ⛑
+- Big thank you to the artist's whose work appears in Rainbeau. Make sure to check out their work via the lin kin the app.
+- Extra big thank you to <a href='https://stock.adobe.com/contributor/202246000/niquirk?load_type=author' target="_blank">Niquirk</a>, whose image is the unofficial 'rainbeau'. Also thanks to <a href='https://unsplash.com/@dimadallacqua' target="_blank">Dima DallAcqua</a>, <a href='https://unsplash.com/@jasrolyn' target="_blank">Jas Rolyn</a>, and <a href='https://unsplash.com/@godling' target="_blank">Zhaoli Jin</a> whose beautiful photos appear in Rainbeau demo stills, video, and this README. 🌈📷💚💙💜🧡💛📷
+- Thanks, as always, to the authors of the innumerable articles, Stack Overflow answers, and other resources that allow learning to keeping going everyday. ⛑
 - And to the person I catch rainbows with - thank you for your love of color and imagination.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
